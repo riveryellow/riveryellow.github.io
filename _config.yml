@@ -136,7 +136,7 @@ deploy:
 
 # img CDN path
 cdn: "header-off"
-header-img: img/post-mongoose.jpg
+header-img: 
 
 # Qiniu imageView2 API
 # More info http://developer.qiniu.com/code/v6/api/kodo-api/image/imageview2.html
