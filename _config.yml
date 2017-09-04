@@ -129,9 +129,9 @@ theme: Anisina
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: 
-  repo: 
-  branch: 
+  type: git
+  repository: http://github.com/riveryellow/blog.git
+  branch: master
 
 
 # img CDN path
