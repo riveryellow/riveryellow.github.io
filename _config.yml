@@ -1,19 +1,19 @@
 # Hexo Configuration
 ## Docs: https://hexo.io/docs/configuration.html
-## Source: https://github.com/hexojs/hexo/
 
 # Site
 title: 茄子的猫砂盆 # your blog title name
 subtitle:  
-author: yellowriver # 作者
+author: yellow river # 作者
 language: 
 timezone: 
 
 # custom Site settings
 # more detail check out docs
-#SEOTitle: Haojen's blog 
-email: river_yellow@163.com
-description: "那些在铲屎时的顿悟"
+SEOTitle: 
+header-img: img/post-mongoose.jpg
+email: 
+description: 
 keyword: # seo key words
 
 favicon: # your favicon png
@@ -21,18 +21,19 @@ favicon: # your favicon png
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://riveryellow.github.com
+#url: http://riveryellow.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
 # SNS settings
 # RSS:
-#weibo_username: haojen
-#zhihu_username: megahertz
-#github_username: haojen
-
-#linkedin_username:  
+weibo_username: 
+zhihu_username: 
+github_username: 
+twitter_username: 
+facebook_username:  
+linkedin_username:  
 
 # Build settings
 anchorjs: false                        # if you want to customize anchor. check out line:181 of `post.html`
@@ -42,7 +43,7 @@ anchorjs: false                        # if you want to customize anchor. check 
 disqus_username: 
 
 # Duoshuo settings
-#duoshuo_username:  # 你的多说帐号
+duoshuo_username:  # 你的多说帐号
 # Share component is depend on Comment so we can NOT use share only.
 duoshuo_share: true                     # set to false if you want to use Comment without Sharing
 
@@ -57,7 +58,7 @@ ga_track_id:             # Format: UA-xxxxxx-xx
 ga_domain:
 
 # Sidebar settings
-sidebar-about-description: 那些在铲屎时的顿悟
+sidebar-about-description: # 个人描述
 sidebar-avatar:     # use absolute URL
 
 
@@ -132,11 +133,6 @@ deploy:
   type: git
   repo: http://github.com/riveryellow/riveryellow.github.io.git
   branch: master
-
-
-# img CDN path
-cdn: "header-off"
-header-img: 
 
 # Qiniu imageView2 API
 # More info http://developer.qiniu.com/code/v6/api/kodo-api/image/imageview2.html
