@@ -130,7 +130,7 @@ theme: Anisina
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: http://github.com/riveryellow/blog.git
+  repo: http://github.com/riveryellow/blog.git
   branch: master
 
 
