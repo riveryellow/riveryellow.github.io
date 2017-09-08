@@ -170,7 +170,10 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
-                <h1 id="标题、段落、块引用"><a href="#标题、段落、块引用" class="headerlink" title="标题、段落、块引用"></a>标题、段落、块引用</h1><h2 id="段落"><a href="#段落" class="headerlink" title="段落"></a>段落</h2><p>一个段落是由一个以上的连接的行句组成，而一个以上的空行则会划分出不同的段落（空行的定义是显示上看起来像是空行，就被视为空行，例如有一行<strong>只有空白和 tab</strong>，那该行也会被<strong>视为空行</strong>），<strong>一般的段落不需要用空白或换行缩进</strong>。</p>
+                <blockquote>
+<p> Markdown是一种轻量级的<strong>标记语言</strong>，相对于复杂的HTML标记语言来说，常用的标记符号不超过十个。<br> 可以很方便地导出为PDF、HTML格式文件，使得使用者可以专心于码字，而无需花大量精力在排版上。</p>
+</blockquote>
+<h1 id="标题、段落、块引用"><a href="#标题、段落、块引用" class="headerlink" title="标题、段落、块引用"></a>标题、段落、块引用</h1><h2 id="段落"><a href="#段落" class="headerlink" title="段落"></a>段落</h2><p>一个段落是由一个以上的连接的行句组成，而一个以上的空行则会划分出不同的段落（空行的定义是显示上看起来像是空行，就被视为空行，例如有一行<strong>只有空白和 tab</strong>，那该行也会被<strong>视为空行</strong>），<strong>一般的段落不需要用空白或换行缩进</strong>。</p>
 <h2 id="Header-—-标题"><a href="#Header-—-标题" class="headerlink" title="Header — 标题"></a>Header — 标题</h2><p>Markdown 支持两种标题的语法，Setext 和 atx 形式。</p>
 <ul>
 <li>Setext 形式是用底线的形式，利用 = （最高阶标题）和 - （第二阶标题）</li>
@@ -184,7 +187,7 @@
 <h3 id="2-markdown-blockquote写法"><a href="#2-markdown-blockquote写法" class="headerlink" title="2. markdown blockquote写法"></a>2. markdown blockquote写法</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line"><span class="quote">&gt; This is a blockquote.</span></div><div class="line">&gt;</div><div class="line"><span class="quote">&gt; ps.段落中也可以增加标题，标题级数不相对继承</span></div><div class="line">&gt;#### H4 in blockquote</div></pre></td></tr></table></figure>
 <h3 id="3-HTML输出代码"><a href="#3-HTML输出代码" class="headerlink" title="3. HTML输出代码"></a>3. HTML输出代码</h3><figure class="highlight html"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">blockquote</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>This is a blockquote.<span class="tag">&lt;<span class="name">br</span>&gt;</span>ps.段落中也可以增加标题，标题级数不相对继承<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">h4</span>&gt;</span>H4 in blockquote<span class="tag">&lt;/<span class="name">h4</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">blockquote</span>&gt;</span></div></pre></td></tr></table></figure>
 <h2 id="Highlight-—-代码高亮"><a href="#Highlight-—-代码高亮" class="headerlink" title="Highlight — 代码高亮"></a>Highlight — 代码高亮</h2><h3 id="1-markdown-highlight写法"><a href="#1-markdown-highlight写法" class="headerlink" title="1. markdown highlight写法"></a>1. markdown highlight写法</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">```+语言名（比如java）</div><div class="line">//代码内容</div><div class="line">```</div></pre></td></tr></table></figure>
-<h3 id="2-highlight展示"><a href="#2-highlight展示" class="headerlink" title="2. highlight展示"></a>2. highlight展示</h3><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">	System.out.println(<span class="string">"abc"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-highlight展示"><a href="#2-highlight展示" class="headerlink" title="2. highlight展示"></a>2. highlight展示</h3><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</div><div class="line">    System.out.println(<span class="string">"abc"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>支持语言参考：<a href="http://highlightjs.readthedocs.io/en/latest/css-classes-reference.html" target="_blank" rel="external">http://highlightjs.readthedocs.io/en/latest/css-classes-reference.html</a></p>
 <h2 id="修辞和强调"><a href="#修辞和强调" class="headerlink" title="修辞和强调"></a>修辞和强调</h2><p>Markdown 使用星号和底线来标记需要强调的区段。</p>
 <h3 id="1-斜体-amp-加粗"><a href="#1-斜体-amp-加粗" class="headerlink" title="1. 斜体&amp;加粗"></a>1. 斜体&amp;加粗</h3><p>Some of these words <em>are emphasized</em>.<br>Some of these words <em>are emphasized also</em>.<br>Use two asterisks for <strong>strong emphasis</strong>.<br>Or, if you prefer, <strong>use two underscores instead</strong>.</p>
@@ -200,7 +203,7 @@
 <p>加号：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">+ Candy.</div><div class="line">+ Gum.</div><div class="line">+ Booze.</div></pre></td></tr></table></figure></p>
 <p>减号：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">- Candy.</div><div class="line">- Gum.</div><div class="line">- Booze.</div></pre></td></tr></table></figure></p>
 <h3 id="2-HTML输出代码-1"><a href="#2-HTML输出代码-1" class="headerlink" title="2. HTML输出代码"></a>2. HTML输出代码</h3><figure class="highlight html"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>Candy.<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>Gum.<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">li</span>&gt;</span>Booze.<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></div></pre></td></tr></table></figure>
-<h3 id="3-切记！"><a href="#3-切记！" class="headerlink" title="3. 切记！"></a>3. 切记！</h3><p>列表元素下一行如果要跟标题(header)，<strong>一定要空行</strong>，不然标题会被包在<code>&lt;li&gt;</code>标签里面，页面展示会产生大块空白。</p>
+<h3 id="3-切记！"><a href="#3-切记！" class="headerlink" title="3. 切记！"></a>3. 切记！</h3><p>列表元素下一行如果要跟标题(header)，__一定要空行__，不然标题会被包在<code>&lt;li&gt;</code>标签里面，页面展示会产生大块空白。</p>
 <h2 id="Link-—-链接"><a href="#Link-—-链接" class="headerlink" title="Link — 链接"></a>Link — 链接</h2><h3 id="行内链接"><a href="#行内链接" class="headerlink" title="行内链接"></a>行内链接</h3><p>This is an <a href="http://example.com/" target="_blank" rel="external">example link</a>.</p>
 <h4 id="1-markdown-行内链接写法"><a href="#1-markdown-行内链接写法" class="headerlink" title="1. markdown 行内链接写法"></a>1. markdown 行内链接写法</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line">This is an [<span class="string">example link</span>](<span class="link">http://example.com/</span>).</div></pre></td></tr></table></figure>
 <h4 id="2-HTML输出代码-2"><a href="#2-HTML输出代码-2" class="headerlink" title="2. HTML输出代码"></a>2. HTML输出代码</h4><figure class="highlight html"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>This is an <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://example.com/"</span> <span class="attr">title</span>=<span class="string">"With a Title"</span>&gt;</span></div><div class="line">example link<span class="tag">&lt;/<span class="name">a</span>&gt;</span>.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div></pre></td></tr></table></figure>
@@ -210,7 +213,7 @@
 <h2 id="Image-—-图片"><a href="#Image-—-图片" class="headerlink" title="Image — 图片"></a>Image — 图片</h2><h3 id="行内形式"><a href="#行内形式" class="headerlink" title="行内形式"></a>行内形式</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line">![<span class="string">alt text</span>](<span class="link">/path/to/img.jpg "Title"</span>)</div><div class="line">//title非必填项</div></pre></td></tr></table></figure>
 <h3 id="参考形式"><a href="#参考形式" class="headerlink" title="参考形式"></a>参考形式</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line">![<span class="string">alt text</span>][<span class="symbol">id</span>]</div><div class="line"></div><div class="line">[<span class="symbol">id</span>]: <span class="link">/path/to/img.jpg "Title"</span></div></pre></td></tr></table></figure>
 <p>以上两种形式的HTML输出代码均为：<br><figure class="highlight html"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"/path/to/img.jpg"</span> <span class="attr">alt</span>=<span class="string">"alt text"</span> <span class="attr">title</span>=<span class="string">"Title"</span> /&gt;</span></div></pre></td></tr></table></figure></p>
-<h2 id="插入HTML标签"><a href="#插入HTML标签" class="headerlink" title="插入HTML标签"></a>插入HTML标签</h2><p>在一般的段落文字中，可以使用反引号 ` 来标记代码区段，区段内的 &amp;、&lt; 和 &gt; 都会被自动的转换成 HTML 实体，这项特性让你可以很容易的在代码区段内插入 HTML 码：</p>
+<h2 id="插入HTML标签"><a href="#插入HTML标签" class="headerlink" title="插入HTML标签"></a>插入HTML标签</h2><p>在一般的段落文字中，可以使用反引号 ` 来标记代码区段，区段内的 &amp;、\&lt; 和 > 都会被自动的转换成 HTML 实体，这项特性让你可以很容易的在代码区段内插入 HTML 码：</p>
 <p>I strongly recommend against using any <code>&lt;blink&gt;</code> tags.</p>
 <p>I wish SmartyPants used named entities like <code>&amp;mdash;</code><br>instead of decimal-encoded entites like <code>&amp;#8212;</code>.</p>
 
@@ -219,11 +222,11 @@
 
                 <ul class="pager">
                     
-                    
-                    <li class="next">
-                        <a href="/2017/09/05/hello-world/" data-toggle="tooltip" data-placement="top"
-                           title="Hello World">Next Post &rarr;</a>
+                    <li class="previous">
+                        <a href="/2017/09/08/learning-list/" data-toggle="tooltip" data-placement="top"
+                           title="待探究问题清单">&larr; Previous Post</a>
                     </li>
+                    
                     
                 </ul>
 
