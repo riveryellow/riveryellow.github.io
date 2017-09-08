@@ -213,7 +213,7 @@ instead of decimal-encoded entites like `&#8212;`.
 # Markdown编辑器
 ## Mou
 ![](img/mou.png)
-  由于macdown暂时不支持10.12.2 Sierra版本，于是放弃了。
+  由于Mou暂时不支持10.12.2 Sierra版本，于是放弃了。
 
 ## Macdown
 ![](img/macdown.png)
