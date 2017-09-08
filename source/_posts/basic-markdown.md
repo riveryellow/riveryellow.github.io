@@ -11,7 +11,7 @@ tags:
 >  Markdown是一种轻量级的**标记语言**，相对于复杂的HTML标记语言来说，常用的标记符号不超过十个。
 >  可以很方便地导出为PDF、HTML格式文件，使得使用者可以专心于码字，而无需花大量精力在排版上。
 
-# 标题、段落、块引用
+# 常用标签
 
 ## 段落
 一个段落是由一个以上的连接的行句组成，而一个以上的空行则会划分出不同的段落（空行的定义是显示上看起来像是空行，就被视为空行，例如有一行**只有空白和 tab**，那该行也会被**视为空行**），**一般的段落不需要用空白或换行缩进**。
@@ -209,3 +209,18 @@ instead of decimal-encoded entites like `&#8212;`.
 [2]:	http://google.com/ "Google"
 [3]:	http://search.yahoo.com/ "Yahoo Search"
 [4]:	http://search.msn.com/ "MSN Search"
+
+# Markdown编辑器
+## Mou
+![](img/mou.png)
+  由于macdown暂时不支持10.12.2 Sierra版本，于是放弃了。
+
+## Macdown
+![](img/macdown.png)
+![](img/macdowndetail.png)
+  说起来 Macdown 和 Mou 还是有一段鲜为人知的虐恋史的，有兴趣可以baidu一下。
+  Macdown的操作界面分为左右两部分，分别是markdown和渲染后的预览，实时更新，体验非常友好。
+
+## Ulysses
+![](img/ulysses.png)
+  功能很强大，不过由于Macdown就已经能满足我平时写写blog的需求，就没做太多研究。
