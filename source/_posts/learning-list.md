@@ -30,10 +30,16 @@ header-img: "./img/issue.jpeg"
 ## 2017.9.7 jQuery call() 、apply()方法学习
 ```
 	融合项目中出现很多callback.call()、callback.apply()(dom.apply()?)的调用方式，搞清楚为什么
+    CitySelected ——> addToCartNew()
 ```
 
 ## 2017.9.8 京东埋点系统学习——子午线、通天塔、H5
 ```
 	当前需求：希望将订单中的商品归类到各个活动中去。
 	痛点：由于商品加车大多数在详情页，根据当前的打点规则，很难简单的追溯商品的活动来源。
+```
+
+## 2017.9.9 jquery Object添加元素
+```
+    如何向已存在的jquery对象中新增元素，push？obj[]?
 ```
