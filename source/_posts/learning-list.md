@@ -7,7 +7,7 @@ header-img: "./img/issue.jpeg"
 ## 2017.9.4 hexo正确使用方式
 ```
 通过hexo发布blog至github时，发布了整个文件脚手架到github上，
-导致访问404
+导致访问404(npm install hexo-deployer-git --save)，每次删除原来脚手架重新拉取时都要安装发布插件
 ```
 
 
