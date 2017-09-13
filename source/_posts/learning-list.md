@@ -6,7 +6,8 @@ header-img: "./img/issue.jpeg"
 ---
 ## 2017.9.4 hexo正确使用方式
 ```
-通过hexo发布blog至github时，发布了整个文件脚手架到github上，导致访问404
+通过hexo发布blog至github时，发布了整个文件脚手架到github上，
+导致访问404
 ```
 
 
@@ -29,26 +30,26 @@ header-img: "./img/issue.jpeg"
 
 ## 2017.9.7 jQuery call() 、apply()方法学习
 ```
-	融合项目中出现很多callback.call()、callback.apply()(dom.apply()?)的调用方式，搞清楚为什么
-    CitySelected ——> addToCartNew()
+融合项目中出现很多callback.call()、callback.apply()(dom.apply()?)的调用方式，搞清楚为什么
+CitySelected ——> addToCartNew()
 ```
 
 ## 2017.9.8 京东埋点系统学习——子午线、通天塔、H5
 ```
-	当前需求：希望将订单中的商品归类到各个活动中去。
-	痛点：由于商品加车大多数在详情页，根据当前的打点规则，很难简单的追溯商品的活动来源。
+当前需求：希望将订单中的商品归类到各个活动中去。
+痛点：由于商品加车大多数在详情页，根据当前的打点规则，很难简单的追溯商品的活动来源。
 ```
 
 ## 2017.9.9 jquery Object添加元素
 ```
-    如何向已存在的jquery对象中新增元素，push？obj[]?
+如何向已存在的jquery对象中新增元素，push？obj[]?
 ```
 
 ## 2017.9.13 如何正确使用github开源代码--fork
 ```
-	用hexo搭建了github pages之后，每次拉取最新的scaffolds后，
+用hexo搭建了github pages之后，每次拉取最新的scaffolds后，
 hexo generate后都会出现WARN NO LAYOUT的警告，hexo server之
 后页面空白。仔细一看，clone到本地的Anisina主题无法提交到自己的
 github。
 ```
-   参考：[如何把别人项目代码修改后 提交到github](http://yijiebuyi.com/blog/9c00641126e41779ef38cafb9c6aad67.html)
+参考：[如何把别人项目代码修改后 提交到github](http://yijiebuyi.com/blog/9c00641126e41779ef38cafb9c6aad67.html)
