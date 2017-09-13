@@ -8,6 +8,7 @@ header-img: "./img/issue.jpeg"
 ```
 通过hexo发布blog至github时，发布了整个文件脚手架到github上，
 导致访问404(npm install hexo-deployer-git --save)，每次删除原来脚手架重新拉取时都要安装发布插件
+若默认发布分支上有非web结构的目录结构，要先清空再发布
 ```
 
 
