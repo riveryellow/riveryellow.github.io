@@ -43,3 +43,12 @@ header-img: "./img/issue.jpeg"
 ```
     如何向已存在的jquery对象中新增元素，push？obj[]?
 ```
+
+## 2017.9.13 如何正确使用github开源代码--fork
+```
+	用hexo搭建了github pages之后，每次拉取最新的scaffolds后，
+hexo generate后都会出现WARN NO LAYOUT的警告，hexo server之
+后页面空白。仔细一看，clone到本地的Anisina主题无法提交到自己的
+github。
+```
+   参考：[如何把别人项目代码修改后 提交到github](http://yijiebuyi.com/blog/9c00641126e41779ef38cafb9c6aad67.html)
