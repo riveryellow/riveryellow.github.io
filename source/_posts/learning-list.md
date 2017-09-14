@@ -54,3 +54,10 @@ hexo generate后都会出现WARN NO LAYOUT的警告，hexo server之
 github。
 ```
 参考：[如何把别人项目代码修改后 提交到github](http://yijiebuyi.com/blog/9c00641126e41779ef38cafb9c6aad67.html)
+
+## 2017.9.14 struts如何引用jar包中的struts配置
+```
+融合项目中，服务引用了jar包中的错误页面struts配置，访问时却无法访问到action指向页面，
+状态码200，页面空白，后台无报错。
+是否和引用jar包中的struts配置有关？
+```
