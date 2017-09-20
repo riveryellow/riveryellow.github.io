@@ -151,5 +151,9 @@ $ hexo deploy
 折腾了好久，才发现是缺少hexo部署到github的插件**hexo-deploy-git**。
 重新拉去脚手架代码，一定要在根路径下安装hexo的部署插件！
 
+### 3. 部署到github后，tags标签页无法访问
+本地访问localhost:4000没问题，查看远程仓库master分支，发现tags的路径编程了大写的Tags，气到要晕厥。百度了一番，应该是git配置里面忽略了大小写的缘故。
+进入脚手架根目录的.git，编辑config文件，将"ignorecase = true"改为false，将主分支上的全部清空，重新部署即可。
+
 参考：https://hexo.io/
 	  https://pages.github.com/
