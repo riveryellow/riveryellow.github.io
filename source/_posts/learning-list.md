@@ -4,7 +4,7 @@ date: 2017-09-08 22:36:49
 cdn: "header-off"
 header-img: "./img/issue.jpeg"
 ---
-## 2017.9.4 [hexo正确使用方式](http://riveryellow.github.io/2017/09/10/buid-blog/)
+## [2017.9.4 hexo正确使用方式](http://riveryellow.github.io/2017/09/10/buid-blog/)
 ```
 通过hexo发布blog至github时，发布了整个文件脚手架到github上，
 导致访问404(npm install hexo-deployer-git --save)，每次删除原来脚手架重新拉取时都要安装发布插件
@@ -17,6 +17,12 @@ header-img: "./img/issue.jpeg"
 项目升级struts2，从2.1.0.2升级到2.3.0.15后，freemarker中
   stack.findValue("@com.aa.bb.classC@getJSONValue()")
 返回为null。
+```
+
+## 2017.9.4 Struts为何禁止通过值栈调用外部静态方法
+```
+学习OGNL、struts值栈的实现原理
+http://struts.apache.org/docs/s2-009.html
 ```
 
 ## 2017.9.5 fetch如何模仿jsonp实现跨域请求
@@ -35,7 +41,7 @@ header-img: "./img/issue.jpeg"
 CitySelected ——> addToCartNew()
 ```
 
-## 2017.9.8 京东埋点系统学习——子午线、通天塔、H5
+## 2017.9.8 埋点系统学习——JD子午线、JD通天塔、Google Tag Manager
 ```
 当前需求：希望将订单中的商品归类到各个活动中去。
 痛点：由于商品加车大多数在详情页，根据当前的打点规则，很难简单的追溯商品的活动来源。
@@ -61,3 +67,4 @@ github。
 状态码200，页面空白，后台无报错。
 是否和引用jar包中的struts配置有关？
 ```
+

@@ -224,3 +224,8 @@ instead of decimal-encoded entites like `&#8212;`.
 ## Ulysses
 ![](img/ulysses.png)
   功能很强大，不过由于Macdown就已经能满足我平时写写blog的需求，就没做太多研究。
+
+## Markdown Pad
+![](img/markdownpad-logo.png)
+![](img/markdown-pad-detail.png)
+  上面的几款说的都是MAC OS下的，windows下免费又不捆绑广告和产品的编辑器，口碑最好的必须是Markdown Pad了，界面友好，操作简单，非常能满足写写blog的需求了。
