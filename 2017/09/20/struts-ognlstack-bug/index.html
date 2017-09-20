@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        struts升级至2.3.20后无法使用stack.findValue调用java静态方法｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2017/09/20/struts-ognlstack-bug/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('img/index-bg2.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="./img/struts-logo.png">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('./img/struts-logo.png');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>struts升级至2.3.20后无法使用stack.findValue调用java静态方法</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2017-09-20
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Struts"
+                           title="Struts">Struts</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            struts升级至2.3.20后无法使用stack.findValue调用java静态方法
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>项目融合之前，struts2一直使用的是2.0.11版本，前端页面使用freemarker模板引擎，通过值栈调用后台的Java静态方法。具体场景如下，<br>拦截器向值栈中存入多个键值对：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebPageInterceptor</span> <span class="keyword">extends</span> <span class="title">AbstractInterceptor</span></span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">7150874893323446302L</span>;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">intercept</span><span class="params">(ActionInvocation invocation)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line"></div><div class="line">		String headType = WebPageUtils.getHeadType(invocation);		</div><div class="line">		<span class="comment">//默认为base头</span></div><div class="line">		<span class="keyword">if</span> (StringUtils.isEmpty(headType)) &#123;</div><div class="line">			headType = <span class="string">"base"</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">//PreResultListener是个好东西！</span></div><div class="line">		invocation.addPreResultListener(<span class="keyword">new</span> PageInfoPreResultListener());</div><div class="line">		<span class="comment">/**</span></div><div class="line"><span class="comment">		 * ...</span></div><div class="line"><span class="comment">		 * ...</span></div><div class="line"><span class="comment">		 * 中间还有很多操作</span></div><div class="line"><span class="comment">		 */</span>	</div><div class="line">		HashMap&lt;String, Object&gt; vars = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</div><div class="line">		vars.put(<span class="string">"headerType"</span>, headType);</div><div class="line">		vars.put(<span class="string">"GlobalConfigFactory"</span>, ConfigFactory.getInstance());</div><div class="line">		<span class="comment">/**</span></div><div class="line"><span class="comment">		 * ...</span></div><div class="line"><span class="comment">		 * ...</span></div><div class="line"><span class="comment">		 * vars里面还有很多东西</span></div><div class="line"><span class="comment">		 */</span>	</div><div class="line">		ValueStack stack = invocation.getStack();</div><div class="line">		stack.push(vars);</div><div class="line">		<span class="keyword">return</span> invocation.invoke();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>前台通过freemarker既获取值栈中的值，又通过值栈调用栈外的静态方法：<br><figure class="highlight js"><table><tr><td class="code"><pre><div class="line">&lt;#-- 值栈外静态方法调用 --&gt;</div><div class="line"><span class="keyword">var</span> globalCoinFlag = <span class="string">"$&#123;(stack.findValue("</span>@com.front.global.hessian.adaptor.GlobalConfigInfoFactoryAdaptor@getInstance()<span class="string">").getGlobalConfigInfo('globalCoinFlag').getExtendInfo())!'0'&#125;"</span>;</div><div class="line">&lt;#-- 使用值栈中的参数 --&gt;</div><div class="line"><span class="keyword">var</span> globalCouponPopupFlag = <span class="string">"$&#123;(GlobalConfigFactory.getConfig("</span>globalSwitch<span class="string">","</span>userCouponPopupFlag<span class="string">").getExtendInfo())!'0'&#125;"</span>;</div></pre></td></tr></table></figure></p>
+<p>融合项目开始之后，struts要求升级到2.3.20，那么问题就来了，原先在模板引擎中通过值栈调用值栈外Java静态方法取值的变量统统无法取到值，WHY？怎么办？</p>
+<h2 id="官方漏洞修补WW-4429"><a href="#官方漏洞修补WW-4429" class="headerlink" title="官方漏洞修补WW-4429"></a>官方漏洞修补WW-4429</h2><p>百度、Google、stackoverflow了一番（不得不说，这种事情还是问墙外的大大比较管用），原来，使用值栈调用值栈之外的java静态方法实际上是一种很不安全的bug，struts在2.3.20已经修复了这个bug，即使在struts配置文件中设置：<br><figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">constant</span> <span class="attr">name</span>=<span class="string">"struts.ognl.allowStaticMethodAccess"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><div class="line">&lt;#-- not working --&gt;</div><div class="line"><span class="keyword">var</span> value = $&#123;stack.findValue(<span class="string">"@com.your.full.package.Classname@methodName(optionalParameters)"</span>)&#125;</div><div class="line">&lt;#-- working --&gt;</div><div class="line"><span class="keyword">var</span> day = $&#123;stack.findValue(<span class="string">"@java.util.Calendar@DAY_OF_WEEK"</span>)&#125;</div></pre></td></tr></table></figure>
+<p>也只能获取静态敞亮，而不能调用静态方法。<br>详见：<a href="https://issues.apache.org/jira/browse/WW-4429" target="_blank" rel="external">WW-4429</a> <a href="https://issues.apache.org/jira/browse/WW-4348" target="_blank" rel="external">WW-4348</a></p>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>将需要调用的静态方法事先存储到值栈中，通过模板引擎直接通过值栈调用即可。</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/09/10/buid-blog/" data-toggle="tooltip" data-placement="top"
+                           title="Hexo + Github Pages搭建个人blog">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题背景"><span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#官方漏洞修补WW-4429"><span class="toc-text">官方漏洞修补WW-4429</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决办法"><span class="toc-text">解决办法</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Struts"
+                           title="Struts">Struts</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2017
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="img/brinjaul.png">
+</body>
+
+</html>

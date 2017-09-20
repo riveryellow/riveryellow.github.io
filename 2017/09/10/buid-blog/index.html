@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Hexo + Github Pages搭建个人blog｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2017/09/10/buid-blog/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('img/index-bg2.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="./img/hexo+github.png">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('./img/hexo+github.png');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Hexo + Github Pages搭建个人blog</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2017-09-10
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Hexo"
+                           title="Hexo">Hexo</a>
+                        
+                        <a class="tag" href="/tags/#Github Pages"
+                           title="Github Pages">Github Pages</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Hexo + Github Pages搭建个人blog
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <blockquote>
+<p>最近寻思着，毕业有一段时间了，是不是应该弄个博客记录一下自己的工作学习点滴，于是本着独立自主不花钱的原则，用hexo + github pages搭了一个简单的个人blog，下面就来说说搭建步骤以及几个踩过的坑。</p>
+</blockquote>
+<h2 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h2><p>   引用官网的话，<em>A fast, simple &amp; powerful blog framework（快速、简单且强大的博客框架）</em>。</p>
+<ul>
+<li><p>Blazing fast — 电光石火般的速度</p>
+<p>  使用Node.js可以带来让人难以置信的博客生成速度，几百个文件只需要几秒钟方可构建完成。</p>
+</li>
+<li><p>Markdown Support</p>
+</li>
+<li><p>One-Command Deployment — 一命令部署</p>
+<p>  只需一条命令即可将博客部署至Github Pages, Heroku或其他站点上。</p>
+</li>
+<li><p>Various Plugin</p>
+</li>
+</ul>
+<h2 id="GithubPages"><a href="#GithubPages" class="headerlink" title="GithubPages"></a>GithubPages</h2><p>直接从github仓库中获取静态数据，只需要将静态数据编辑好之后提交、推到远程仓库，改变就能生效。</p>
+<h2 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h2><h3 id="1-在Github创建新的仓库"><a href="#1-在Github创建新的仓库" class="headerlink" title="1. 在Github创建新的仓库"></a>1. 在Github创建新的仓库</h3><p>按照gituhub pages上的指导步骤，首先创建一个仓库，以“github的用户名”+github.io 命名仓库（必须这么命名）。<br><img src="img/create-repo.png" alt=""><br>我这已经创建好了的仓库，所以会飘红。</p>
+<h3 id="2-在仓库中创建一个分支"><a href="#2-在仓库中创建一个分支" class="headerlink" title="2. 在仓库中创建一个分支"></a>2. 在仓库中创建一个分支</h3><p>由于github pages在展示的时候，是直接拉取指定分支的静态代码进行展示，所以master分支用于存放生成好的静态代码用于前台展示，新建scaffolds分支用于存放hexo脚手架目录及文件。</p>
+<h3 id="3-搭建hexo环境"><a href="#3-搭建hexo环境" class="headerlink" title="3. 搭建hexo环境"></a>3. 搭建hexo环境</h3><p>首先，通过npm安装hexo依赖：<br><figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> npm install hexo-cli -g</div></pre></td></tr></table></figure></p>
+<p>安装好之后再控制台输入：<br><figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> hexo version</div></pre></td></tr></table></figure></p>
+<p>若能出现各种版本号，没有报“command not found: hexo”，说明安装成功。<br>接着，在目标文件夹中初始化Hexo，并使用npm安装所需要的依赖<br><figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> mkdir &lt;folder&gt;</div><div class="line"><span class="meta">$</span> cd &lt;folder&gt;</div><div class="line"><span class="meta">$</span> hexo init</div><div class="line"><span class="meta">$</span> npm install</div></pre></td></tr></table></figure></p>
+<p>初始化成功后，就能看到如下的目录结构：<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">.</div><div class="line">├── _config.yml</div><div class="line">├── package.json</div><div class="line">├── scaffolds</div><div class="line">├── source</div><div class="line">|   ├── _drafts</div><div class="line">|   └── _posts</div><div class="line">└── themes</div></pre></td></tr></table></figure></p>
+<p>当前目录下执行：<br><figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
+<p>安装hexo的github发布插件，这个插件是必须的，否则执行hexo d之后，会将整个脚手架上传到仓库，进而导致github无法展示博客页面。</p>
+<p>插件安装好之后，打开_config.yml，配置几个比较重要的属性，其他的使用默认或根据所选主题来配置就好：<br><figure class="highlight xml"><table><tr><td class="code"><pre><div class="line">deploy:</div><div class="line">  type: git</div><div class="line">  repo: http://github.com/riveryellow/riveryellow.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure></p>
+<p>hexo配置文件的格式，冒号后面一定要跟一个空格才能形成合法键值对。另外，hexo3.0之后，type的值应该是git而不是github，repo是仓库地址（从github页面上copy下来的是带https的，不确定https的协议头能否正常发布）。branch是生成好后的静态代码要部署的分支。</p>
+<p>至此，环境算是搭建好了。可以将现有的代码提交到仓库的脚手架分支进行托管。</p>
+<h2 id="发表博文到github-pages"><a href="#发表博文到github-pages" class="headerlink" title="发表博文到github pages"></a>发表博文到github pages</h2><h3 id="1-新建博文"><a href="#1-新建博文" class="headerlink" title="1. 新建博文"></a>1. 新建博文</h3><p>在控制台输入如下命令：<br><figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> hexo new "new post"</div></pre></td></tr></table></figure></p>
+<p>执行之后，可以在./source/_post下看到new-post.md（hexo会用横杠补齐空格），打开new-post.md，设置Front-matter(这个真不知道怎么翻译。。)。<br><em>Front-matter is a block of YAML or JSON at the beginning of the file that is used to configure settings for your writings. Front-matter is terminated by three dashes when written in YAML or three semicolons when written in JSON.</em><br>我选择使用YAML的格式，看起来简洁一些。<br><figure class="highlight xml"><table><tr><td class="code"><pre><div class="line">---</div><div class="line">title: 这里可以用中文</div><div class="line">date: 2017-09-05 20:57:49 //博文发布时间，不一定是当前时间</div><div class="line">cdn: "header-off" //Anisina带的属性</div><div class="line">header-img: "./img/markdown.jpeg" //Anisina带的属性</div><div class="line">tags: //博文标签</div><div class="line">	- Markdown</div><div class="line">	- Hexo</div><div class="line">---</div></pre></td></tr></table></figure></p>
+<p>大致的配置就是这样了，如果改markdown为标签页，那么需要新增属性：layout: tags，否则layout默认为post（在_config.yml中设置的）。<br>在front-matter配置好之后，就可以在下方开始用markdown编写博文了。</p>
+<h3 id="2-在博文中插入本地图片"><a href="#2-在博文中插入本地图片" class="headerlink" title="2. 在博文中插入本地图片"></a>2. 在博文中插入本地图片</h3><p>如果想在博文中插入自己的图片，有两种方式：一种是将图片放入专门的服务器，通过图片链接插入图片，另外一种是将图片放到本地，通过相对路径进行访问。本着免费至上的原则，我选择了第二种。<br>首先，在 ./source/_post/ 下新建目录，名字要和引用图片的博文名字相同，如new-post.md，那么新建的目录名称就叫new-post。然后在改目录下新建img目录，用于存放图片。引用时，在.md文件中写入：<br><figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line">![](img/xxx.png)</div></pre></td></tr></table></figure></p>
+<p>即可引入。 </p>
+<h3 id="3-生成html静态代码"><a href="#3-生成html静态代码" class="headerlink" title="3. 生成html静态代码"></a>3. 生成html静态代码</h3><p>通过hexo命令生成静态的html代码后，方可通过浏览器进行访问。<br><figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> hexo g </div><div class="line">或</div><div class="line"><span class="meta">$</span> hexo generate</div></pre></td></tr></table></figure></p>
+<p>命令执行后，可以看到根目录下多了一个public目录，里面放的就是生成好的html静态代码。部署后，也是将public文件中的东西部署到master分支上去。</p>
+<h3 id="4-部署静态html代码"><a href="#4-部署静态html代码" class="headerlink" title="4. 部署静态html代码"></a>4. 部署静态html代码</h3><p>若要在本地查看效果：<br><figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> hexo s</div><div class="line">或 </div><div class="line"><span class="meta">$</span> hexo server</div></pre></td></tr></table></figure></p>
+<p>通过访问localhost:4000即可查看效果。<br>若要部署到github：<br><figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> hexo d</div><div class="line">或</div><div class="line"><span class="meta">$</span> hexo deploy</div></pre></td></tr></table></figure></p>
+<p>若部署成功，几分钟后，通过访问当初创建的仓库名就能看到效果，仓库的对应分支也能查看到提交记录。<br><img src="img/master.png" alt=""></p>
+<h2 id="踩过的坑"><a href="#踩过的坑" class="headerlink" title="踩过的坑"></a>踩过的坑</h2><h3 id="1-WARN-NO-LAYOUT"><a href="#1-WARN-NO-LAYOUT" class="headerlink" title="1. WARN:NO LAYOUT"></a>1. WARN:NO LAYOUT</h3><p>将本地存放的脚手架目录全部删除，重新从仓库拉取脚手架，在执行 hexo g 后，发现命令行提示，好几个html前面出现了“WARN:NO LAYOUT”的字样，hexo s之后，页面一片空白。<br>百度一番，说是主题文件出了问题。进入./themes下，果然是少了主题文件。<br><em>tips:clone到本地的主题不能直接提交到自己的仓库</em></p>
+<h3 id="2-部署到github失败，master分支上是整个脚手架的代码"><a href="#2-部署到github失败，master分支上是整个脚手架的代码" class="headerlink" title="2. 部署到github失败，master分支上是整个脚手架的代码"></a>2. 部署到github失败，master分支上是整个脚手架的代码</h3><p>重新拉去脚手架代码之后进行部署，本地正常访问，但是部署到github后，github.io地址无法访问（404），发布结果邮件报莫名其妙的错误，master分支上是整个脚手架的代码。<br>折腾了好久，才发现是缺少hexo部署到github的插件<strong>hexo-deploy-git</strong>。<br>重新拉去脚手架代码，一定要在根路径下安装hexo的部署插件！</p>
+<p>参考：<a href="https://hexo.io/" target="_blank" rel="external">https://hexo.io/</a><br>      <a href="https://pages.github.com/" target="_blank" rel="external">https://pages.github.com/</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/09/20/struts-ognlstack-bug/" data-toggle="tooltip" data-placement="top"
+                           title="struts升级至2.3.20后无法使用stack.findValue调用java静态方法">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/09/08/learning-list/" data-toggle="tooltip" data-placement="top"
+                           title="待探究问题清单">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hexo"><span class="toc-text">Hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GithubPages"><span class="toc-text">GithubPages</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#搭建步骤"><span class="toc-text">搭建步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-在Github创建新的仓库"><span class="toc-text">1. 在Github创建新的仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-在仓库中创建一个分支"><span class="toc-text">2. 在仓库中创建一个分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-搭建hexo环境"><span class="toc-text">3. 搭建hexo环境</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发表博文到github-pages"><span class="toc-text">发表博文到github pages</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-新建博文"><span class="toc-text">1. 新建博文</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-在博文中插入本地图片"><span class="toc-text">2. 在博文中插入本地图片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-生成html静态代码"><span class="toc-text">3. 生成html静态代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-部署静态html代码"><span class="toc-text">4. 部署静态html代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#踩过的坑"><span class="toc-text">踩过的坑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-WARN-NO-LAYOUT"><span class="toc-text">1. WARN:NO LAYOUT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-部署到github失败，master分支上是整个脚手架的代码"><span class="toc-text">2. 部署到github失败，master分支上是整个脚手架的代码</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Hexo"
+                           title="Hexo">Hexo</a>
+                        
+                        <a class="tag" href="/tags/#Github Pages"
+                           title="Github Pages">Github Pages</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2017
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="img/brinjaul.png">
+</body>
+
+</html>
