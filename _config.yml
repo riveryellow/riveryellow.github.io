@@ -58,7 +58,7 @@ ga_track_id: # Format: UA-xxxxxx-xx
 ga_domain:
 
 # Sidebar settings
-sidebar-about-description: 猫砂盆里的感悟 # 个人描述
+sidebar-about-description: 妈妈再也不用担心我同样的bug写第二遍 # 个人描述
 sidebar-avatar: img/brinjaul.png   # use absolute URL
 
 
