@@ -12,7 +12,7 @@ header-img: "./img/issue.jpeg"
 ```
 
 
-## 2017.9.4 新版Struts2调用java静态方法
+## [2017.9.4 新版Struts2调用java静态方法](https://riveryellow.github.io/2017/09/20/struts-ognlstack-bug/)
 ```
 项目升级struts2，从2.1.0.2升级到2.3.0.15后，freemarker中
   stack.findValue("@com.aa.bb.classC@getJSONValue()")
