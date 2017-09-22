@@ -1,6 +1,6 @@
 ---
 title: 待探究问题清单
-date: 2017-09-08 22:36:49
+date: 2017-09-22 22:36:49
 cdn: "header-off"
 header-img: "./img/issue.jpeg"
 ---
@@ -66,5 +66,11 @@ github。
 融合项目中，服务引用了jar包中的错误页面struts配置，访问时却无法访问到action指向页面，
 状态码200，页面空白，后台无报错。
 是否和引用jar包中的struts配置有关？
+```
+
+## 2017.9.22 如何使用spring配置在不同环境拉去不同的配置文件
+```
+开发时，往往本地、测试、预发布、线上使用的一些系统参数都是不一样的。
+参考：GlobalPropertyConfigurer
 ```
 
