@@ -74,3 +74,9 @@ github。
 参考：GlobalPropertyConfigurer
 ```
 
+## 2017.9.25 图片懒加载
+```
+简单实现图片懒加载，使页面上的图片能够按需加载，降低页面加载时间。
+参考： lazyImg
+```
+
