@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        通过PropertyPlaceholderConfigurer配置不同环境配置｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2017/09/25/property-placeholder/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('img/index-bg2.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="./img/configuration.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('./img/configuration.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>通过PropertyPlaceholderConfigurer配置不同环境配置</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2017-09-25
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring"
+                           title="Spring">Spring</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            通过PropertyPlaceholderConfigurer配置不同环境配置
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <blockquote>
+<p>项目中，本地调试、测试环境、预发布环境、线上，不同环境有时需要不同的配置文件。原来的项目中，可以通过公共的配置管理服务为不同的环境在线配置不同的配置文件，然后在构建或服务器启动时去获取。<br>现在没有了这样的公共服务，将环境配置硬编码到代码中显然是不现实的。在Spring中，可以通过扩展PropertyPlaceholderConfigurer（bean factory post processor）来实现不同环境读取不同配置。</p>
+</blockquote>
+<h2 id="硬编码实现"><a href="#硬编码实现" class="headerlink" title="硬编码实现"></a>硬编码实现</h2><p>java代码<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String couponSystem;</div><div class="line">    <span class="keyword">private</span> String couponLanguage;</div><div class="line">	<span class="keyword">private</span> String jpeaKey;</div><div class="line">	...</div><div class="line">	...</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCouponSystem</span><span class="params">(String couponSystem)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.couponSystem = couponSystem;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCouponLanguage</span><span class="params">(String couponLanguage)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.couponLanguage = couponLanguage;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setJpeaKey</span><span class="params">(String jpeaKey)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.jpeaKey = jpeaKey;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>spring配置<br><figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"userService"</span> <span class="attr">class</span>=<span class="string">"com.demo.service.impl.UserServiceImpl"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"couponSystem"</span> <span class="attr">value</span>=<span class="string">"H5"</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"couponLanguage"</span> <span class="attr">value</span>=<span class="string">"zh-CN"</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"jpeaKey"</span> <span class="attr">value</span>=<span class="string">"e3b95cec784745"</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>通过setter方法，spring将配置注入到类的属性中。但是如果环境变化，需要不同的配置值，就要通过修改代码来实现，非常不方便。</p>
+<h2 id="扩展PropertyPlaceholderConfigurer实现"><a href="#扩展PropertyPlaceholderConfigurer实现" class="headerlink" title="扩展PropertyPlaceholderConfigurer实现"></a>扩展PropertyPlaceholderConfigurer实现</h2><h3 id="使用PropertyPlaceholderConfigurer读取-properties配置文件"><a href="#使用PropertyPlaceholderConfigurer读取-properties配置文件" class="headerlink" title="使用PropertyPlaceholderConfigurer读取.properties配置文件"></a>使用PropertyPlaceholderConfigurer读取.properties配置文件</h3><p>env-local.properties<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">coupon.config.system=H5</div><div class="line">coupon.config.language=zh-CN</div><div class="line">jpea.config.key=e3b95cec784745</div></pre></td></tr></table></figure></p>
+<p>在spring的配置文件中可以做如下修改：<br><figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"propertyConfigurer"</span> <span class="attr">class</span>=<span class="string">"com.demo.tools.PropertyPlaceholderConfigurer"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"locations"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">list</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>classpath:env-local.properties<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">list</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"userService"</span> <span class="attr">class</span>=<span class="string">"com.demo.service.impl.UserServiceImpl"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"couponSystem"</span> <span class="attr">value</span>=<span class="string">"$&#123;coupon.config.system&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"couponLanguage"</span> <span class="attr">value</span>=<span class="string">"$&#123;coupon.config.language&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"jpeaKey"</span> <span class="attr">value</span>=<span class="string">"$&#123;jpea.config.key&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>PropertyPlaceholderConfigurer通过Spring IoC容器去加载.properties配置文件，然后再使用通配符${…}通过java代码中的setter方法将.properties文件中的配置注入到类的属性中。<br>当然，也可以使用spring注解：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span> </span>&#123;</div><div class="line">	<span class="meta">@Value</span>(<span class="string">"coupon.config.system"</span>)</div><div class="line">    <span class="keyword">private</span> String couponSystem;</div><div class="line">	<span class="meta">@Value</span>(<span class="string">"coupon.config.language"</span>)</div><div class="line">    <span class="keyword">private</span> String couponLanguage;</div><div class="line">	<span class="meta">@Value</span>(<span class="string">"jpea.config.key"</span>)</div><div class="line">	<span class="keyword">private</span> String jpeaKey</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="扩展PropertyPlaceholderConfigurer获取不同环境下的配置"><a href="#扩展PropertyPlaceholderConfigurer获取不同环境下的配置" class="headerlink" title="扩展PropertyPlaceholderConfigurer获取不同环境下的配置"></a>扩展PropertyPlaceholderConfigurer获取不同环境下的配置</h3><ul>
+<li>在classpath下配置各个环境所需要的配置文件：env-test.properties、env-stg.properties/env-prod.properties.</li>
+<li><p>Spring配置文件中加入动态获取配置文件设置：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"propertyConfigurer"</span> <span class="attr">class</span>=<span class="string">"com.demo.tools.PropertyPlaceholderConfigurer"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"locations"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">list</span>&gt;</span></div><div class="line">			<span class="comment">&lt;!-- 默认test --&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>classpath:env-$&#123;run_env:test&#125;.properties<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">list</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>配置tomcat启动参数：</p>
+<ul>
+<li>本地可以在Tomcat配置中的”VM options”中加入参数 -Drun_env=”test”</li>
+<li>远程服务器上，可以在启动脚本中（如：catalina.sh，当前容器中使用的是default_tomcat_env.sh）加入语句 export run_env=”stg”</li>
+</ul>
+</li>
+<li>服务器启动，就会根据启动参数获取不同的环境所需的配置。</li>
+</ul>
+<h2 id="忽略PlaceHolder-Exception"><a href="#忽略PlaceHolder-Exception" class="headerlink" title="忽略PlaceHolder Exception"></a>忽略PlaceHolder Exception</h2><p>当properties文件中不包含所引用的属性时，会产生如下报错：<br><figure class="highlight console"><table><tr><td class="code"><pre><div class="line">Exception in thread "" org.springframework.beans.factory.BeanDefinitionStoreException: Invalid bean definition with name "userService" in class path resource [spring-resource-base.xml]:</div><div class="line">	...</div><div class="line">	...</div><div class="line">Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'jpea.config.value' in string value "$&#123;jpea.config.value&#125;"</div><div class="line">	...</div><div class="line">	...</div></pre></td></tr></table></figure></p>
+<p>如果不想看到报错，可以在Spring配置文件中对propertyConfigurer做如下修改：<br><figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"propertyConfigurer"</span> <span class="attr">class</span>=<span class="string">"com.demo.tools.PropertyPlaceholderConfigurer"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"locations"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">list</span>&gt;</span></div><div class="line">			<span class="tag">&lt;<span class="name">value</span>&gt;</span>classpath:env-local.properties<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">list</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"ignoreUnresolvablePlaceholders"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div></pre></td></tr></table></figure></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/09/24/git-unlink-old/" data-toggle="tooltip" data-placement="top"
+                           title="git pull或push时报错："unable to unlink old 'xxx/xxx/xx'：Invalid argument"">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#硬编码实现"><span class="toc-text">硬编码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扩展PropertyPlaceholderConfigurer实现"><span class="toc-text">扩展PropertyPlaceholderConfigurer实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用PropertyPlaceholderConfigurer读取-properties配置文件"><span class="toc-text">使用PropertyPlaceholderConfigurer读取.properties配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#扩展PropertyPlaceholderConfigurer获取不同环境下的配置"><span class="toc-text">扩展PropertyPlaceholderConfigurer获取不同环境下的配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#忽略PlaceHolder-Exception"><span class="toc-text">忽略PlaceHolder Exception</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring"
+                           title="Spring">Spring</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2017
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="img/brinjaul.png">
+</body>
+
+</html>
