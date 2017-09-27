@@ -76,7 +76,8 @@ public class UserServiceImpl implements UserService {
 }
 ```
 
-### 扩展PropertyPlaceholderConfigurer获取不同环境下的配置
+### 获取不同环境下的配置
+#### 1. 使用EL表达式
 + 在classpath下配置各个环境所需要的配置文件：env-test.properties、env-stg.properties/env-prod.properties.
 + Spring配置文件中加入动态获取配置文件设置：
 ``` xml
@@ -93,6 +94,25 @@ public class UserServiceImpl implements UserService {
 	+ 本地可以在Tomcat配置中的"VM options"中加入参数 -Drun_env="test"
 	+ 远程服务器上，可以在启动脚本中（如：catalina.sh，当前容器中使用的是default_tomcat_env.sh）加入语句 export run_env="stg"
 + 服务器启动，就会根据启动参数获取不同的环境所需的配置。
+
+#### 2. 使用Spring profile
++ 根据不同环境，创建相应数量的beans
+``` xml
+<beans profile="test">
+<bean id="propertyConfigurer" class="com.demo.tools.PropertyPlaceholderConfigurer">
+	<property name="locations">
+		<list>
+			<value>classpath:env-test.properties</value>
+		</list>
+	</property>
+</bean>
+</beans>
+...
+...
+```
++ 配置不同环境下tomcat的启动参数,两种方法：
+	+ export spring.profiles.active="test"
+	+ -Dspring.profiles.active="test"
 
 ## 忽略PlaceHolder Exception
 当properties文件中不包含所引用的属性时，会产生如下报错：
