@@ -68,7 +68,7 @@ github。
 是否和引用jar包中的struts配置有关？
 ```
 
-## [2017.9.22 如何使用spring配置在不同环境拉去不同的配置文件](https://riveryellow.github.io/2017/09/25/property-placeholder/)
+## [2017.9.22 如何使用spring配置在不同环境获取不同的配置文件](https://riveryellow.github.io/2017/09/25/property-placeholder/)
 ```
 开发时，往往本地、测试、预发布、线上使用的一些系统参数都是不一样的。
 参考：GlobalPropertyConfigurer
