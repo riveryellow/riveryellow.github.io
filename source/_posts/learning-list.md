@@ -80,3 +80,9 @@ github。
 参考： lazyImg
 ```
 
+## 2017.9.28 Spring Security单点登录实现
+```
+今天被要求给后台系统做一个简单的登陆，于是使用了spring security。
+搞清楚原理：https://docs.spring.io/spring-security/site/docs/current/guides/html5//helloworld-javaconfig.html#security-config-java
+```
+
