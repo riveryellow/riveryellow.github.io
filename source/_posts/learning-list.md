@@ -86,3 +86,11 @@ github。
 搞清楚原理：https://docs.spring.io/spring-security/site/docs/current/guides/html5//helloworld-javaconfig.html#security-config-java
 ```
 
+## 2017.10.1 浏览器url缓存机制及JSONP使用缓存实例（cache-control）
+```
+对于返回结果变动不大的请求，可以使用浏览器的缓存机制。
+参考：getCityById、JsonpInterceptor
+```
+
+
+
