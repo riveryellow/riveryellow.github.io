@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        待探究问题清单｜yellowriver&#39;s blog
+        引用计数算法｜yellowriver&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="http://yoursite.com/2017/09/08/learning-list/">
+    <link rel="canonical" href="http://yoursite.com/2017/10/08/reference-counting/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -127,13 +127,13 @@
 <!--only post-->
 
 
-<img class="wechat-title-img" src="./img/issue.jpeg">
+<img class="wechat-title-img" src="./img/jvm.jpg">
 
 
 <style>
     
     header.intro-header {
-        background-image: url('./img/issue.jpeg');
+        background-image: url('./img/jvm.jpg');
     }
 
     
@@ -144,15 +144,21 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>待探究问题清单</h1>
+                    <h1>引用计数算法</h1>
                     
                     <span class="meta">
                          作者 yellow river
                         <span>
-                          日期 2017-09-08
+                          日期 2017-10-08
                          </span>
                     </span>
                     <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#JVM"
+                           title="JVM">JVM</a>
                         
                     </div>
                 </div>
@@ -161,7 +167,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            待探究问题清单
+            引用计数算法
         </span>
     </div>
 </header>
@@ -172,31 +178,22 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
-                <h2 id="2017-9-4-hexo正确使用方式"><a href="#2017-9-4-hexo正确使用方式" class="headerlink" title="2017.9.4 hexo正确使用方式"></a><a href="http://riveryellow.github.io/2017/09/10/buid-blog/" target="_blank" rel="external">2017.9.4 hexo正确使用方式</a></h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">通过hexo发布blog至github时，发布了整个文件脚手架到github上，</div><div class="line">导致访问404(npm install hexo-deployer-git --save)，每次删除原来脚手架重新拉取时都要安装发布插件</div><div class="line">若默认发布分支上有非web结构的目录结构，要先清空再发布</div></pre></td></tr></table></figure>
-<h2 id="2017-9-4-新版Struts2调用java静态方法"><a href="#2017-9-4-新版Struts2调用java静态方法" class="headerlink" title="2017.9.4 新版Struts2调用java静态方法"></a><a href="https://riveryellow.github.io/2017/09/20/struts-ognlstack-bug/" target="_blank" rel="external">2017.9.4 新版Struts2调用java静态方法</a></h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">项目升级struts2，从2.1.0.2升级到2.3.0.15后，freemarker中</div><div class="line">  stack.findValue(&quot;@com.aa.bb.classC@getJSONValue()&quot;)</div><div class="line">返回为null。</div></pre></td></tr></table></figure>
-<h2 id="2017-9-4-Struts为何禁止通过值栈调用外部静态方法"><a href="#2017-9-4-Struts为何禁止通过值栈调用外部静态方法" class="headerlink" title="2017.9.4 Struts为何禁止通过值栈调用外部静态方法"></a>2017.9.4 Struts为何禁止通过值栈调用外部静态方法</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">学习OGNL、struts值栈的实现原理</div><div class="line">http://struts.apache.org/docs/s2-009.html</div></pre></td></tr></table></figure>
-<h2 id="2017-9-5-fetch如何模仿jsonp实现跨域请求"><a href="#2017-9-5-fetch如何模仿jsonp实现跨域请求" class="headerlink" title="2017.9.5 fetch如何模仿jsonp实现跨域请求"></a>2017.9.5 fetch如何模仿jsonp实现跨域请求</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">项目重构改造，为简化代码，将原有jsonp请求通过fetch获取，遇到报错如下：</div><div class="line"></div><div class="line">&gt;  fetch(&quot;//cart.yhd.com/cart/info/minicart.do&quot;)</div><div class="line">&lt;· Promise &#123;[[PromiseStatus]]: &quot;pending&quot;, [[PromiseValue]]: undefined&#125;</div><div class="line">·  Fetch API cannot load http://cart.yhd.com/cart/info/minicart.do. No &apos;Access-Control-Allow-Origin&apos; header is present on the requested resource. Origin &apos;http://www.yhd.com&apos; is therefore not allowed access. If an opaque response serves your needs, set the request&apos;s mode to &apos;no-cors&apos; to fetch the resource with CORS disabled.</div><div class="line">·  Uncaught (in promise) TypeError: Failed to fetch</div></pre></td></tr></table></figure>
-<h2 id="2017-9-7-jQuery-call-、apply-方法学习"><a href="#2017-9-7-jQuery-call-、apply-方法学习" class="headerlink" title="2017.9.7 jQuery call() 、apply()方法学习"></a>2017.9.7 jQuery call() 、apply()方法学习</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">融合项目中出现很多callback.call()、callback.apply()(dom.apply()?)的调用方式，搞清楚为什么</div><div class="line">CitySelected ——&gt; addToCartNew()</div></pre></td></tr></table></figure>
-<h2 id="2017-9-8-埋点系统学习——JD子午线、JD通天塔、Google-Tag-Manager"><a href="#2017-9-8-埋点系统学习——JD子午线、JD通天塔、Google-Tag-Manager" class="headerlink" title="2017.9.8 埋点系统学习——JD子午线、JD通天塔、Google Tag Manager"></a>2017.9.8 埋点系统学习——JD子午线、JD通天塔、Google Tag Manager</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">当前需求：希望将订单中的商品归类到各个活动中去。</div><div class="line">痛点：由于商品加车大多数在详情页，根据当前的打点规则，很难简单的追溯商品的活动来源。</div></pre></td></tr></table></figure>
-<h2 id="2017-9-9-jquery-Object添加元素"><a href="#2017-9-9-jquery-Object添加元素" class="headerlink" title="2017.9.9 jquery Object添加元素"></a>2017.9.9 jquery Object添加元素</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">如何向已存在的jquery对象中新增元素，push？obj[]?</div></pre></td></tr></table></figure>
-<h2 id="2017-9-13-如何正确使用github开源代码–fork"><a href="#2017-9-13-如何正确使用github开源代码–fork" class="headerlink" title="2017.9.13 如何正确使用github开源代码–fork"></a>2017.9.13 如何正确使用github开源代码–fork</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">用hexo搭建了github pages之后，每次拉取最新的scaffolds后，</div><div class="line">hexo generate后都会出现WARN NO LAYOUT的警告，hexo server之</div><div class="line">后页面空白。仔细一看，clone到本地的Anisina主题无法提交到自己的</div><div class="line">github。</div></pre></td></tr></table></figure>
-<p>参考：<a href="http://yijiebuyi.com/blog/9c00641126e41779ef38cafb9c6aad67.html" target="_blank" rel="external">如何把别人项目代码修改后 提交到github</a></p>
-<h2 id="2017-9-14-struts如何引用jar包中的struts配置"><a href="#2017-9-14-struts如何引用jar包中的struts配置" class="headerlink" title="2017.9.14 struts如何引用jar包中的struts配置"></a>2017.9.14 struts如何引用jar包中的struts配置</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">融合项目中，服务引用了jar包中的错误页面struts配置，访问时却无法访问到action指向页面，</div><div class="line">状态码200，页面空白，后台无报错。</div><div class="line">是否和引用jar包中的struts配置有关？</div></pre></td></tr></table></figure>
+                <blockquote>
+<p>在判断对象是否存活时，引用计数算法的做法是：给对象中添加一个引用计数器，每当有一个地方引用它时，计数器值就加1；当引用失效时，计数器值就减1；任何时刻计数器为0的对象就是不可能再被使用的。</p>
+</blockquote>
+<p>引用计数算法（Reference Counting）的实现简单，判定效率也很高，在大部分情况下时一个不错的算法，也有一些比较著名的案例，例如MS的COM(Component Object Model)技术、使用ActionScript3的FlashPlayer、Python语言和在游戏脚本领域被广泛应用的Squirrel中都使用了引用计数算法进行内存管理。但是，主流的Java虚拟机里面没有选用计数算法来管理内存，主要原因就是他很难解决对象之间相互循环引用的问题。例如以下代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReferenceCountingGC</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> Object instance = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</div><div class="line"></div><div class="line">    <span class="comment">//占用内存,以便在GC日志中看清楚是否被回收过</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] bigSize = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testGC</span><span class="params">()</span></span>&#123;</div><div class="line">        ReferenceCountingGC objA = <span class="keyword">new</span> ReferenceCountingGC();</div><div class="line">        ReferenceCountingGC objB = <span class="keyword">new</span> ReferenceCountingGC();</div><div class="line"></div><div class="line">        objA.instance = objB;</div><div class="line">        objB.instance = objA;</div><div class="line"></div><div class="line">        objA = <span class="keyword">null</span>;</div><div class="line">        objB = <span class="keyword">null</span>;</div><div class="line">        <span class="comment">//触发gc</span></div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><img src="img/RC-UML.png" alt=""><br>当执行到objA.instance = objB时,此时objA虽然没被引用，但objA对属性instance的引用使得objA的引用计数已经+1。执行完objB.instance = objA后，objA和objB的引用计数均为2.<br>当objA和objB都赋值为空后，两个对象的引用计数均减1，但是引用计数仍然不为0，所以虽然这两个对象再无任何引用，也就是说这两个对象已经不再可能被访问，若虚拟机采用的是计数算法，还是无法通知GC收集器回收它们。<br>在运行参数中加入：-XX:+PrintGCDetails。查看运行结果：<br><figure class="highlight console"><table><tr><td class="code"><pre><div class="line">[GC (System.gc()) [PSYoungGen: 8028K-&gt;480K(76288K)] 8028K-&gt;488K(251392K), 0.0009484 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </div><div class="line">[Full GC (System.gc()) [PSYoungGen: 480K-&gt;0K(76288K)] [ParOldGen: 8K-&gt;395K(175104K)] 488K-&gt;395K(251392K), [Metaspace: 3093K-&gt;3093K(1056768K)], 0.0047382 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] </div><div class="line">Heap</div><div class="line"> PSYoungGen      total 76288K, used 1966K [0x000000076ab00000, 0x0000000770000000, 0x00000007c0000000)</div><div class="line">  eden space 65536K, 3% used [0x000000076ab00000,0x000000076aceba30,0x000000076eb00000)</div><div class="line">  from space 10752K, 0% used [0x000000076eb00000,0x000000076eb00000,0x000000076f580000)</div><div class="line">  to   space 10752K, 0% used [0x000000076f580000,0x000000076f580000,0x0000000770000000)</div><div class="line"> ParOldGen       total 175104K, used 395K [0x00000006c0000000, 0x00000006cab00000, 0x000000076ab00000)</div><div class="line">  object space 175104K, 0% used [0x00000006c0000000,0x00000006c0062ee8,0x00000006cab00000)</div><div class="line"> Metaspace       used 3110K, capacity 4494K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 348K, capacity 386K, committed 512K, reserved 1048576K</div></pre></td></tr></table></figure></p>
+<p>从GC日志中可以清楚地看出，“8028K-&gt;488K(251392K)”和“480K-&gt;0K(76288K)”意味着虚拟机并没有因为两个对象互相引用就不回收它们，这也说明虚拟机并不是通过引用计数算法来判断对象是否存活的。</p>
 
                 <hr>
                 
 
                 <ul class="pager">
                     
-                    <li class="previous">
-                        <a href="/2017/09/10/buid-blog/" data-toggle="tooltip" data-placement="top"
-                           title="Hexo + Github Pages搭建个人blog">&larr; Previous Post</a>
-                    </li>
-                    
                     
                     <li class="next">
-                        <a href="/2017/09/05/basic-markdown/" data-toggle="tooltip" data-placement="top"
-                           title="Markdown基本用法">Next Post &rarr;</a>
+                        <a href="/2017/09/25/property-placeholder/" data-toggle="tooltip" data-placement="top"
+                           title="通过PropertyPlaceholderConfigurer配置不同环境配置">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -212,7 +209,7 @@
 
             <div class="hidden-xs col-sm-3 toc-col">
                 <div class="toc-wrap">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-4-hexo正确使用方式"><span class="toc-text">2017.9.4 hexo正确使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-4-新版Struts2调用java静态方法"><span class="toc-text">2017.9.4 新版Struts2调用java静态方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-4-Struts为何禁止通过值栈调用外部静态方法"><span class="toc-text">2017.9.4 Struts为何禁止通过值栈调用外部静态方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-5-fetch如何模仿jsonp实现跨域请求"><span class="toc-text">2017.9.5 fetch如何模仿jsonp实现跨域请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-7-jQuery-call-、apply-方法学习"><span class="toc-text">2017.9.7 jQuery call() 、apply()方法学习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-8-埋点系统学习——JD子午线、JD通天塔、Google-Tag-Manager"><span class="toc-text">2017.9.8 埋点系统学习——JD子午线、JD通天塔、Google Tag Manager</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-9-jquery-Object添加元素"><span class="toc-text">2017.9.9 jquery Object添加元素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-13-如何正确使用github开源代码–fork"><span class="toc-text">2017.9.13 如何正确使用github开源代码–fork</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-14-struts如何引用jar包中的struts配置"><span class="toc-text">2017.9.14 struts如何引用jar包中的struts配置</span></a></li></ol>
+                    
                 </div>
             </div>
         </div>
@@ -233,6 +230,12 @@
                         <a href="/tags/">FEATURED TAGS</a>
                     </h5>
                     <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#JVM"
+                           title="JVM">JVM</a>
                         
                     </div>
                 </section>
