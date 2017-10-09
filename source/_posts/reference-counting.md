@@ -2,7 +2,7 @@
 title: 引用计数算法
 date: 2017-10-08 22:03:58
 cdn: "header-off"
-header-img: "./img/java-logo.png"
+header-img: "./img/jvm.jpg"
 tags:
 	- JVM
 	- Java
@@ -33,7 +33,9 @@ public class ReferenceCountingGC {
     }
 }
 ```
-当objA和objB都赋值为空后，这两个对象再无任何引用，也就是说这两个对象已经不再可能被访问。若虚拟机采用的是计数算法，由于它们互相引用着对方，导致两个对象的引用计数都不为0，于是计数算法无法通知GC收集器回收它们。
+![](img/RC-UML.png)
+当执行到objA.instance = objB时,此时objA虽然没被引用，但objA对属性instance的引用使得objA的引用计数已经+1。执行完objB.instance = objA后，objA和objB的引用计数均为2.
+当objA和objB都赋值为空后，两个对象的引用计数均减1，但是引用计数仍然不为0，所以虽然这两个对象再无任何引用，也就是说这两个对象已经不再可能被访问，若虚拟机采用的是计数算法，还是无法通知GC收集器回收它们。
 在运行参数中加入：-XX:+PrintGCDetails。查看运行结果：
 ``` console
 [GC (System.gc()) [PSYoungGen: 8028K->480K(76288K)] 8028K->488K(251392K), 0.0009484 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
