@@ -92,5 +92,10 @@ github。
 参考：getCityById、JsonpInterceptor
 ```
 
+## 2017.10.9 sitemesh以及decorate模式
+```
+学习sitemesh的配置以及实现
+```
+
 
 
