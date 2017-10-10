@@ -102,4 +102,11 @@ github。
 回顾ABTEST的分桶实现，以及后台新增AB实验后的消息通知机制（Zookeeper）
 ```
 
+## 2017.10.10 jsonp请求的返回值中出现"$ref": "$.objCitys.T[0]"
+```
+在jsonp请求后返回的结果中，出现了"$ref": "$.objCitys.T[0]"，导致解析成undefined.
+原因：大概是后台返回的数组中有重复的元素
+探究fastjson如何解析json对象
+```
+
 

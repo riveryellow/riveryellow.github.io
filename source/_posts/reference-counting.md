@@ -37,6 +37,10 @@ public class ReferenceCountingGC {
 当执行到objA.instance = objB时,此时objA虽然没被引用，但objA对属性instance的引用使得objA的引用计数已经+1。执行完objB.instance = objA后，objA和objB的引用计数均为2.
 当objA和objB都赋值为空后，两个对象的引用计数均减1，但是引用计数仍然不为0，所以虽然这两个对象再无任何引用，也就是说这两个对象已经不再可能被访问，若虚拟机采用的是计数算法，还是无法通知GC收集器回收它们。
 在运行参数中加入：-XX:+PrintGCDetails。查看运行结果：
+>虚拟机提供了-XX:+PrintGCDetails这个收集器日志参数，告诉虚拟机在发生垃圾收集
+行为时打印内存回收日志，并且在进程退出的时候输出当前的内存各区域分配情况。 在实际
+应用中，内存回收日志一般是打印到文件后通过日志工具进行分析，不过本实验的日志并不
+多，直接阅读就能看得很清楚。
 ``` console
 [GC (System.gc()) [PSYoungGen: 8028K->480K(76288K)] 8028K->488K(251392K), 0.0009484 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
 [Full GC (System.gc()) [PSYoungGen: 480K->0K(76288K)] [ParOldGen: 8K->395K(175104K)] 488K->395K(251392K), [Metaspace: 3093K->3093K(1056768K)], 0.0047382 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
