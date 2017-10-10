@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        引用计数算法｜yellowriver&#39;s blog
+        JVM内存分配策略——对象优先在Eden分配｜yellowriver&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="http://yoursite.com/2017/10/08/reference-counting/">
+    <link rel="canonical" href="http://yoursite.com/2017/10/10/memory-strategy1/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -144,12 +144,12 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>引用计数算法</h1>
+                    <h1>JVM内存分配策略——对象优先在Eden分配</h1>
                     
                     <span class="meta">
                          作者 yellow river
                         <span>
-                          日期 2017-10-08
+                          日期 2017-10-10
                          </span>
                     </span>
                     <div class="tags text-center">
@@ -167,7 +167,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            引用计数算法
+            JVM内存分配策略——对象优先在Eden分配
         </span>
     </div>
 </header>
@@ -179,29 +179,24 @@
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
                 <blockquote>
-<p>在判断对象是否存活时，引用计数算法的做法是：给对象中添加一个引用计数器，每当有一个地方引用它时，计数器值就加1；当引用失效时，计数器值就减1；任何时刻计数器为0的对象就是不可能再被使用的。</p>
+<p>对象的内存分配，往大方向讲，就是在堆上分配（但也可能经过JIT编译后被拆散为标量类型并间接地栈上分配），对象主要分配在新生代的Eden区上，如果启动了本地现成分配缓冲，将按线程优先在TLAB上分配。少数情况下也可能会直接分配在老年代中，分配的规则并不是百分之百固定的，其细节取决于当前使用的是哪一种垃圾收集器组合，还有虚拟机中与内存相关的参数设置。<br>——《深入理解Java虚拟机》</p>
 </blockquote>
-<p>引用计数算法（Reference Counting）的实现简单，判定效率也很高，在大部分情况下时一个不错的算法，也有一些比较著名的案例，例如MS的COM(Component Object Model)技术、使用ActionScript3的FlashPlayer、Python语言和在游戏脚本领域被广泛应用的Squirrel中都使用了引用计数算法进行内存管理。但是，主流的Java虚拟机里面没有选用计数算法来管理内存，主要原因就是他很难解决对象之间相互循环引用的问题。例如以下代码：<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReferenceCountingGC</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> Object instance = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</div><div class="line"></div><div class="line">    <span class="comment">//占用内存,以便在GC日志中看清楚是否被回收过</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] bigSize = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testGC</span><span class="params">()</span></span>&#123;</div><div class="line">        ReferenceCountingGC objA = <span class="keyword">new</span> ReferenceCountingGC();</div><div class="line">        ReferenceCountingGC objB = <span class="keyword">new</span> ReferenceCountingGC();</div><div class="line"></div><div class="line">        objA.instance = objB;</div><div class="line">        objB.instance = objA;</div><div class="line"></div><div class="line">        objA = <span class="keyword">null</span>;</div><div class="line">        objB = <span class="keyword">null</span>;</div><div class="line">        <span class="comment">//触发gc</span></div><div class="line">        System.gc();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><img src="img/RC-UML.png" alt=""><br>当执行到objA.instance = objB时,此时objA虽然没被引用，但objA对属性instance的引用使得objA的引用计数已经+1。执行完objB.instance = objA后，objA和objB的引用计数均为2.<br>当objA和objB都赋值为空后，两个对象的引用计数均减1，但是引用计数仍然不为0，所以虽然这两个对象再无任何引用，也就是说这两个对象已经不再可能被访问，若虚拟机采用的是计数算法，还是无法通知GC收集器回收它们。<br>在运行参数中加入：-XX:+PrintGCDetails。查看运行结果：</p>
-<blockquote>
-<p>虚拟机提供了-XX:+PrintGCDetails这个收集器日志参数，告诉虚拟机在发生垃圾收集<br>行为时打印内存回收日志，并且在进程退出的时候输出当前的内存各区域分配情况。 在实际<br>应用中，内存回收日志一般是打印到文件后通过日志工具进行分析，不过本实验的日志并不<br>多，直接阅读就能看得很清楚。<br><figure class="highlight console"><table><tr><td class="code"><pre><div class="line">[GC (System.gc()) [PSYoungGen: 8028K-&gt;480K(76288K)] 8028K-&gt;488K(251392K), 0.0009484 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </div><div class="line">[Full GC (System.gc()) [PSYoungGen: 480K-&gt;0K(76288K)] [ParOldGen: 8K-&gt;395K(175104K)] 488K-&gt;395K(251392K), [Metaspace: 3093K-&gt;3093K(1056768K)], 0.0047382 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] </div><div class="line">Heap</div><div class="line"> PSYoungGen      total 76288K, used 1966K [0x000000076ab00000, 0x0000000770000000, 0x00000007c0000000)</div><div class="line">  eden space 65536K, 3% used [0x000000076ab00000,0x000000076aceba30,0x000000076eb00000)</div><div class="line">  from space 10752K, 0% used [0x000000076eb00000,0x000000076eb00000,0x000000076f580000)</div><div class="line">  to   space 10752K, 0% used [0x000000076f580000,0x000000076f580000,0x0000000770000000)</div><div class="line"> ParOldGen       total 175104K, used 395K [0x00000006c0000000, 0x00000006cab00000, 0x000000076ab00000)</div><div class="line">  object space 175104K, 0% used [0x00000006c0000000,0x00000006c0062ee8,0x00000006cab00000)</div><div class="line"> Metaspace       used 3110K, capacity 4494K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 348K, capacity 386K, committed 512K, reserved 1048576K</div></pre></td></tr></table></figure></p>
+<p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配时，虚拟机将发起一次Minor GC。在Minor GC执行的时候，存活下来的对象将被复制到Survivor区。如果Survivor没有足够空间的时候，将会有一部分对象被迁移到老年代。<br>随着Minor GC的不断进行，老年代中的对象也会越来越多，当老年代内存紧张的时候，就会触发Full GC。通常Full GC会对整个堆进行回收。<br>如下示例：<br>   在运行时通过-Xms20M、 -Xmx20M、 -Xmn10M这3个参数限制了Java堆大小为20MB，不可扩<br>展，其中10MB分配给新生代，剩下的10MB分配给老年代。 -XX：SurvivorRatio=8(默认)决定了新生代中Eden区与一个Survivor区的空间比例是8:1:1(Survivor中有两块区域：from, to)<br><figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">    *VM参数：-verbose:gc -Xms20M-Xmx20M-Xmn10M-XX：+PrintGCDetails</span></div><div class="line"><span class="comment">    -XX:SurvivorRatio=8</span></div><div class="line"><span class="comment">    */</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testAllocation</span><span class="params">()</span> </span>&#123;</div><div class="line">       <span class="keyword">byte</span>[] allocation1, allocation2, allocation3, allocation4;</div><div class="line">       allocation1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</div><div class="line">       allocation2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</div><div class="line">       allocation3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</div><div class="line">       allocation4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];<span class="comment">//出现一次Minor GC</span></div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p><img src="./img/minorgc1.png" alt=""><br>执行testAllocation()中分配allocation4对象的语句时会发生一次Minor GC，这次GC的结果是新生代7500KB变为998KB，而总内存占用量则几乎没有减少（因为allocation1、allocation2、 allocation3三个对象都是存活的，虚拟机几乎没有找到可回收的对象）。 这次GC发生的原因是给allocation4分配内存的时候，发现Eden已经被占用了6MB，剩余空间已不足以分配allocation4所需的4MB内存，因此发生Minor GC。 GC期间虚拟机又发现已有的2个2MB大小的对象全部无法放入Survivor空间（Survivor空间只有1MB大小），所以只好通过<strong><em>Handle Promotion</em></strong>机制提前转移到老年代去。</p>
+<p><img src="./img/minorgc2.png" alt=""><br>这次GC结束后，4MB的allocation4对象顺利分配在Eden中，因此程序执行完的结果是<br>Eden占用6MB（被allocation4和其中一个2Mallocation占用），Survivor空闲，老年代被占用4MB（被两个2Mallocation占用）。<br><figure class="highlight console"><table><tr><td class="code"><pre><div class="line">[GC [PSYoungGen: 7500K-&gt;998K(9216K)] 7500K-&gt;5471K(19456K), 0.0093991 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] </div><div class="line">Heap</div><div class="line"> PSYoungGen      total 9216K, used 7422K [0x00000000ff600000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 8192K, 78% used [0x00000000ff600000,0x00000000ffc45fe8,0x00000000ffe00000)</div><div class="line">  from space 1024K, 97% used [0x00000000ffe00000,0x00000000ffef9868,0x00000000fff00000)</div><div class="line">  to   space 1024K, 0% used [0x00000000fff00000,0x00000000fff00000,0x0000000100000000)</div><div class="line"> ParOldGen       total 10240K, used 4473K [0x00000000fec00000, 0x00000000ff600000, 0x00000000ff600000)</div><div class="line">  object space 10240K, 43% used [0x00000000fec00000,0x00000000ff05e6c0,0x00000000ff600000)</div><div class="line"> PSPermGen       total 21504K, used 3147K [0x00000000f9a00000, 0x00000000faf00000, 0x00000000fec00000)</div><div class="line">  object space 21504K, 14% used [0x00000000f9a00000,0x00000000f9d12f00,0x00000000faf00000)</div></pre></td></tr></table></figure></p>
+<h2 id="Copying算法"><a href="#Copying算法" class="headerlink" title="Copying算法"></a>Copying算法</h2><blockquote>
+<p>现在的商业虚拟机都采用这种收集算法来回收新生代，IBM公司的专门研究表明，新生代中的对象98%是“朝生夕死”的，所以并不需要按照1:1的比例来划分内存空间，而是将内存分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还存活着的对象一次性地复制到另外一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间。 HotSpot虚拟机默认Eden和Survivor的大小比例是8:1:1。 当Survivor空间不够用时，需要依赖其他内存（这里指老年代）进行分配担保（Handle Promotion）。<br>在GC开始的时候，对象只会存在于Eden区和名为“From”的Survivor区，Survivor区“To”是空的。紧接着进行GC，Eden区中所有存活的对象都会被复制到“To”，而在“From”区中，仍存活的对象会根据他们的年龄值来决定去向。年龄达到一定值(年龄阈值，可以通过-XX:MaxTenuringThreshold来设置)的对象会被移动到年老代中，没有达到阈值的对象会被复制到“To”区域。经过这次GC后，Eden区和From区已经被清空。这个时候，“From”和“To”会交换他们的角色，也就是新的“To”就是上次GC前的“From”，新的“From”就是上次GC前的“To”。不管怎样，都会保证名为To的Survivor区域是空的。Minor GC会一直重复这样的过程，直到“To”区被填满，“To”区被填满之后，会将所有对象移动到年老代中。</p>
 </blockquote>
-<p>从GC日志中可以清楚地看出，“8028K-&gt;488K(251392K)”和“480K-&gt;0K(76288K)”意味着虚拟机并没有因为两个对象互相引用就不回收它们，这也说明虚拟机并不是通过引用计数算法来判断对象是否存活的。</p>
 
                 <hr>
                 
 
                 <ul class="pager">
                     
-                    <li class="previous">
-                        <a href="/2017/10/10/memory-strategy1/" data-toggle="tooltip" data-placement="top"
-                           title="JVM内存分配策略——对象优先在Eden分配">&larr; Previous Post</a>
-                    </li>
-                    
                     
                     <li class="next">
-                        <a href="/2017/09/25/property-placeholder/" data-toggle="tooltip" data-placement="top"
-                           title="通过PropertyPlaceholderConfigurer配置不同环境配置">Next Post &rarr;</a>
+                        <a href="/2017/10/08/reference-counting/" data-toggle="tooltip" data-placement="top"
+                           title="引用计数算法">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -217,7 +212,7 @@
 
             <div class="hidden-xs col-sm-3 toc-col">
                 <div class="toc-wrap">
-                    
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Copying算法"><span class="toc-text">Copying算法</span></a></li></ol>
                 </div>
             </div>
         </div>

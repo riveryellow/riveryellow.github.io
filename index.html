@@ -273,6 +273,30 @@
 
 <div class="post-preview  "
      style="background-image: url('./img/jvm.jpg')">
+    <a href="/2017/10/10/memory-strategy1/">
+        <h2 class="post-title">
+            JVM内存分配策略——对象优先在Eden分配
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-10
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                
+对象的内存分配，往大方向讲，就是在堆上分配（但也可能经过JIT编译后被拆散为标量类型并间接地栈上分配），对象主要分配在新生代的Eden区上，如果启动了本地现成分配缓冲，将按线程优先在TLAB上分配。少数情况下也可能会直接分配在老年代中，分配的规则并不是百分之百固定的，其细节取决于当前使用的是哪..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('./img/jvm.jpg')">
     <a href="/2017/10/08/reference-counting/">
         <h2 class="post-title">
             引用计数算法
@@ -443,32 +467,6 @@
 
 
 
-<div class="post-preview  "
-     style="background-image: url('./img/hexo+github.png')">
-    <a href="/2017/09/10/buid-blog/">
-        <h2 class="post-title">
-            Hexo + Github Pages搭建个人blog
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-10
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                
-最近寻思着，毕业有一段时间了，是不是应该弄个博客记录一下自己的工作学习点滴，于是本着独立自主不花钱的原则，用hexo + github pages搭了一个简单的个人blog，下面就来说说搭建步骤以及几个踩过的坑。
-
-Hexo   引用官网的话，A fast, simple &amp; powe..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
 
 <!-- 翻页 pager -->
 
@@ -537,13 +535,23 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                     
                     
                     
+                    <a href="/tags/#Github Pages" title="Github Pages"
+                       rel="1">Github Pages</a>
+                    
+                    
+                    
                     <a href="/tags/#git" title="git"
                        rel="2">git</a>
                     
                     
                     
-                    <a href="/tags/#Github Pages" title="Github Pages"
-                       rel="1">Github Pages</a>
+                    <a href="/tags/#JVM" title="JVM"
+                       rel="2">JVM</a>
+                    
+                    
+                    
+                    <a href="/tags/#Java" title="Java"
+                       rel="3">Java</a>
                     
                     
                     
@@ -557,18 +565,8 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                     
                     
                     
-                    <a href="/tags/#Java" title="Java"
-                       rel="2">Java</a>
-                    
-                    
-                    
                     <a href="/tags/#Spring" title="Spring"
                        rel="1">Spring</a>
-                    
-                    
-                    
-                    <a href="/tags/#JVM" title="JVM"
-                       rel="1">JVM</a>
                     
                     
                     
