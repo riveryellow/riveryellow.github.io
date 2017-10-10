@@ -97,5 +97,9 @@ github。
 学习sitemesh的配置以及实现
 ```
 
+## 2017.10.10 ABTEST分桶实现
+```
+回顾ABTEST的分桶实现，以及后台新增AB实验后的消息通知机制（Zookeeper）
+```
 
 
