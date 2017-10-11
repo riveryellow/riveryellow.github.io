@@ -41,6 +41,7 @@ public class ReferenceCountingGC {
 行为时打印内存回收日志，并且在进程退出的时候输出当前的内存各区域分配情况。 在实际
 应用中，内存回收日志一般是打印到文件后通过日志工具进行分析，不过本实验的日志并不
 多，直接阅读就能看得很清楚。
+
 ``` console
 [GC (System.gc()) [PSYoungGen: 8028K->480K(76288K)] 8028K->488K(251392K), 0.0009484 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
 [Full GC (System.gc()) [PSYoungGen: 480K->0K(76288K)] [ParOldGen: 8K->395K(175104K)] 488K->395K(251392K), [Metaspace: 3093K->3093K(1056768K)], 0.0047382 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
