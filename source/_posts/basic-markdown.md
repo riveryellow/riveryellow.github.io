@@ -210,6 +210,28 @@ instead of decimal-encoded entites like `&#8212;`.
 [3]:	http://search.yahoo.com/ "Yahoo Search"
 [4]:	http://search.msn.com/ "MSN Search"
 
+自定义表格
+----
+### 1.语法说明
++ 第一行为表头，第二行分隔表头和主体部分，第三行开始每一行代表一个表格行；
++ 列与列之间用管道符号 “|” 隔开，原生方式的表格每一行的两边也要有管道符；
++ 可在第二行指定不同列单元格内容的对齐方式，默认为左对齐，在 “-” 右边加上 “:” 为右对齐，在 “-” 两侧同时加上 “:” 为居中对齐。
+
+### 2.markdown写法
+``` console
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
+```
+### 3.输出展示
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
+
 # Markdown编辑器
 ## Mou
 ![](img/mou.png)
