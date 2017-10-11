@@ -2,7 +2,7 @@
 title: git pull或push时报错："unable to unlink old 'xxx/xxx/xx'：Invalid argument"
 date: 2017-09-24 16:18:49
 cdn: "header-off"
-header-img: "../../16/git-reset-commit/img/github.png"
+header-img: "/img/github.png"
 tags:
 	- git
 ---

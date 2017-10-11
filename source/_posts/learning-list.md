@@ -2,7 +2,7 @@
 title: 待探究问题清单
 date: 2017-09-22 22:36:49
 cdn: "header-off"
-header-img: "./img/issue.jpeg"
+header-img: "/img/issue.jpeg"
 ---
 ## [2017.9.4 hexo正确使用方式](http://riveryellow.github.io/2017/09/10/buid-blog/)
 ```

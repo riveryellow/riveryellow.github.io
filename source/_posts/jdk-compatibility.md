@@ -2,7 +2,7 @@
 title: Tomcat启动报错：java.io.IOException:invalid constant type:18
 date: 2017-09-21 21:28:29
 cdn: "header-off"
-header-img: "./img/java-logo.png"
+header-img: "/img/java-logo.png"
 tags: 
 	- jdk
 	- Tomcat

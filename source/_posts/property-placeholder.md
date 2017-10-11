@@ -2,7 +2,7 @@
 title: 通过PropertyPlaceholderConfigurer配置不同环境配置
 date: 2017-09-25 14:46:15
 cdn: "header-off"
-header-img: "./img/configuration.jpg"
+header-img: "/img/configuration.jpg"
 tags:
 	- Spring
 ---

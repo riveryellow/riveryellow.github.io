@@ -2,7 +2,7 @@
 title: git撤销已提交但未push的代码
 date: 2017-09-16 20:18:40
 cdn: "header-off"
-header-img: "./img/github.png"
+header-img: "/img/github.png"
 tags:
 	- git
 ---

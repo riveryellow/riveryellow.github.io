@@ -11,7 +11,7 @@ timezone:
 # custom Site settings
 # more detail check out docs
 SEOTitle: yellowriver's blog
-header-img: img/index-bg2.jpg
+header-img: /img/index-bg2.jpg
 email:
 description:
 keyword: # seo key words
@@ -59,7 +59,7 @@ ga_domain:
 
 # Sidebar settings
 sidebar-about-description: 妈妈再也不用担心我同样的bug写第二遍 # 个人描述
-sidebar-avatar: img/brinjaul.png   # use absolute URL
+sidebar-avatar: /img/brinjaul.png   # use absolute URL
 
 
 # Featured Tags

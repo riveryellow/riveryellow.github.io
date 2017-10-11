@@ -2,7 +2,7 @@
 title: Hexo + Github Pages搭建个人blog
 date: 2017-09-10 20:57:49
 cdn: "header-off"
-header-img: "./img/hexo+github.png"
+header-img: "/img/hexo+github.png"
 tags:
 	- Github Pages
 	- Hexo

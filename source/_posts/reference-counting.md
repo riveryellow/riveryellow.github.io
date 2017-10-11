@@ -2,7 +2,7 @@
 title: 引用计数算法
 date: 2017-10-08 22:03:58
 cdn: "header-off"
-header-img: "./img/jvm.jpg"
+header-img: "/img/jvm.jpg"
 tags:
 	- JVM
 	- Java

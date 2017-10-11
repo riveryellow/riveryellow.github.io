@@ -2,7 +2,7 @@
 title: struts升级至2.3.20后无法使用stack.findValue调用java静态方法
 date: 2017-09-20 20:56:43
 cdn: "header-off"
-header-img: "./img/struts-logo.png"
+header-img: "/img/struts-logo.png"
 tags:
 	- Struts
 ---

@@ -2,7 +2,7 @@
 title: JVM内存分配策略——对象优先在Eden分配
 date: 2017-10-10 16:57:51
 cdn: "header-off"
-header-img: "./img/jvm.jpg"
+header-img: "/img/jvm.jpg"
 tags:
 	- JVM
 	- Java
