@@ -37,7 +37,7 @@
 <style>
 
     header.intro-header {
-        background-image: url('img/index-bg2.jpg')
+        background-image: url('/img/index-bg2.jpg')
     }
 </style>
 <!-- hack iOS CSS :active style -->
@@ -253,7 +253,7 @@
                 <div class="site-heading text-center">
                     <div class="about-me">
                         <!--移动端头部显示-->
-                        <img src="img/brinjaul.png"/>
+                        <img src="/img/brinjaul.png"/>
                         <h5><a href="/about/">yellow river</a></h5>
                         <p>妈妈再也不用担心我同样的bug写第二遍</p>
                     </div>
@@ -272,7 +272,119 @@
 
 
 <div class="post-preview  "
-     style="background-image: url('./img/jvm.jpg')">
+     style="background-image: url('/img/deeplink.jpg')">
+    <a href="/2017/10/29/deeplink/">
+        <h2 class="post-title">
+            H5唤醒app
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-29
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                最近做了两个app唤醒的需求，可以说是一路爬着做过来的，然而爬到最后发现，结果并不讨喜，各种环境的唤醒结果有所差异，有些甚至不能唤醒（坑爹鹅）。今天来就这段时间踩的坑做个总结。
+js实现的三种唤醒方式目前，IOS和Android通常都使用scheme（协议）的方式进行唤醒，链接规范如下：
+ifr..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/spring.png')">
+    <a href="/2017/10/16/spring-cli-install/">
+        <h2 class="post-title">
+            Spring Boot CLI安装
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-16
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                
+The Spring Boot CLI is a command line tool that can be used if you want to quickly prototype with Spring. It allows you to run Groovy scripts, whic..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/ab-test.jpg')">
+    <a href="/2017/10/13/abtest/">
+        <h2 class="post-title">
+            A/B实验——从后台配置到前台展示
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-13
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                What is A/B testing？A/B测试(也称为分拆测试[split testing]或桶测试[bucket testing])是一种比较两种不同版本的网页或应用程序，以确定哪一种表现更好的实现方法。AB测试本质上是一个实验，在这个实验中，一个页面的两个或多个变种被随机地展示给用户，统..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/jvm.jpg')">
+    <a href="/2017/10/11/jvm-monitor-tools/">
+        <h2 class="post-title">
+            jdk自带虚拟机性能监控工具
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-11
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                
+
+
+名称
+主要作用
+
+
+
+
+jps(JVM Process Status Tool)
+显示指定系统内所有的HotSpot虚拟机进程
+
+
+jstat(JVM Statistics Monitoring Tool)
+用于手机HotSpot虚拟机各方面的运行数据
+
+
+jinfo(Configurat..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/jvm.jpg')">
     <a href="/2017/10/10/memory-strategy1/">
         <h2 class="post-title">
             JVM内存分配策略——对象优先在Eden分配
@@ -296,7 +408,7 @@
 
 
 <div class="post-preview  "
-     style="background-image: url('./img/jvm.jpg')">
+     style="background-image: url('/img/jvm.jpg')">
     <a href="/2017/10/08/reference-counting/">
         <h2 class="post-title">
             引用计数算法
@@ -322,7 +434,7 @@
 
 
 <div class="post-preview  "
-     style="background-image: url('./img/configuration.jpg')">
+     style="background-image: url('/img/configuration.jpg')">
     <a href="/2017/09/25/property-placeholder/">
         <h2 class="post-title">
             通过PropertyPlaceholderConfigurer配置不同环境配置
@@ -346,7 +458,7 @@
 
 
 <div class="post-preview  "
-     style="background-image: url('../../16/git-reset-commit/img/github.png')">
+     style="background-image: url('/img/github.png')">
     <a href="/2017/09/24/git-unlink-old/">
         <h2 class="post-title">
             git pull或push时报错："unable to unlink old 'xxx/xxx/xx'：Invalid argument"
@@ -361,102 +473,6 @@
 在本地使用git pull或push代码时，提交、或拉取代码失败，并出现报错：error: unable to unlink old ‘xxx/xxx/xx.xx’: Invalid argument说起来这个问题也出现过好几次了orz
 
 大多数遇到这种情况，基本都是要更新或提交的文件被系统线..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('./img/issue.jpeg')">
-    <a href="/2017/09/22/learning-list/">
-        <h2 class="post-title">
-            待探究问题清单
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-22
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                2017.9.4 hexo正确使用方式通过hexo发布blog至github时，发布了整个文件脚手架到github上，导致访问404(npm install hexo-deployer-git --save)，每次删除原来脚手架重新拉取时都要安装发布插件若默认发布分支上有非web结构的目录结构，..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('./img/java-logo.png')">
-    <a href="/2017/09/21/jdk-compatibility/">
-        <h2 class="post-title">
-            Tomcat启动报错：java.io.IOException:invalid constant type:18
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-21
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                问题背景测试环境的项目部署到Tomcat启动时，由于报错启动失败，报错如下：org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'endUserService' define..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('./img/struts-logo.png')">
-    <a href="/2017/09/20/struts-ognlstack-bug/">
-        <h2 class="post-title">
-            struts升级至2.3.20后无法使用stack.findValue调用java静态方法
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-20
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                问题背景项目融合之前，struts2一直使用的是2.0.11版本，前端页面使用freemarker模板引擎，通过值栈调用后台的Java静态方法。具体场景如下，拦截器向值栈中存入多个键值对：public class WebPageInterceptor extends AbstractInterc..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('./img/github.png')">
-    <a href="/2017/09/16/git-reset-commit/">
-        <h2 class="post-title">
-            git撤销已提交但未push的代码
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-16
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                
-查找想要回退到的版本号：
-
-在IDEA中可以：”Version Control -&gt; Log -&gt; 右键提交记录 -&gt;  Copy Revision Number”获取到
-命令行通过命令：$ git logcommit 0edf1b84e1aa60b0571704fcd0e1..
             </p>
         </div>
     </a>
@@ -495,7 +511,7 @@
                 <div class="short-about">
                     <!--侧边栏头像-->
                     
-                    <img src="img/brinjaul.png"/>
+                    <img src="/img/brinjaul.png"/>
                     
                     <h5><a href="/about/">yellow river</a></h5>
                     
@@ -525,6 +541,16 @@
                 <div class="tags">
                     
                     
+                    <a href="/tags/#Java" title="Java"
+                       rel="6">Java</a>
+                    
+                    
+                    
+                    <a href="/tags/#A/B testing" title="A/B testing"
+                       rel="1">A/B testing</a>
+                    
+                    
+                    
                     <a href="/tags/#Markdown" title="Markdown"
                        rel="1">Markdown</a>
                     
@@ -540,18 +566,18 @@
                     
                     
                     
+                    <a href="/tags/#deeplink" title="deeplink"
+                       rel="1">deeplink</a>
+                    
+                    
+                    
+                    <a href="/tags/#H5" title="H5"
+                       rel="1">H5</a>
+                    
+                    
+                    
                     <a href="/tags/#git" title="git"
                        rel="2">git</a>
-                    
-                    
-                    
-                    <a href="/tags/#JVM" title="JVM"
-                       rel="2">JVM</a>
-                    
-                    
-                    
-                    <a href="/tags/#Java" title="Java"
-                       rel="3">Java</a>
                     
                     
                     
@@ -565,8 +591,13 @@
                     
                     
                     
+                    <a href="/tags/#JVM" title="JVM"
+                       rel="3">JVM</a>
+                    
+                    
+                    
                     <a href="/tags/#Spring" title="Spring"
-                       rel="1">Spring</a>
+                       rel="2">Spring</a>
                     
                     
                     
@@ -681,7 +712,7 @@
 <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 <!--wechat title img-->
-<img class="wechat-title-img" src="img/brinjaul.png">
+<img class="wechat-title-img" src="/img/brinjaul.png">
 </body>
 
 </html>

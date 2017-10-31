@@ -37,7 +37,7 @@
 <style>
 
     header.intro-header {
-        background-image: url('img/index-bg2.jpg')
+        background-image: url('/img/index-bg2.jpg')
     }
 </style>
 <!-- hack iOS CSS :active style -->
@@ -253,7 +253,7 @@
                 <div class="site-heading text-center">
                     <div class="about-me">
                         <!--移动端头部显示-->
-                        <img src="img/brinjaul.png"/>
+                        <img src="/img/brinjaul.png"/>
                         <h5><a href="/about/">yellow river</a></h5>
                         <p>妈妈再也不用担心我同样的bug写第二遍</p>
                     </div>
@@ -272,7 +272,103 @@
 
 
 <div class="post-preview  "
-     style="background-image: url('./img/hexo+github.png')">
+     style="background-image: url('/img/issue.jpeg')">
+    <a href="/2017/09/22/learning-list/">
+        <h2 class="post-title">
+            待探究问题清单
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-22
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                2017.9.4 hexo正确使用方式通过hexo发布blog至github时，发布了整个文件脚手架到github上，导致访问404(npm install hexo-deployer-git --save)，每次删除原来脚手架重新拉取时都要安装发布插件若默认发布分支上有非web结构的目录结构，..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/java-logo.png')">
+    <a href="/2017/09/21/jdk-compatibility/">
+        <h2 class="post-title">
+            Tomcat启动报错：java.io.IOException:invalid constant type:18
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-21
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                问题背景测试环境的项目部署到Tomcat启动时，由于报错启动失败，报错如下：org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'endUserService' define..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/struts-logo.png')">
+    <a href="/2017/09/20/struts-ognlstack-bug/">
+        <h2 class="post-title">
+            struts升级至2.3.20后无法使用stack.findValue调用java静态方法
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-20
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                问题背景项目融合之前，struts2一直使用的是2.0.11版本，前端页面使用freemarker模板引擎，通过值栈调用后台的Java静态方法。具体场景如下，拦截器向值栈中存入多个键值对：public class WebPageInterceptor extends AbstractInterc..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/github.png')">
+    <a href="/2017/09/16/git-reset-commit/">
+        <h2 class="post-title">
+            git撤销已提交但未push的代码
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-16
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                
+查找想要回退到的版本号：
+
+在IDEA中可以：”Version Control -&gt; Log -&gt; 右键提交记录 -&gt;  Copy Revision Number”获取到
+命令行通过命令：$ git logcommit 0edf1b84e1aa60b0571704fcd0e1..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/hexo+github.png')">
     <a href="/2017/09/10/buid-blog/">
         <h2 class="post-title">
             Hexo + Github Pages搭建个人blog
@@ -298,7 +394,7 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
 
 
 <div class="post-preview  "
-     style="background-image: url('./img/markdown.jpeg')">
+     style="background-image: url('/img/markdown.jpeg')">
     <a href="/2017/09/05/basic-markdown/">
         <h2 class="post-title">
             Markdown基本用法
@@ -351,7 +447,7 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                 <div class="short-about">
                     <!--侧边栏头像-->
                     
-                    <img src="img/brinjaul.png"/>
+                    <img src="/img/brinjaul.png"/>
                     
                     <h5><a href="/about/">yellow river</a></h5>
                     
@@ -381,6 +477,16 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                 <div class="tags">
                     
                     
+                    <a href="/tags/#Java" title="Java"
+                       rel="6">Java</a>
+                    
+                    
+                    
+                    <a href="/tags/#A/B testing" title="A/B testing"
+                       rel="1">A/B testing</a>
+                    
+                    
+                    
                     <a href="/tags/#Markdown" title="Markdown"
                        rel="1">Markdown</a>
                     
@@ -396,18 +502,18 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                     
                     
                     
+                    <a href="/tags/#deeplink" title="deeplink"
+                       rel="1">deeplink</a>
+                    
+                    
+                    
+                    <a href="/tags/#H5" title="H5"
+                       rel="1">H5</a>
+                    
+                    
+                    
                     <a href="/tags/#git" title="git"
                        rel="2">git</a>
-                    
-                    
-                    
-                    <a href="/tags/#JVM" title="JVM"
-                       rel="2">JVM</a>
-                    
-                    
-                    
-                    <a href="/tags/#Java" title="Java"
-                       rel="3">Java</a>
                     
                     
                     
@@ -421,8 +527,13 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                     
                     
                     
+                    <a href="/tags/#JVM" title="JVM"
+                       rel="3">JVM</a>
+                    
+                    
+                    
                     <a href="/tags/#Spring" title="Spring"
-                       rel="1">Spring</a>
+                       rel="2">Spring</a>
                     
                     
                     
@@ -537,7 +648,7 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
 <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 <!--wechat title img-->
-<img class="wechat-title-img" src="img/brinjaul.png">
+<img class="wechat-title-img" src="/img/brinjaul.png">
 </body>
 
 </html>

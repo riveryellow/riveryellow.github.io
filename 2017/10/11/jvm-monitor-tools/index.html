@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        jdk自带虚拟机性能监控工具｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2017/10/11/jvm-monitor-tools/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/img/index-bg2.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/img/jvm.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/img/jvm.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>jdk自带虚拟机性能监控工具</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2017-10-11
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#JVM"
+                           title="JVM">JVM</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            jdk自带虚拟机性能监控工具
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <table>
+<thead>
+<tr>
+<th>名称</th>
+<th>主要作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jps(JVM Process Status Tool)</td>
+<td>显示指定系统内所有的HotSpot虚拟机进程</td>
+</tr>
+<tr>
+<td>jstat(JVM Statistics Monitoring Tool)</td>
+<td>用于手机HotSpot虚拟机各方面的运行数据</td>
+</tr>
+<tr>
+<td>jinfo(Configuration Info for Java)</td>
+<td>显示虚拟机配置信息（鸡肋）</td>
+</tr>
+<tr>
+<td>jmap(Memory Map for Java)</td>
+<td>生成虚拟机的内存转出快照（heapdump文件）</td>
+</tr>
+<tr>
+<td>jhat(JVM Heap Analysis Tool)</td>
+<td>用于分析heapdump文件，它会建立一个HTTP/HTML服务器，让用户可以在浏览器上查看分析结果</td>
+</tr>
+<tr>
+<td>jstack(Stack Trace for Java)</td>
+<td>显示虚拟机的线程快照</td>
+</tr>
+</tbody>
+</table>
+<h2 id="jps-JVM-Process-Status-Tool"><a href="#jps-JVM-Process-Status-Tool" class="headerlink" title="jps(JVM Process Status Tool)"></a>jps(JVM Process Status Tool)</h2><p>jps可以列出正在运行的虚拟机进程，并显示虚拟机执行主类（main函数所在的类）名称以及这些进程的本地虚拟机唯一ID（Local Virtual Machine Identifier,LVMID）。对于本地虚拟机进程来说，LVMID与操作系统的进程ID（Process Identifier,PID）是一致的，使用Windows的任务管理器或者UNIX的ps命令也可以查询到虚拟机进程的LVMID，但如果同时启动了多个虚拟机进程，无法根据进程名称定位时，那就只能依赖jps命令显示主类的功能才能区分。</p>
+<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">-q</td>
+<td>只输出LVMID，省略主类的名称</td>
+</tr>
+<tr>
+<td style="text-align:center">-m</td>
+<td>输出虚拟机进程启动时传递给主类main()函数的参数</td>
+</tr>
+<tr>
+<td style="text-align:center">-l</td>
+<td>输出主类的全名，如果进程执行的是Jar包，输出Jar的路径</td>
+</tr>
+<tr>
+<td style="text-align:center">-v</td>
+<td>输出虚拟机进程启动时JVM参数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight console"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> jps -l</div><div class="line">6148 org.jetbrains.jps.cmdline.Launcher</div><div class="line">9004 org.apache.catalina.startup.Bootstrap</div><div class="line">9912 sun.tools.jps.Jps</div><div class="line">5648</div><div class="line">7916 org.jetbrains.idea.maven.server.RemoteMavenServer</div></pre></td></tr></table></figure>
+<h2 id="jstat-JVM-Statistics-Monitoring-Tool"><a href="#jstat-JVM-Statistics-Monitoring-Tool" class="headerlink" title="jstat(JVM Statistics Monitoring Tool)"></a>jstat(JVM Statistics Monitoring Tool)</h2><p>jstat是用于监视虚拟机各种运行状态信息的命令行工具。它可以显示本地或者远程虚拟机进程中的类装载、内存、垃圾收集。JIT编译等运行数据，在没有GUI图形界面、只提供纯文本控制台环境的服务器上，它将是运行期定位虚拟机性能问题的首选工具。</p>
+<h3 id="参数说明-1"><a href="#参数说明-1" class="headerlink" title="参数说明"></a>参数说明</h3><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-class</td>
+<td>监视类装载、卸载数量、总空间以及类装载所耗费的时间</td>
+</tr>
+<tr>
+<td>-gc</td>
+<td>监视Java堆状况，包括Eden区、两个survivor区、老年代、永久代等的容量、已用空间、GC时间合计等信息</td>
+</tr>
+<tr>
+<td>-gccapacity</td>
+<td>监视内容与-gc基本相同，但输出主要关注Java堆各个区域使用到的最大、最小空间</td>
+</tr>
+<tr>
+<td>-gcutil</td>
+<td>监视内容与-gc基本相同，但输出主要关注已使用空间占总空间的百分比</td>
+</tr>
+<tr>
+<td>-gccause</td>
+<td>与-gcutil功能一样，但是会额外输出导致上一次GC产生的原因</td>
+</tr>
+<tr>
+<td>-gcnew</td>
+<td>监视新生代GC状况</td>
+</tr>
+<tr>
+<td>-gcnewcapacity</td>
+<td>监视内容与-gcnew基本相同，输出主要关注使用到的最大、最小空间</td>
+</tr>
+<tr>
+<td>-gcold</td>
+<td>监视老年代GC状况</td>
+</tr>
+<tr>
+<td>-gcoldcapacity</td>
+<td>监视内容与-gcold基本相同，输出主要关注使用到的最大、最小空间</td>
+</tr>
+<tr>
+<td>-gcpermcapacity</td>
+<td>输出永久代使用到的最大、最小空间</td>
+</tr>
+<tr>
+<td>-compiler</td>
+<td>输出JIT编译器编译过的方法、耗时等信息</td>
+</tr>
+<tr>
+<td>-printcompilation</td>
+<td>输出已经被JIT编译的方法</td>
+</tr>
+</tbody>
+</table>
+<h3 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a>示例</h3><figure class="highlight console"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> jstat -gccause 4576 3000 4</div><div class="line">   S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT    LGCC                 GCC</div><div class="line"> 96.56   0.00  25.06   0.03   7.78      4    0.927     0    0.000    0.927 Allocation Failure   No GC</div><div class="line"> 96.56   0.00  69.56   0.03   8.54      4    0.927     0    0.000    0.927 Allocation Failure   No GC</div><div class="line">  0.00  99.98  26.45   3.25   9.65      5    0.991     0    0.000    0.991 Allocation Failure   No GC</div><div class="line">  0.00  99.98  26.97   3.25   9.65      5    0.991     0    0.000    0.991 Allocation Failure   No GC</div></pre></td></tr></table></figure>
+<h3 id="列表项含义"><a href="#列表项含义" class="headerlink" title="列表项含义"></a>列表项含义</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">S0</td>
+<td>Survivor space 0</td>
+</tr>
+<tr>
+<td style="text-align:center">S1</td>
+<td>Survivor space 1</td>
+</tr>
+<tr>
+<td style="text-align:center">E</td>
+<td>Eden space</td>
+</tr>
+<tr>
+<td style="text-align:center">O</td>
+<td>Old space</td>
+</tr>
+<tr>
+<td style="text-align:center">P</td>
+<td>Perm space</td>
+</tr>
+<tr>
+<td style="text-align:center">YGC</td>
+<td>Number of young generation garbage collection (GC) events.</td>
+</tr>
+<tr>
+<td style="text-align:center">YGCT</td>
+<td>Young generation garbage collection time.</td>
+</tr>
+<tr>
+<td style="text-align:center">FGC</td>
+<td>Number of full GC events.</td>
+</tr>
+<tr>
+<td style="text-align:center">FGCT</td>
+<td>Full garbage collection time.</td>
+</tr>
+<tr>
+<td style="text-align:center">GCT</td>
+<td>Total garbage collection time.</td>
+</tr>
+<tr>
+<td style="text-align:center">LGGC</td>
+<td>Cause of last garbage collection</td>
+</tr>
+<tr>
+<td style="text-align:center">GCC</td>
+<td>Cause of current garbage collection</td>
+</tr>
+</tbody>
+</table>
+<p>参考：<a href="http://docs.oracle.com/javase/9/tools/tools-and-command-reference.htm#JSWOR596" target="_blank" rel="external">http://docs.oracle.com/javase/9/tools/tools-and-command-reference.htm#JSWOR596</a></p>
+<h2 id="jmap-Memory-Map-for-Java"><a href="#jmap-Memory-Map-for-Java" class="headerlink" title="jmap(Memory Map for Java)"></a>jmap(Memory Map for Java)</h2><p>jmap的作用并不仅仅是为了获取dump文件，它还可以查询finalize执行队列、 Java堆和永久代的详细信息，如空间使用率、 当前用的是哪种收集器等。</p>
+<h3 id="参数说明-2"><a href="#参数说明-2" class="headerlink" title="参数说明"></a>参数说明</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">-dump</td>
+<td>生成Java堆转储快照。参数： live — When specified, dumps only the live objects; if not specified, then dumps all objects in the heap.   format=b — Dumps the Java heap,. in hprof binary format    file=filename — Dumps the heap to filename</td>
+</tr>
+<tr>
+<td style="text-align:center">-finalizerinfo</td>
+<td>显示在F-Queue中等待Finalizer线程执行finalize方法的对象（LINUX/SOLARIS）</td>
+</tr>
+<tr>
+<td style="text-align:center">-heap</td>
+<td>显示Java堆详细信息，如使用哪种回收器、参数配置、分代状况等（LINUX/SOLARIS）</td>
+</tr>
+<tr>
+<td style="text-align:center">-histo</td>
+<td>显示堆中对象统计信息，包括类、实例数量、合计容量</td>
+</tr>
+<tr>
+<td style="text-align:center">-permstat</td>
+<td>以Classloader为统计口径显示永久代内存状态（LINUX/SOLARIS）</td>
+</tr>
+<tr>
+<td style="text-align:center">-F</td>
+<td>当虚拟机进程对-dump选项没有响应时，可使用这个选项强制生成dump快照（LINUX/SOLARIS）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="示例-2"><a href="#示例-2" class="headerlink" title="示例"></a>示例</h3><figure class="highlight console"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> jmap -dump:format=b,file=test 7736</div><div class="line">Dumping heap to D:\dev-tools\Java\jdk1.7.0_79\bin\test ...</div><div class="line">Heap dump file created</div></pre></td></tr></table></figure>
+<h3 id="其他获取堆转储快照的方式"><a href="#其他获取堆转储快照的方式" class="headerlink" title="其他获取堆转储快照的方式"></a>其他获取堆转储快照的方式</h3><p> 如果不使用jmap命令，要想获取Java堆转储快照，还有一些比较“暴力”的手段：譬如-XX：+HeapDumpOnOutOfMemoryError参数，可以让虚拟机在OOM异常出现之后自动生成dump文件，通过-XX：+HeapDumpOnCtrlBreak参数则可以使用[Ctrl]+[Break]键让虚拟机生成dump文件，又或者在Linux系统下通过Kill-3命令发送进程退出信号“吓唬”一下虚拟机，也能拿到dump文件。</p>
+<h2 id="jhat-JVM-Heap-Analysis-Tool"><a href="#jhat-JVM-Heap-Analysis-Tool" class="headerlink" title="jhat(JVM Heap Analysis Tool)"></a>jhat(JVM Heap Analysis Tool)</h2><p>Sun JDK提供jhat（JVM Heap Analysis Tool）命令与jmap搭配使用，来分析jmap生成的堆转储快照。 jhat内置了一个微型的HTTP/HTML服务器，生成dump文件的分析结果后，可以在浏览器中查看。 不过在实际工作中，除非手上真的没有别的工具可用，否则一般都不会去直接使用jhat命令来分析dump文件，主要原因有二：一是一般不会在部署应用程序的服务器上直接分析dump文件，即使可以这样做，也会尽量将dump文件复制到其他机器（用于分析的机器一般也是服务器，由于加载dump快照文件需要比生成dump更大的内存，所以一般在64位JDK、 大内存的服务器上进行）上进行分析，因为分析工作是一个耗时而且消耗硬件资源的过程，既然都要在其他机器进行，就没有必要受到命令行工具的限制了；另一个原因是jhat的分析功能相对来说比较简陋，VisualVM，以及专业用于分析dump文件的Eclipse Memory Analyzer、 IBM HeapAnalyzer等工具，都能实现比jhat更强大更专业的分析功能。 </p>
+<h2 id="jstack-Stack-Trace-for-Java"><a href="#jstack-Stack-Trace-for-Java" class="headerlink" title="jstack(Stack Trace for Java)"></a>jstack(Stack Trace for Java)</h2><h3 id="参数说明-3"><a href="#参数说明-3" class="headerlink" title="参数说明"></a>参数说明</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">选项</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">-F</td>
+<td>当正常输出的请求不被响应时，强制输出线程堆栈</td>
+</tr>
+<tr>
+<td style="text-align:center">-l</td>
+<td>除堆栈外，显示关于锁的附加信息</td>
+</tr>
+<tr>
+<td style="text-align:center">-m</td>
+<td>如果调用到本地方法的话，可以显示C/C++的堆栈</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tip"><a href="#tip" class="headerlink" title="tip"></a>tip</h3><p>在JDK 1.5后，java.lang.Thread类新增了一个getAllStackTraces()方法用于获取虚拟机中所有线程StackTraceElement对象。 使用这个方法可以通过简单的几行代码就完成jstack的大部分功能，在实际项目中不妨调用这个方法做个管理员页面，可以随时使用浏览器来查看线程堆栈.</p>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight"><table><tr><td class="code"><pre><div class="line">&lt;%<span class="meta">@page</span> <span class="keyword">import</span>=<span class="string">"java.util.Map"</span> %&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;title&gt;服务器线程信息&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">	&lt;pre&gt;</div><div class="line">	&lt;%</div><div class="line">    <span class="keyword">for</span> (Map.Entry&lt;Thread, StackTraceElement[]&gt; stackTrace : Thread.</div><div class="line">            getAllStackTraces().entrySet()) &#123;</div><div class="line">        Thread thread = (Thread) stackTrace.getKey();</div><div class="line">        StackTraceElement[] stack = (StackTraceElement[]) stackTrace.getValue();</div><div class="line">        <span class="keyword">if</span> (thread.equals(Thread.currentThread()) &#123;</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        &#125;</div><div class="line">        out.print(<span class="string">"\n线程:"</span> + thread.getName() + <span class="string">"\n"</span>);</div><div class="line">        <span class="keyword">for</span> (StackTraceElement element : stack) &#123;</div><div class="line">            out.print(<span class="string">"\t"</span> + element + <span class="string">"\n"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;%&gt;</div><div class="line">&lt;/pre&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/10/13/abtest/" data-toggle="tooltip" data-placement="top"
+                           title="A/B实验——从后台配置到前台展示">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/10/10/memory-strategy1/" data-toggle="tooltip" data-placement="top"
+                           title="JVM内存分配策略——对象优先在Eden分配">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#jps-JVM-Process-Status-Tool"><span class="toc-text">jps(JVM Process Status Tool)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参数说明"><span class="toc-text">参数说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例"><span class="toc-text">示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jstat-JVM-Statistics-Monitoring-Tool"><span class="toc-text">jstat(JVM Statistics Monitoring Tool)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参数说明-1"><span class="toc-text">参数说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例-1"><span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#列表项含义"><span class="toc-text">列表项含义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jmap-Memory-Map-for-Java"><span class="toc-text">jmap(Memory Map for Java)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参数说明-2"><span class="toc-text">参数说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例-2"><span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他获取堆转储快照的方式"><span class="toc-text">其他获取堆转储快照的方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jhat-JVM-Heap-Analysis-Tool"><span class="toc-text">jhat(JVM Heap Analysis Tool)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jstack-Stack-Trace-for-Java"><span class="toc-text">jstack(Stack Trace for Java)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参数说明-3"><span class="toc-text">参数说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tip"><span class="toc-text">tip</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码实现"><span class="toc-text">代码实现</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#JVM"
+                           title="JVM">JVM</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2017
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/img/brinjaul.png">
+</body>
+
+</html>

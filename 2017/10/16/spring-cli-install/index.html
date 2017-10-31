@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        git撤销已提交但未push的代码｜yellowriver&#39;s blog
+        Spring Boot CLI安装｜yellowriver&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="http://yoursite.com/2017/09/16/git-reset-commit/">
+    <link rel="canonical" href="http://yoursite.com/2017/10/16/spring-cli-install/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -127,13 +127,13 @@
 <!--only post-->
 
 
-<img class="wechat-title-img" src="/img/github.png">
+<img class="wechat-title-img" src="/img/spring.png">
 
 
 <style>
     
     header.intro-header {
-        background-image: url('/img/github.png');
+        background-image: url('/img/spring.png');
     }
 
     
@@ -144,18 +144,21 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>git撤销已提交但未push的代码</h1>
+                    <h1>Spring Boot CLI安装</h1>
                     
                     <span class="meta">
                          作者 yellow river
                         <span>
-                          日期 2017-09-16
+                          日期 2017-10-16
                          </span>
                     </span>
                     <div class="tags text-center">
                         
-                        <a class="tag" href="/tags/#git"
-                           title="git">git</a>
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#Spring"
+                           title="Spring">Spring</a>
                         
                     </div>
                 </div>
@@ -164,7 +167,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            git撤销已提交但未push的代码
+            Spring Boot CLI安装
         </span>
     </div>
 </header>
@@ -175,22 +178,22 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
-                <ol>
-<li><p>查找想要回退到的版本号：</p>
+                <blockquote>
+<p>The Spring Boot CLI is a command line tool that can be used if you want to quickly prototype with Spring. It allows you to run Groovy scripts, which means that you have a familiar Java-like syntax, without so much boilerplate code.</p>
+</blockquote>
+<h2 id="Windows安装"><a href="#Windows安装" class="headerlink" title="Windows安装"></a>Windows安装</h2><h3 id="下载压缩包"><a href="#下载压缩包" class="headerlink" title="下载压缩包"></a>下载压缩包</h3><p>可以直接从spring官网下载：</p>
 <ul>
-<li>在IDEA中可以：”Version Control -&gt; Log -&gt; 右键提交记录 -&gt;  Copy Revision Number”获取到</li>
-<li>命令行通过命令：<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> git log</div><div class="line">commit 0edf1b84e1aa60b0571704fcd0e136504878b2ff</div><div class="line">Author: yellow_river &lt;river_yellow@163.com&gt;</div><div class="line">Date:   Thu Sep 21 11:13:01 2017 +0800</div><div class="line">   modified configuration</div><div class="line"></div><div class="line">commit 2baa4aa01a0741a9b0cfe08626d8174ce01978c8</div><div class="line">Author: huanghe_MAC &lt;river_yellow@163.com&gt;</div><div class="line">Date:   Wed Sep 20 22:15:58 2017 +0800</div><div class="line">   new configurations</div><div class="line"></div><div class="line">commit fb21cc83168e11428fb3e502c4b4a8fab8af0ac1</div><div class="line">Author: yellow_river &lt;river_yellow@163.com&gt;</div><div class="line">Date:   Wed Sep 20 17:38:16 2017 +0800</div><div class="line">   new page</div></pre></td></tr></table></figure>
-</li>
+<li><a href="https://repo.spring.io/snapshot/org/springframework/boot/spring-boot-cli/2.0.0.BUILD-SNAPSHOT/spring-boot-cli-2.0.0.BUILD-SNAPSHOT-bin.zip" target="_blank" rel="external">spring-boot-cli-2.0.0.BUILD-SNAPSHOT-bin.zip</a></li>
+<li><a href="https://repo.spring.io/snapshot/org/springframework/boot/spring-boot-cli/2.0.0.BUILD-SNAPSHOT/spring-boot-cli-2.0.0.BUILD-SNAPSHOT-bin.tar.gz" target="_blank" rel="external">spring-boot-cli-2.0.0.BUILD-SNAPSHOT-bin.tar.gz</a></li>
 </ul>
-<p>commit后的就是版本号。</p>
-</li>
-</ol>
-<ol>
-<li><p>撤销分为两种，一种是将代码撤销至与撤销版本完全一致的代码：</p>
- <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> git reset --hard commit_id</div></pre></td></tr></table></figure>
-<p> 另一种是保留已提交代码：</p>
- <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> git reset commit_id</div></pre></td></tr></table></figure></li>
-</ol>
+<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>将文件解压到指定文件夹后，根据INSTALL.txt配置环境：</p>
+<ul>
+<li>在环境变量中，将java版本配置到1.8；</li>
+<li>新建环境变量SPRING_CLI_HOME，指向刚刚解压的文件夹（如：D:\dev-tools\plugin\spring-2.0.0.BUILD-SNAPSHOT），并将<strong>%SPRING_CLI_HOME%\bin</strong>添加到环境变量Path中。</li>
+</ul>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><figure class="highlight console"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> spring --version</div><div class="line">Spring CLI v2.0.0.BUILD-SNAPSHOT</div></pre></td></tr></table></figure>
+<h2 id="MacOS安装"><a href="#MacOS安装" class="headerlink" title="MacOS安装"></a>MacOS安装</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用Homebrew可以直接安装到/usr/local/bin中：<br><figure class="highlight console"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> brew tap pivotal/tap</div><div class="line"><span class="meta">$</span> brew install springboot</div></pre></td></tr></table></figure></p>
+<p>安装好之后，命令spring会自动注册到shell中。</p>
 
                 <hr>
                 
@@ -198,14 +201,14 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2017/09/20/struts-ognlstack-bug/" data-toggle="tooltip" data-placement="top"
-                           title="struts升级至2.3.20后无法使用stack.findValue调用java静态方法">&larr; Previous Post</a>
+                        <a href="/2017/10/29/deeplink/" data-toggle="tooltip" data-placement="top"
+                           title="H5唤醒app">&larr; Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2017/09/10/buid-blog/" data-toggle="tooltip" data-placement="top"
-                           title="Hexo + Github Pages搭建个人blog">Next Post &rarr;</a>
+                        <a href="/2017/10/13/abtest/" data-toggle="tooltip" data-placement="top"
+                           title="A/B实验——从后台配置到前台展示">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -221,7 +224,7 @@
 
             <div class="hidden-xs col-sm-3 toc-col">
                 <div class="toc-wrap">
-                    
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows安装"><span class="toc-text">Windows安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#下载压缩包"><span class="toc-text">下载压缩包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环境配置"><span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证"><span class="toc-text">验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MacOS安装"><span class="toc-text">MacOS安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-text">安装</span></a></li></ol></li></ol>
                 </div>
             </div>
         </div>
@@ -243,8 +246,11 @@
                     </h5>
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/#git"
-                           title="git">git</a>
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#Spring"
+                           title="Spring">Spring</a>
                         
                     </div>
                 </section>

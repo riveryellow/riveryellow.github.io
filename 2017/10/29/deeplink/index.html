@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        H5唤醒app｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2017/10/29/deeplink/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/img/index-bg2.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/img/deeplink.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/img/deeplink.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>H5唤醒app</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2017-10-29
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#deeplink"
+                           title="deeplink">deeplink</a>
+                        
+                        <a class="tag" href="/tags/#H5"
+                           title="H5">H5</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            H5唤醒app
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>最近做了两个app唤醒的需求，可以说是一路爬着做过来的，然而爬到最后发现，结果并不讨喜，各种环境的唤醒结果有所差异，有些甚至不能唤醒（坑爹鹅）。今天来就这段时间踩的坑做个总结。</p>
+<h2 id="js实现的三种唤醒方式"><a href="#js实现的三种唤醒方式" class="headerlink" title="js实现的三种唤醒方式"></a>js实现的三种唤醒方式</h2><p>目前，IOS和Android通常都使用scheme（协议）的方式进行唤醒，链接规范如下：</p>
+<h3 id="iframe"><a href="#iframe" class="headerlink" title="iframe"></a>iframe</h3><h4 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h4><p>iframe的实现方式也有好几种：</p>
+<ul>
+<li><p>在html页面中写入一个不可见的iframe：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"deeplink"</span> <span class="attr">src</span>=<span class="string">"[scheme]://[host]/[path]?[query]"</span> <span class="attr">frameborder</span>=<span class="string">"0"</span> <span class="attr">scrolling</span>=<span class="string">"no"</span> <span class="attr">width</span>=<span class="string">"0%"</span> <span class="attr">style</span>=<span class="string">"display:none"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>监听事件中，动态向html中插入iframe节点：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">"onload"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> iframe = <span class="built_in">document</span>.createElement(<span class="string">"iframe"</span>);</div><div class="line">	iframe.src = srcLink;</div><div class="line">	iframe.style.display = <span class="string">"none"</span>;</div><div class="line">	<span class="built_in">document</span>.body.appendChild(iframe);</div><div class="line">&#125;);<span class="comment">//方法执行完之后会尝试打开app</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="验证结果"><a href="#验证结果" class="headerlink" title="验证结果"></a>验证结果</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">浏览器</th>
+<th style="text-align:center">Android</th>
+<th style="text-align:center">IOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">UC</td>
+<td style="text-align:center">YES</td>
+<td style="text-align:center">YES</td>
+</tr>
+<tr>
+<td style="text-align:center">Chrome</td>
+<td style="text-align:center">NO</td>
+<td style="text-align:center">NO</td>
+</tr>
+<tr>
+<td style="text-align:center">QQ浏览器</td>
+<td style="text-align:center">YES</td>
+<td style="text-align:center">YES</td>
+</tr>
+<tr>
+<td style="text-align:center">Safari</td>
+<td style="text-align:center">——</td>
+<td style="text-align:center">NO</td>
+</tr>
+<tr>
+<td style="text-align:center">微信</td>
+<td style="text-align:center">NO</td>
+<td style="text-align:center">NO</td>
+</tr>
+</tbody>
+</table>
+<p>综上，iframe的方式适用于Android系统，在IOS下，UC、qq浏览器也可以唤醒，但是在Safari大佬中无法唤醒，所以在IOS系统下不考虑使用iframe。</p>
+<h3 id="window-location-href"><a href="#window-location-href" class="headerlink" title="window.location.href"></a>window.location.href</h3><h4 id="实现方法-1"><a href="#实现方法-1" class="headerlink" title="实现方法"></a>实现方法</h4><p>window.location.href通常适用于事件驱动的方法中，例如：<br><figure class="highlight js"><table><tr><td class="code"><pre><div class="line">$(<span class="string">'#goApp'</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> srcLink = <span class="string">"[scheme]://[host]/[path]?[query]"</span>；</div><div class="line">	<span class="built_in">window</span>.location.href = srcLink;	</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<figure class="highlight js"><table><tr><td class="code"><pre><div class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="built_in">window</span>.location.href = <span class="string">'toplife://topLifeCommodityDetail?skuId=5474432'</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>同样的，在a标签中直接设置href的链接，效果也是一样的：<br><figure class="highlight html"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">"goApp"</span> <span class="attr">href</span>=<span class="string">"[scheme]://[host]/[path]?[query]"</span> /&gt;</span></div></pre></td></tr></table></figure></p>
+<h4 id="验证结果-1"><a href="#验证结果-1" class="headerlink" title="验证结果"></a>验证结果</h4><table>
+<thead>
+<tr>
+<th style="text-align:center">浏览器</th>
+<th style="text-align:center">Android</th>
+<th style="text-align:center">IOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">UC</td>
+<td style="text-align:center">YES</td>
+<td style="text-align:center">YES</td>
+</tr>
+<tr>
+<td style="text-align:center">Chrome</td>
+<td style="text-align:center">YES</td>
+<td style="text-align:center">YES</td>
+</tr>
+<tr>
+<td style="text-align:center">QQ浏览器</td>
+<td style="text-align:center">YES</td>
+<td style="text-align:center">YES</td>
+</tr>
+<tr>
+<td style="text-align:center">Safari</td>
+<td style="text-align:center">—</td>
+<td style="text-align:center">YES</td>
+</tr>
+<tr>
+<td style="text-align:center">微信</td>
+<td style="text-align:center">NO</td>
+<td style="text-align:center">NO</td>
+</tr>
+</tbody>
+</table>
+<h2 id="结论分析"><a href="#结论分析" class="headerlink" title="结论分析"></a>结论分析</h2><ol>
+<li>对于IOS来说，很明显的，location.href的方式更合适，主要是为了Safari；</li>
+<li>Android系统中，若需要进入页面就直接唤醒，iframe和location.href都可以；而事件驱动的唤醒，则选用iframe。</li>
+</ol>
+<h2 id="关于坑鹅（微信）"><a href="#关于坑鹅（微信）" class="headerlink" title="关于坑鹅（微信）"></a>关于坑鹅（微信）</h2><p>由于微信将唤起本地APP的接口给禁了，所以原则上微信中是不能直接唤起APP的。但也有例外：</p>
+<ul>
+<li>在安卓系统中，只有机器上安装了应用宝，并将跳转链接跳到应用宝对应app的下载页面才能实现唤起（亲儿子的待遇）；</li>
+<li>而IOS，在IOS9以后的系统中，据说可以通过配置通用链接（Universal Links）实现微信中的唤醒，没试过，不做评价。</li>
+<li>坊间还有个说法，可以让微信团队将app加入白名单，接口放行。</li>
+</ul>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/10/16/spring-cli-install/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Boot CLI安装">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#js实现的三种唤醒方式"><span class="toc-text">js实现的三种唤醒方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iframe"><span class="toc-text">iframe</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#实现方法"><span class="toc-text">实现方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#验证结果"><span class="toc-text">验证结果</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#window-location-href"><span class="toc-text">window.location.href</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#实现方法-1"><span class="toc-text">实现方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#验证结果-1"><span class="toc-text">验证结果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结论分析"><span class="toc-text">结论分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于坑鹅（微信）"><span class="toc-text">关于坑鹅（微信）</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#deeplink"
+                           title="deeplink">deeplink</a>
+                        
+                        <a class="tag" href="/tags/#H5"
+                           title="H5">H5</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2017
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/img/brinjaul.png">
+</body>
+
+</html>

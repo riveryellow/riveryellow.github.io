@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        git撤销已提交但未push的代码｜yellowriver&#39;s blog
+        A/B实验——从后台配置到前台展示｜yellowriver&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="http://yoursite.com/2017/09/16/git-reset-commit/">
+    <link rel="canonical" href="http://yoursite.com/2017/10/13/abtest/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -127,13 +127,13 @@
 <!--only post-->
 
 
-<img class="wechat-title-img" src="/img/github.png">
+<img class="wechat-title-img" src="/img/ab-test.jpg">
 
 
 <style>
     
     header.intro-header {
-        background-image: url('/img/github.png');
+        background-image: url('/img/ab-test.jpg');
     }
 
     
@@ -144,18 +144,21 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>git撤销已提交但未push的代码</h1>
+                    <h1>A/B实验——从后台配置到前台展示</h1>
                     
                     <span class="meta">
                          作者 yellow river
                         <span>
-                          日期 2017-09-16
+                          日期 2017-10-13
                          </span>
                     </span>
                     <div class="tags text-center">
                         
-                        <a class="tag" href="/tags/#git"
-                           title="git">git</a>
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#A/B testing"
+                           title="A/B testing">A/B testing</a>
                         
                     </div>
                 </div>
@@ -164,7 +167,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            git撤销已提交但未push的代码
+            A/B实验——从后台配置到前台展示
         </span>
     </div>
 </header>
@@ -175,37 +178,22 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
-                <ol>
-<li><p>查找想要回退到的版本号：</p>
-<ul>
-<li>在IDEA中可以：”Version Control -&gt; Log -&gt; 右键提交记录 -&gt;  Copy Revision Number”获取到</li>
-<li>命令行通过命令：<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> git log</div><div class="line">commit 0edf1b84e1aa60b0571704fcd0e136504878b2ff</div><div class="line">Author: yellow_river &lt;river_yellow@163.com&gt;</div><div class="line">Date:   Thu Sep 21 11:13:01 2017 +0800</div><div class="line">   modified configuration</div><div class="line"></div><div class="line">commit 2baa4aa01a0741a9b0cfe08626d8174ce01978c8</div><div class="line">Author: huanghe_MAC &lt;river_yellow@163.com&gt;</div><div class="line">Date:   Wed Sep 20 22:15:58 2017 +0800</div><div class="line">   new configurations</div><div class="line"></div><div class="line">commit fb21cc83168e11428fb3e502c4b4a8fab8af0ac1</div><div class="line">Author: yellow_river &lt;river_yellow@163.com&gt;</div><div class="line">Date:   Wed Sep 20 17:38:16 2017 +0800</div><div class="line">   new page</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>commit后的就是版本号。</p>
-</li>
-</ol>
-<ol>
-<li><p>撤销分为两种，一种是将代码撤销至与撤销版本完全一致的代码：</p>
- <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> git reset --hard commit_id</div></pre></td></tr></table></figure>
-<p> 另一种是保留已提交代码：</p>
- <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> git reset commit_id</div></pre></td></tr></table></figure></li>
-</ol>
-
+                <h2 id="What-is-A-B-testing？"><a href="#What-is-A-B-testing？" class="headerlink" title="What is A/B testing？"></a>What is A/B testing？</h2><p>A/B测试(也称为分拆测试[split testing]或桶测试[bucket testing])是一种比较两种不同版本的网页或应用程序，以确定哪一种表现更好的实现方法。AB测试本质上是一个实验，在这个实验中，一个页面的两个或多个变种被随机地展示给用户，统计分析出转化率以确定哪个版本表现更好。</p>
+<h2 id="A-B-testing后台配置实验"><a href="#A-B-testing后台配置实验" class="headerlink" title="A/B testing后台配置实验"></a>A/B testing后台配置实验</h2><h2 id="A-B-testing分桶实现"><a href="#A-B-testing分桶实现" class="headerlink" title="A/B testing分桶实现"></a>A/B testing分桶实现</h2>
                 <hr>
                 
 
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2017/09/20/struts-ognlstack-bug/" data-toggle="tooltip" data-placement="top"
-                           title="struts升级至2.3.20后无法使用stack.findValue调用java静态方法">&larr; Previous Post</a>
+                        <a href="/2017/10/16/spring-cli-install/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Boot CLI安装">&larr; Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2017/09/10/buid-blog/" data-toggle="tooltip" data-placement="top"
-                           title="Hexo + Github Pages搭建个人blog">Next Post &rarr;</a>
+                        <a href="/2017/10/11/jvm-monitor-tools/" data-toggle="tooltip" data-placement="top"
+                           title="jdk自带虚拟机性能监控工具">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -221,7 +209,7 @@
 
             <div class="hidden-xs col-sm-3 toc-col">
                 <div class="toc-wrap">
-                    
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-is-A-B-testing？"><span class="toc-text">What is A/B testing？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-B-testing后台配置实验"><span class="toc-text">A/B testing后台配置实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-B-testing分桶实现"><span class="toc-text">A/B testing分桶实现</span></a></li></ol>
                 </div>
             </div>
         </div>
@@ -243,8 +231,11 @@
                     </h5>
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/#git"
-                           title="git">git</a>
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#A/B testing"
+                           title="A/B testing">A/B testing</a>
                         
                     </div>
                 </section>
