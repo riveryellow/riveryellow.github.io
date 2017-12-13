@@ -29,7 +29,7 @@ iframe的实现方式也有好几种：
 ```
 #### 验证结果
 |   浏览器    |    Android   |  IOS  | 
-|:----------:|:------------:|：----：|
+|:----------:|:------------:|:----:|
 |   UC       |   YES     |  YES  |
 | Chrome     |  NO   |   NO  |
 |   QQ浏览器  |  YES   |  YES    |
@@ -59,11 +59,11 @@ window.onload = function(){
 
 #### 验证结果
 |   浏览器    |    Android   |  IOS  | 
-|:----------:|:------------:|：----：|
+|:----------:|:------------:|:----:|
 |   UC       |   YES     |  YES  |
 | Chrome     |  YES   |   YES  |
 |   QQ浏览器  |  YES   |  YES    |
-|  Safari   |   ——  |   YES |
+|  Safari   |   —  |   YES |
 |  微信    |   NO   |  NO   |
 
 ## 结论分析
