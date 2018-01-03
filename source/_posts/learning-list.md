@@ -129,3 +129,9 @@ Groovy是一种基于JVM（Java虚拟机）的敏捷开发语言，它结合了P
 参考：MergeStaticServlet
 ```
 
+## 2018.1.3 spring BeanUtil使用方法及原理学习
+```
+今天做网关接口时，用到了spring的BeanUtil进行对象拷贝。
+学习其原理。（顺带学习对象vo的遍历）
+```
+
