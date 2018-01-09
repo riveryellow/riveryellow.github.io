@@ -135,3 +135,10 @@ Groovy是一种基于JVM（Java虚拟机）的敏捷开发语言，它结合了P
 学习其原理。（顺带学习对象vo的遍历）
 ```
 
+## 2018.1.9 @Autowired 与 @Resouce的区别
+
+## 2018.1.9 Spring3.1与Tomcat8兼容性问题
+```
+Spring3.1与tomcat8组合时，@RequestMapping无法完成链接映射
+```
+
