@@ -272,6 +272,106 @@
 
 
 <div class="post-preview  "
+     style="background-image: url('/img/jvm.jpg')">
+    <a href="/2017/10/10/memory-strategy1/">
+        <h2 class="post-title">
+            JVM内存分配策略——对象优先在Eden分配
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-10
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                
+对象的内存分配，往大方向讲，就是在堆上分配（但也可能经过JIT编译后被拆散为标量类型并间接地栈上分配），对象主要分配在新生代的Eden区上，如果启动了本地现成分配缓冲，将按线程优先在TLAB上分配。少数情况下也可能会直接分配在老年代中，分配的规则并不是百分之百固定的，其细节取决于当前使用的是哪..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/jvm.jpg')">
+    <a href="/2017/10/08/reference-counting/">
+        <h2 class="post-title">
+            引用计数算法
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-08
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                
+在判断对象是否存活时，引用计数算法的做法是：给对象中添加一个引用计数器，每当有一个地方引用它时，计数器值就加1；当引用失效时，计数器值就减1；任何时刻计数器为0的对象就是不可能再被使用的。
+
+引用计数算法（Reference Counting）的实现简单，判定效率也很高，在大部分情况下时一个不..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/configuration.jpg')">
+    <a href="/2017/09/25/property-placeholder/">
+        <h2 class="post-title">
+            通过PropertyPlaceholderConfigurer配置不同环境配置
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-25
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                
+项目中，本地调试、测试环境、预发布环境、线上，不同环境有时需要不同的配置文件。原来的项目中，可以通过公共的配置管理服务为不同的环境在线配置不同的配置文件，然后在构建或服务器启动时去获取。现在没有了这样的公共服务，将环境配置硬编码到代码中显然是不现实的。在Spring中，可以通过扩展Proper..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/github.png')">
+    <a href="/2017/09/24/git-unlink-old/">
+        <h2 class="post-title">
+            git pull或push时报错："unable to unlink old 'xxx/xxx/xx'：Invalid argument"
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-24
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                
+在本地使用git pull或push代码时，提交、或拉取代码失败，并出现报错：error: unable to unlink old ‘xxx/xxx/xx.xx’: Invalid argument说起来这个问题也出现过好几次了orz
+
+大多数遇到这种情况，基本都是要更新或提交的文件被系统线..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
      style="background-image: url('/img/issue.jpeg')">
     <a href="/2017/09/22/learning-list/">
         <h2 class="post-title">
@@ -367,58 +467,6 @@
 
 
 
-<div class="post-preview  "
-     style="background-image: url('/img/hexo+github.png')">
-    <a href="/2017/09/10/buid-blog/">
-        <h2 class="post-title">
-            Hexo + Github Pages搭建个人blog
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-10
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                
-最近寻思着，毕业有一段时间了，是不是应该弄个博客记录一下自己的工作学习点滴，于是本着独立自主不花钱的原则，用hexo + github pages搭了一个简单的个人blog，下面就来说说搭建步骤以及几个踩过的坑。
-
-Hexo   引用官网的话，A fast, simple &amp; powe..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('/img/markdown.jpeg')">
-    <a href="/2017/09/05/basic-markdown/">
-        <h2 class="post-title">
-            Markdown基本用法
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-09-05
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                
- Markdown是一种轻量级的标记语言，相对于复杂的HTML标记语言来说，常用的标记符号不超过十个。 可以很方便地导出为PDF、HTML格式文件，使得使用者可以专心于码字，而无需花大量精力在排版上。
-
-常用标签段落一个段落是由一个以上的连接的行句组成，而一个以上的空行则会划分出不同的段落（空..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
 
 <!-- 翻页 pager -->
 
@@ -428,6 +476,10 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
         <a href="/">&larr; Newer Posts</a>
     </li>
     
+    
+    <li class="next">
+        <a href="/page/3/">Older Posts &rarr;</a>
+    </li>
     
 </ul>
 
@@ -478,7 +530,7 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                     
                     
                     <a href="/tags/#Java" title="Java"
-                       rel="6">Java</a>
+                       rel="7">Java</a>
                     
                     
                     
@@ -487,8 +539,13 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                     
                     
                     
-                    <a href="/tags/#Markdown" title="Markdown"
-                       rel="1">Markdown</a>
+                    <a href="/tags/#git" title="git"
+                       rel="2">git</a>
+                    
+                    
+                    
+                    <a href="/tags/#Github Pages" title="Github Pages"
+                       rel="1">Github Pages</a>
                     
                     
                     
@@ -497,8 +554,8 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                     
                     
                     
-                    <a href="/tags/#Github Pages" title="Github Pages"
-                       rel="1">Github Pages</a>
+                    <a href="/tags/#Markdown" title="Markdown"
+                       rel="1">Markdown</a>
                     
                     
                     
@@ -509,11 +566,6 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                     
                     <a href="/tags/#H5" title="H5"
                        rel="1">H5</a>
-                    
-                    
-                    
-                    <a href="/tags/#git" title="git"
-                       rel="2">git</a>
                     
                     
                     
@@ -533,12 +585,22 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
                     
                     
                     <a href="/tags/#Spring" title="Spring"
-                       rel="2">Spring</a>
+                       rel="3">Spring</a>
+                    
+                    
+                    
+                    <a href="/tags/#mysql" title="mysql"
+                       rel="1">mysql</a>
                     
                     
                     
                     <a href="/tags/#Struts" title="Struts"
                        rel="1">Struts</a>
+                    
+                    
+                    
+                    <a href="/tags/#rpc" title="rpc"
+                       rel="1">rpc</a>
                     
                     
                 </div>
@@ -573,7 +635,7 @@ Hexo   引用官网的话，A fast, simple &amp; powe..
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; 茄子的猫砂盆 2017
+                    Copyright &copy; 茄子的猫砂盆 2018
                     <br>
                     <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
                     <br>
