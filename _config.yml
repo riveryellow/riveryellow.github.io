@@ -16,7 +16,7 @@ email:
 description:
 keyword: # seo key words
 
-favicon: # your favicon png
+favicon: /img/favicon.png
 # custom end
 
 # URL
