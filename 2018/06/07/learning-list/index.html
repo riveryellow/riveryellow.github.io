@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        待探究问题清单｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2018/06/07/learning-list/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/img/index-bg2.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/img/issue.jpeg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/img/issue.jpeg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>待探究问题清单</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2018-06-07
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            待探究问题清单
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="2017-9-4-hexo正确使用方式"><a href="#2017-9-4-hexo正确使用方式" class="headerlink" title="2017.9.4 hexo正确使用方式"></a><a href="http://riveryellow.github.io/2017/09/10/buid-blog/" target="_blank" rel="external">2017.9.4 hexo正确使用方式</a></h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">通过hexo发布blog至github时，发布了整个文件脚手架到github上，</div><div class="line">导致访问404(npm install hexo-deployer-git --save)，每次删除原来脚手架重新拉取时都要安装发布插件</div><div class="line">若默认发布分支上有非web结构的目录结构，要先清空再发布</div></pre></td></tr></table></figure>
+<h2 id="2017-9-4-新版Struts2调用java静态方法"><a href="#2017-9-4-新版Struts2调用java静态方法" class="headerlink" title="2017.9.4 新版Struts2调用java静态方法"></a><a href="https://riveryellow.github.io/2017/09/20/struts-ognlstack-bug/" target="_blank" rel="external">2017.9.4 新版Struts2调用java静态方法</a></h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">项目升级struts2，从2.1.0.2升级到2.3.0.15后，freemarker中</div><div class="line">  stack.findValue(&quot;@com.aa.bb.classC@getJSONValue()&quot;)</div><div class="line">返回为null。</div></pre></td></tr></table></figure>
+<h2 id="2017-9-4-Struts为何禁止通过值栈调用外部静态方法"><a href="#2017-9-4-Struts为何禁止通过值栈调用外部静态方法" class="headerlink" title="2017.9.4 Struts为何禁止通过值栈调用外部静态方法"></a>2017.9.4 Struts为何禁止通过值栈调用外部静态方法</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">学习OGNL、struts值栈的实现原理</div><div class="line">http://struts.apache.org/docs/s2-009.html</div></pre></td></tr></table></figure>
+<h2 id="2017-9-5-fetch如何模仿jsonp实现跨域请求"><a href="#2017-9-5-fetch如何模仿jsonp实现跨域请求" class="headerlink" title="2017.9.5 fetch如何模仿jsonp实现跨域请求"></a>2017.9.5 fetch如何模仿jsonp实现跨域请求</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">项目重构改造，为简化代码，将原有jsonp请求通过fetch获取，遇到报错如下：</div><div class="line"></div><div class="line">&gt;  fetch(&quot;//cart.yhd.com/cart/info/minicart.do&quot;)</div><div class="line">&lt;· Promise &#123;[[PromiseStatus]]: &quot;pending&quot;, [[PromiseValue]]: undefined&#125;</div><div class="line">·  Fetch API cannot load http://cart.yhd.com/cart/info/minicart.do. No &apos;Access-Control-Allow-Origin&apos; header is present on the requested resource. Origin &apos;http://www.yhd.com&apos; is therefore not allowed access. If an opaque response serves your needs, set the request&apos;s mode to &apos;no-cors&apos; to fetch the resource with CORS disabled.</div><div class="line">·  Uncaught (in promise) TypeError: Failed to fetch</div></pre></td></tr></table></figure>
+<h2 id="2017-9-7-jQuery-call-、apply-方法学习"><a href="#2017-9-7-jQuery-call-、apply-方法学习" class="headerlink" title="2017.9.7 jQuery call() 、apply()方法学习"></a>2017.9.7 jQuery call() 、apply()方法学习</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">融合项目中出现很多callback.call()、callback.apply()(dom.apply()?)的调用方式，搞清楚为什么</div><div class="line">CitySelected ——&gt; addToCartNew()</div></pre></td></tr></table></figure>
+<h2 id="2017-9-8-埋点系统学习——JD子午线、JD通天塔、Google-Tag-Manager"><a href="#2017-9-8-埋点系统学习——JD子午线、JD通天塔、Google-Tag-Manager" class="headerlink" title="2017.9.8 埋点系统学习——JD子午线、JD通天塔、Google Tag Manager"></a>2017.9.8 埋点系统学习——JD子午线、JD通天塔、Google Tag Manager</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">当前需求：希望将订单中的商品归类到各个活动中去。</div><div class="line">痛点：由于商品加车大多数在详情页，根据当前的打点规则，很难简单的追溯商品的活动来源。</div></pre></td></tr></table></figure>
+<h2 id="2017-9-9-jquery-Object添加元素"><a href="#2017-9-9-jquery-Object添加元素" class="headerlink" title="2017.9.9 jquery Object添加元素"></a>2017.9.9 jquery Object添加元素</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">如何向已存在的jquery对象中新增元素，push？obj[]?</div></pre></td></tr></table></figure>
+<h2 id="2017-9-13-如何正确使用github开源代码–fork"><a href="#2017-9-13-如何正确使用github开源代码–fork" class="headerlink" title="2017.9.13 如何正确使用github开源代码–fork"></a>2017.9.13 如何正确使用github开源代码–fork</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">用hexo搭建了github pages之后，每次拉取最新的scaffolds后，</div><div class="line">hexo generate后都会出现WARN NO LAYOUT的警告，hexo server之</div><div class="line">后页面空白。仔细一看，clone到本地的Anisina主题无法提交到自己的</div><div class="line">github。</div></pre></td></tr></table></figure>
+<p>参考：<a href="http://yijiebuyi.com/blog/9c00641126e41779ef38cafb9c6aad67.html" target="_blank" rel="external">如何把别人项目代码修改后 提交到github</a></p>
+<h2 id="2017-9-14-struts如何引用jar包中的struts配置"><a href="#2017-9-14-struts如何引用jar包中的struts配置" class="headerlink" title="2017.9.14 struts如何引用jar包中的struts配置"></a>2017.9.14 struts如何引用jar包中的struts配置</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">融合项目中，服务引用了jar包中的错误页面struts配置，访问时却无法访问到action指向页面，</div><div class="line">状态码200，页面空白，后台无报错。</div><div class="line">是否和引用jar包中的struts配置有关？</div></pre></td></tr></table></figure>
+<h2 id="2017-9-22-如何使用spring配置在不同环境获取不同的配置文件"><a href="#2017-9-22-如何使用spring配置在不同环境获取不同的配置文件" class="headerlink" title="2017.9.22 如何使用spring配置在不同环境获取不同的配置文件"></a><a href="https://riveryellow.github.io/2017/09/25/property-placeholder/" target="_blank" rel="external">2017.9.22 如何使用spring配置在不同环境获取不同的配置文件</a></h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">开发时，往往本地、测试、预发布、线上使用的一些系统参数都是不一样的。</div><div class="line">参考：GlobalPropertyConfigurer</div></pre></td></tr></table></figure>
+<h2 id="2017-9-25-图片懒加载"><a href="#2017-9-25-图片懒加载" class="headerlink" title="2017.9.25 图片懒加载"></a>2017.9.25 图片懒加载</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">简单实现图片懒加载，使页面上的图片能够按需加载，降低页面加载时间。</div><div class="line">参考： lazyImg</div></pre></td></tr></table></figure>
+<h2 id="2017-9-28-Spring-Security单点登录实现"><a href="#2017-9-28-Spring-Security单点登录实现" class="headerlink" title="2017.9.28 Spring Security单点登录实现"></a>2017.9.28 Spring Security单点登录实现</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">今天被要求给后台系统做一个简单的登陆，于是使用了spring security。</div><div class="line">搞清楚原理：https://docs.spring.io/spring-security/site/docs/current/guides/html5//helloworld-javaconfig.html#security-config-java</div></pre></td></tr></table></figure>
+<h2 id="2017-10-1-浏览器url缓存机制及JSONP使用缓存实例（cache-control）"><a href="#2017-10-1-浏览器url缓存机制及JSONP使用缓存实例（cache-control）" class="headerlink" title="2017.10.1 浏览器url缓存机制及JSONP使用缓存实例（cache-control）"></a>2017.10.1 浏览器url缓存机制及JSONP使用缓存实例（cache-control）</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">对于返回结果变动不大的请求，可以使用浏览器的缓存机制。</div><div class="line">参考：getCityById、JsonpInterceptor</div></pre></td></tr></table></figure>
+<h2 id="2017-10-9-sitemesh以及decorate模式"><a href="#2017-10-9-sitemesh以及decorate模式" class="headerlink" title="2017.10.9 sitemesh以及decorate模式"></a>2017.10.9 sitemesh以及decorate模式</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">学习sitemesh的配置以及实现</div></pre></td></tr></table></figure>
+<h2 id="2017-10-10-ABTEST分桶实现"><a href="#2017-10-10-ABTEST分桶实现" class="headerlink" title="2017.10.10 ABTEST分桶实现"></a>2017.10.10 ABTEST分桶实现</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">回顾ABTEST的分桶实现，以及后台新增AB实验后的消息通知机制（Zookeeper）</div></pre></td></tr></table></figure>
+<h2 id="2017-10-10-jsonp请求的返回值中出现”-ref”-“-objCitys-T-0-”"><a href="#2017-10-10-jsonp请求的返回值中出现”-ref”-“-objCitys-T-0-”" class="headerlink" title="2017.10.10 jsonp请求的返回值中出现”$ref”: “$.objCitys.T[0]”"></a>2017.10.10 jsonp请求的返回值中出现”$ref”: “$.objCitys.T[0]”</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">在jsonp请求后返回的结果中，出现了&quot;$ref&quot;: &quot;$.objCitys.T[0]&quot;，导致解析成undefined.</div><div class="line">原因：大概是后台返回的数组中有重复的元素</div><div class="line">探究fastjson如何解析json对象</div></pre></td></tr></table></figure>
+<h2 id="2017-10-12-Spring-boot"><a href="#2017-10-12-Spring-boot" class="headerlink" title="2017.10.12 Spring boot"></a>2017.10.12 Spring boot</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">熟悉新项目框架（特性）</div></pre></td></tr></table></figure>
+<h2 id="2017-10-12-OpenResty"><a href="#2017-10-12-OpenResty" class="headerlink" title="2017.10.12 OpenResty"></a>2017.10.12 OpenResty</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">熟悉新项目技术</div></pre></td></tr></table></figure>
+<h2 id="2017-10-16-groovy基础学习"><a href="#2017-10-16-groovy基础学习" class="headerlink" title="2017.10.16 groovy基础学习"></a>2017.10.16 groovy基础学习</h2><p>Groovy是一种基于JVM（Java虚拟机）的敏捷开发语言，它结合了Python、Ruby和Smalltalk的许多强大的特性，Groovy 代码能够与 Java 代码很好地结合，也能用于扩展现有代码。由于其运行在 JVM 上的特性，Groovy 可以使用其他 Java 语言编写的库。<br>很厉害的样子，学习一下也无妨。</p>
+<h2 id="2017-10-16-js自动混淆实现"><a href="#2017-10-16-js自动混淆实现" class="headerlink" title="2017.10.16 js自动混淆实现"></a>2017.10.16 js自动混淆实现</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">当本地修改js时，不需要重新package就可获取到新的混淆js</div><div class="line">参考：MergeStaticServlet</div></pre></td></tr></table></figure>
+<h2 id="2018-1-3-spring-BeanUtil使用方法及原理学习"><a href="#2018-1-3-spring-BeanUtil使用方法及原理学习" class="headerlink" title="2018.1.3 spring BeanUtil使用方法及原理学习"></a>2018.1.3 spring BeanUtil使用方法及原理学习</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">今天做网关接口时，用到了spring的BeanUtil进行对象拷贝。</div><div class="line">学习其原理。（顺带学习对象vo的遍历）</div></pre></td></tr></table></figure>
+<h2 id="2018-1-9-Autowired-与-Resouce的区别"><a href="#2018-1-9-Autowired-与-Resouce的区别" class="headerlink" title="2018.1.9 @Autowired 与 @Resouce的区别"></a>2018.1.9 @Autowired 与 @Resouce的区别</h2><h2 id="2018-1-9-Spring3-1与Tomcat8兼容性问题"><a href="#2018-1-9-Spring3-1与Tomcat8兼容性问题" class="headerlink" title="2018.1.9 Spring3.1与Tomcat8兼容性问题"></a>2018.1.9 Spring3.1与Tomcat8兼容性问题</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Spring3.1与tomcat8组合时，@RequestMapping无法完成链接映射</div></pre></td></tr></table></figure>
+<h2 id="2018-6-12-HikariCP连接池学习-与Spring整合"><a href="#2018-6-12-HikariCP连接池学习-与Spring整合" class="headerlink" title="2018.6.12 HikariCP连接池学习(与Spring整合)"></a>2018.6.12 HikariCP连接池学习(与Spring整合)</h2>
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/06/09/spring-custom-metrics/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Boot 1.5.X 自定义Metrics">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/12/30/choose-open-source-license/" data-toggle="tooltip" data-placement="top"
+                           title="Paul Bagwell教你选择开源许可证">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-4-hexo正确使用方式"><span class="toc-text">2017.9.4 hexo正确使用方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-4-新版Struts2调用java静态方法"><span class="toc-text">2017.9.4 新版Struts2调用java静态方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-4-Struts为何禁止通过值栈调用外部静态方法"><span class="toc-text">2017.9.4 Struts为何禁止通过值栈调用外部静态方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-5-fetch如何模仿jsonp实现跨域请求"><span class="toc-text">2017.9.5 fetch如何模仿jsonp实现跨域请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-7-jQuery-call-、apply-方法学习"><span class="toc-text">2017.9.7 jQuery call() 、apply()方法学习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-8-埋点系统学习——JD子午线、JD通天塔、Google-Tag-Manager"><span class="toc-text">2017.9.8 埋点系统学习——JD子午线、JD通天塔、Google Tag Manager</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-9-jquery-Object添加元素"><span class="toc-text">2017.9.9 jquery Object添加元素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-13-如何正确使用github开源代码–fork"><span class="toc-text">2017.9.13 如何正确使用github开源代码–fork</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-14-struts如何引用jar包中的struts配置"><span class="toc-text">2017.9.14 struts如何引用jar包中的struts配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-22-如何使用spring配置在不同环境获取不同的配置文件"><span class="toc-text">2017.9.22 如何使用spring配置在不同环境获取不同的配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-25-图片懒加载"><span class="toc-text">2017.9.25 图片懒加载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-9-28-Spring-Security单点登录实现"><span class="toc-text">2017.9.28 Spring Security单点登录实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-10-1-浏览器url缓存机制及JSONP使用缓存实例（cache-control）"><span class="toc-text">2017.10.1 浏览器url缓存机制及JSONP使用缓存实例（cache-control）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-10-9-sitemesh以及decorate模式"><span class="toc-text">2017.10.9 sitemesh以及decorate模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-10-10-ABTEST分桶实现"><span class="toc-text">2017.10.10 ABTEST分桶实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-10-10-jsonp请求的返回值中出现”-ref”-“-objCitys-T-0-”"><span class="toc-text">2017.10.10 jsonp请求的返回值中出现”$ref”: “$.objCitys.T[0]”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-10-12-Spring-boot"><span class="toc-text">2017.10.12 Spring boot</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-10-12-OpenResty"><span class="toc-text">2017.10.12 OpenResty</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-10-16-groovy基础学习"><span class="toc-text">2017.10.16 groovy基础学习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2017-10-16-js自动混淆实现"><span class="toc-text">2017.10.16 js自动混淆实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2018-1-3-spring-BeanUtil使用方法及原理学习"><span class="toc-text">2018.1.3 spring BeanUtil使用方法及原理学习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2018-1-9-Autowired-与-Resouce的区别"><span class="toc-text">2018.1.9 @Autowired 与 @Resouce的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2018-1-9-Spring3-1与Tomcat8兼容性问题"><span class="toc-text">2018.1.9 Spring3.1与Tomcat8兼容性问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2018-6-12-HikariCP连接池学习-与Spring整合"><span class="toc-text">2018.6.12 HikariCP连接池学习(与Spring整合)</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2018
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/img/brinjaul.png">
+</body>
+
+</html>

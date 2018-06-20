@@ -12,7 +12,7 @@
     <meta name="msapplication-navbutton-color" content="#600090">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
-    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="shortcut icon" href="/img/favicon.png">
     <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
@@ -273,12 +273,35 @@
 
 <div class="post-preview  "
      style="background-image: url('/img/grpc.png')">
-    <a href="/2018/06/08/grpc1/">
+    <a href="/2018/06/19/grpc2/">
+        <h2 class="post-title">
+            grpc实践(二) — 消息字段不能为空处理
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-06-19
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                问题背景现象   在使用gRPC做远程接口调用时，从本地的实体通过BeanUtils.copyProperties()对即将传给客户端的由proto3生成的对象进行拷贝时会出现如下报错：org.springframework.beans.FatalBeanException: Could not..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/grpc.png')">
+    <a href="/2018/06/12/grpc1/">
         <h2 class="post-title">
             grpc实践(一)
         </h2>
         <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-06-08
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-06-12
         </p>
         
         <div class="post-content-preview">
@@ -286,6 +309,52 @@
                 实践背景   目前在着手的一个音乐app服务端项目中，有些诸如用户服务、谷歌api查询等可以公用的功能杂糅在服务端中，其他项目也同样杂糅着类似的功能，因此想要把这些共用性比较高的功能服务都抽离出来，降低耦合。
 Why GRPC?
 Simple service definition 简单的服务定义..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/springboot.jpg')">
+    <a href="/2018/06/09/spring-custom-metrics/">
+        <h2 class="post-title">
+            Spring Boot 1.5.X 自定义Metrics
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-06-09
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                需求场景   当我们使用Spring Boot Actuator对Spring项目进行监控时，我们可以得到大部分我们想要的监控数据，但是仍无法满足我们的监控场景需要。   当前需要监控的场景之一是，在项目中通过RestTemplate调用远程接口时，监控调用的返回状态，以监控远程服务的状态。在一..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/issue.jpeg')">
+    <a href="/2018/06/07/learning-list/">
+        <h2 class="post-title">
+            待探究问题清单
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-06-07
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                2017.9.4 hexo正确使用方式通过hexo发布blog至github时，发布了整个文件脚手架到github上，导致访问404(npm install hexo-deployer-git --save)，每次删除原来脚手架重新拉取时都要安装发布插件若默认发布分支上有非web结构的目录结构，..
             </p>
         </div>
     </a>
@@ -399,93 +468,6 @@ ifr..
 
 
 
-<div class="post-preview  "
-     style="background-image: url('/img/spring.png')">
-    <a href="/2017/10/16/spring-cli-install/">
-        <h2 class="post-title">
-            Spring Boot CLI安装
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-16
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                
-The Spring Boot CLI is a command line tool that can be used if you want to quickly prototype with Spring. It allows you to run Groovy scripts, whic..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('/img/ab-test.jpg')">
-    <a href="/2017/10/13/abtest/">
-        <h2 class="post-title">
-            A/B实验——从后台配置到前台展示
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-13
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                What is A/B testing？A/B测试(也称为分拆测试[split testing]或桶测试[bucket testing])是一种比较两种不同版本的网页或应用程序，以确定哪一种表现更好的实现方法。AB测试本质上是一个实验，在这个实验中，一个页面的两个或多个变种被随机地展示给用户，统..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('/img/jvm.jpg')">
-    <a href="/2017/10/11/jvm-monitor-tools/">
-        <h2 class="post-title">
-            jdk自带虚拟机性能监控工具
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-11
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                
-
-
-名称
-主要作用
-
-
-
-
-jps(JVM Process Status Tool)
-显示指定系统内所有的HotSpot虚拟机进程
-
-
-jstat(JVM Statistics Monitoring Tool)
-用于手机HotSpot虚拟机各方面的运行数据
-
-
-jinfo(Configurat..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
 
 <!-- 翻页 pager -->
 
@@ -545,17 +527,12 @@ jinfo(Configurat..
                     
                     
                     <a href="/tags/#Java" title="Java"
-                       rel="7">Java</a>
+                       rel="8">Java</a>
                     
                     
                     
                     <a href="/tags/#A/B testing" title="A/B testing"
                        rel="1">A/B testing</a>
-                    
-                    
-                    
-                    <a href="/tags/#git" title="git"
-                       rel="2">git</a>
                     
                     
                     
@@ -584,6 +561,26 @@ jinfo(Configurat..
                     
                     
                     
+                    <a href="/tags/#rpc" title="rpc"
+                       rel="2">rpc</a>
+                    
+                    
+                    
+                    <a href="/tags/#git" title="git"
+                       rel="2">git</a>
+                    
+                    
+                    
+                    <a href="/tags/#JVM" title="JVM"
+                       rel="3">JVM</a>
+                    
+                    
+                    
+                    <a href="/tags/#mysql" title="mysql"
+                       rel="1">mysql</a>
+                    
+                    
+                    
                     <a href="/tags/#jdk" title="jdk"
                        rel="1">jdk</a>
                     
@@ -594,28 +591,13 @@ jinfo(Configurat..
                     
                     
                     
-                    <a href="/tags/#JVM" title="JVM"
-                       rel="3">JVM</a>
-                    
-                    
-                    
                     <a href="/tags/#Spring" title="Spring"
-                       rel="3">Spring</a>
-                    
-                    
-                    
-                    <a href="/tags/#mysql" title="mysql"
-                       rel="1">mysql</a>
+                       rel="4">Spring</a>
                     
                     
                     
                     <a href="/tags/#Struts" title="Struts"
                        rel="1">Struts</a>
-                    
-                    
-                    
-                    <a href="/tags/#rpc" title="rpc"
-                       rel="1">rpc</a>
                     
                     
                 </div>
