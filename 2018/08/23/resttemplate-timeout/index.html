@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        RestTemplate连接池、超时时间配置｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2018/08/23/resttemplate-timeout/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/img/index-bg2.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/img/resttemplate.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/img/resttemplate.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>RestTemplate连接池、超时时间配置</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2018-08-23
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#Spring"
+                           title="Spring">Spring</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            RestTemplate连接池、超时时间配置
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>   RestTemplate是Spring Framework提供的比HttpClient更优雅的进行HTTP交互的模板类。Java Doc如是说：</p>
+<blockquote>
+<p>Spring’s central class for synchronous client-side HTTP access. It simplifies communication with HTTP servers, and enforces RESTful principles. It handles HTTP connections, leaving application code to provide URLs (with possible template variables) and extract results.</p>
+</blockquote>
+<h2 id="默认的RestTemplate配置"><a href="#默认的RestTemplate配置" class="headerlink" title="默认的RestTemplate配置"></a>默认的RestTemplate配置</h2><p>   RestTemplate默认的ClientHttpRequestFactor为SimpleClientHttpRequestFactory，其中的createRequest方法，每次创建request都是通过jdk的URL类new一个新的连接，每个连接都占用一个端口，若资源没有及时释放，就会导致无法建立新的连接：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> HttpURLConnection <span class="title">openConnection</span><span class="params">(URL url, Proxy proxy)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">       URLConnection urlConnection = proxy != <span class="keyword">null</span> ? url.openConnection(proxy) : url.openConnection();</span><br><span class="line">       <span class="keyword">if</span> (!HttpURLConnection.class.isInstance(urlConnection)) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"HttpURLConnection required for ["</span> + url + <span class="string">"] but got: "</span> + urlConnection);</span><br><span class="line">       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           <span class="keyword">return</span> (HttpURLConnection)urlConnection;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>   从SimpleClientHttpRequestFactory中还能看出，<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> connectTimeout = -<span class="number">1</span>;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> readTimeout = -<span class="number">1</span>;</span><br></pre></td></tr></table></figure></p>
+<p>   默认的超时时间设置为-1，若出现服务器宕机的情况，该连接将永远不会被释放。</p>
+<h2 id="配置RestTemplate线程池、超时时间"><a href="#配置RestTemplate线程池、超时时间" class="headerlink" title="配置RestTemplate线程池、超时时间"></a>配置RestTemplate线程池、超时时间</h2><p>   为RestTemplate创建线程池，其中一个思路就是将HTTP Lib换成带有线程池功能的HttpComponents，设置线程池的同时，设置连接超时时间。<br>   RestTemplate文档中说到， RestTemplate默认使用标准的JDK工具进行HTTP连接，若想使用别的HTTP库（HttpComponents, Netty, OkHttp…）,可以通过InterceptingHttpAccessor.setRequestFactory(org.springframework.http.client.ClientHttpRequestFactory)属性进行修改。<br>   具体实现如下：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebConfiguration</span> <span class="keyword">extends</span> <span class="title">WebMvcConfigurerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        PoolingHttpClientConnectionManager connectionManager = <span class="keyword">new</span> PoolingHttpClientConnectionManager();</span><br><span class="line">        connectionManager.setDefaultSocketConfig(SocketConfig.custom().setTcpNoDelay(<span class="keyword">true</span>).build());</span><br><span class="line">        connectionManager.setDefaultMaxPerRoute(<span class="number">20</span>); <span class="comment">// 每个路由(host)的最大连接数</span></span><br><span class="line">        connectionManager.setMaxTotal(<span class="number">200</span>); <span class="comment">// 总的最大连接数</span></span><br><span class="line"></span><br><span class="line">        HttpClient httpClient = HttpClientBuilder.create().setConnectionManager(connectionManager).build();</span><br><span class="line"></span><br><span class="line">        HttpComponentsClientHttpRequestFactory factory = <span class="keyword">new</span> HttpComponentsClientHttpRequestFactory(httpClient);</span><br><span class="line">		<span class="comment">// 超时时间设置</span></span><br><span class="line">        factory.setReadTimeout(<span class="number">30</span> * <span class="number">1000</span>);</span><br><span class="line">        factory.setConnectTimeout(<span class="number">30</span> * <span class="number">1000</span>);</span><br><span class="line">        factory.setConnectionRequestTimeout(<span class="number">30</span> * <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate(factory);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="HttpComponentsClientHttpRequestFactory实现原理"><a href="#HttpComponentsClientHttpRequestFactory实现原理" class="headerlink" title="HttpComponentsClientHttpRequestFactory实现原理"></a>HttpComponentsClientHttpRequestFactory实现原理</h2><p>   以RestTemplate#getForObject(URI url, Class<t> responseType)为例，以下是调用栈：</t></p>
+<pre><code>- RestTemplate#getForObject(URI url, Class&lt;T&gt; responseType)
+- HttpComponentsClientHttpRequest#executeInternal(HttpHeaders headers, byte[] bufferedOutput)
+// CloseableHttpClient是HttpComponentsClientHttpRequestFactory默认的HttpClient（HttpClients.createSystem()）
+- CloseableHttpClient#execute(HttpHost target, HttpRequest request, HttpContext context) 
+- InternalHttpClient#doExecute( HttpHost , HttpRequest ,HttpContext ) 
+- this.execChain.execute(route, wrapper, localcontext, execAware) 
+- MainClientExec#execute*(HttpRoute,HttpRequestWrapper,HttpClientContext,HttpExecutionAware) 
+// HttpClientConnectionManager就是在Bean中set到HttpClient中的PoolingHttpClientConnectionManager
+- HttpClientConnectionManager#requestConnection(HttpRoute,Object):ConnectionRequest 
+// 这里是lease时机
+- ConnectionRequest#get(long,TimeUnit):HttpClientConnection
+// 这是release时机 
+- CloseableHttpResponse#close()
+- ConnectionHolder#close() 
+- ConnectionHolder#releaseConnection() 
+- releaseConnection$releaseConnection(boolean)
+</code></pre><p>   连接池的核心应该是HttpClientConnectionManager中的属性cPool的父类AbstractConnPool：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">	<span class="meta">@Contract</span>(</span><br><span class="line">    threading = ThreadingBehavior.SAFE_CONDITIONAL</span><br><span class="line">)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractConnPool</span>&lt;<span class="title">T</span>, <span class="title">C</span>, <span class="title">E</span> <span class="keyword">extends</span> <span class="title">PoolEntry</span>&lt;<span class="title">T</span>, <span class="title">C</span>&gt;&gt; <span class="keyword">implements</span> <span class="title">ConnPool</span>&lt;<span class="title">T</span>, <span class="title">E</span>&gt;, <span class="title">ConnPoolControl</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Lock lock;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Condition condition;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ConnFactory&lt;T, C&gt; connFactory;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;T, RouteSpecificPool&lt;T, C, E&gt;&gt; routeToPool;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Set&lt;E&gt; leased;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> LinkedList&lt;E&gt; available;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> LinkedList&lt;Future&lt;E&gt;&gt; pending;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;T, Integer&gt; maxPerRoute;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> isShutDown;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> defaultMaxPerRoute;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> maxTotal;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> validateAfterInactivity;</span><br><span class="line">    ...</span><br><span class="line">	...</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line">``` </span><br><span class="line">   其中，routeToPool是各个路由对应的连接池，一个路由可以存在DefaultMaxPerRoute个连接，所有路由的连接总数不得超过MaxTotal，routeToPool的构成如下：</span><br><span class="line">```java</span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">RouteSpecificPool</span>&lt;<span class="title">T</span>, <span class="title">C</span>, <span class="title">E</span> <span class="keyword">extends</span> <span class="title">PoolEntry</span>&lt;<span class="title">T</span>, <span class="title">C</span>&gt;&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> T route;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Set&lt;E&gt; leased;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> LinkedList&lt;E&gt; available;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> LinkedList&lt;Future&lt;E&gt;&gt; pending;</span><br><span class="line"></span><br><span class="line">    RouteSpecificPool(T route) &#123;</span><br><span class="line">        <span class="keyword">this</span>.route = route;</span><br><span class="line">        <span class="keyword">this</span>.leased = <span class="keyword">new</span> HashSet();</span><br><span class="line">        <span class="keyword">this</span>.available = <span class="keyword">new</span> LinkedList();</span><br><span class="line">        <span class="keyword">this</span>.pending = <span class="keyword">new</span> LinkedList();</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">	...</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="lease-connection"><a href="#lease-connection" class="headerlink" title="lease connection"></a>lease connection</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Future&lt;E&gt; <span class="title">lease</span><span class="params">(<span class="keyword">final</span> T route, <span class="keyword">final</span> Object state, <span class="keyword">final</span> FutureCallback&lt;E&gt; callback)</span> </span>&#123;</span><br><span class="line">       Args.notNull(route, <span class="string">"Route"</span>);</span><br><span class="line">       Asserts.check(!<span class="keyword">this</span>.isShutDown, <span class="string">"Connection pool shut down"</span>);</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> Future&lt;E&gt;() &#123;</span><br><span class="line">           <span class="keyword">private</span> <span class="keyword">final</span> AtomicBoolean cancelled = <span class="keyword">new</span> AtomicBoolean(<span class="keyword">false</span>);</span><br><span class="line">           <span class="keyword">private</span> <span class="keyword">final</span> AtomicBoolean done = <span class="keyword">new</span> AtomicBoolean(<span class="keyword">false</span>);</span><br><span class="line">           <span class="keyword">private</span> <span class="keyword">final</span> AtomicReference&lt;E&gt; entryRef = <span class="keyword">new</span> AtomicReference((Object)<span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">cancel</span><span class="params">(<span class="keyword">boolean</span> mayInterruptIfRunning)</span> </span>&#123;</span><br><span class="line">               <span class="keyword">if</span> (<span class="keyword">this</span>.cancelled.compareAndSet(<span class="keyword">false</span>, <span class="keyword">true</span>)) &#123;</span><br><span class="line">                   <span class="keyword">this</span>.done.set(<span class="keyword">true</span>);</span><br><span class="line">                   AbstractConnPool.<span class="keyword">this</span>.lock.lock();</span><br><span class="line"></span><br><span class="line">                   <span class="keyword">try</span> &#123;</span><br><span class="line">                       AbstractConnPool.<span class="keyword">this</span>.condition.signalAll();</span><br><span class="line">                   &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                       AbstractConnPool.<span class="keyword">this</span>.lock.unlock();</span><br><span class="line">                   &#125;</span><br><span class="line"></span><br><span class="line">                   <span class="keyword">if</span> (callback != <span class="keyword">null</span>) &#123;</span><br><span class="line">                       callback.cancelled();</span><br><span class="line">                   &#125;</span><br><span class="line"></span><br><span class="line">                   <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isCancelled</span><span class="params">()</span> </span>&#123;</span><br><span class="line">               <span class="keyword">return</span> <span class="keyword">this</span>.cancelled.get();</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isDone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">               <span class="keyword">return</span> <span class="keyword">this</span>.done.get();</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException, ExecutionException </span>&#123;</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   <span class="keyword">return</span> <span class="keyword">this</span>.get(<span class="number">0L</span>, TimeUnit.MILLISECONDS);</span><br><span class="line">               &#125; <span class="keyword">catch</span> (TimeoutException var2) &#123;</span><br><span class="line">                   <span class="keyword">throw</span> <span class="keyword">new</span> ExecutionException(var2);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit tunit)</span> <span class="keyword">throws</span> InterruptedException, ExecutionException, TimeoutException </span>&#123;</span><br><span class="line">               E entry = (PoolEntry)<span class="keyword">this</span>.entryRef.get();</span><br><span class="line">               <span class="keyword">if</span> (entry != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   <span class="keyword">return</span> entry;</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   <span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;</span><br><span class="line">                       <span class="keyword">try</span> &#123;</span><br><span class="line">                           <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">                               E leasedEntry = AbstractConnPool.<span class="keyword">this</span>.getPoolEntryBlocking(route, state, timeout, tunit, <span class="keyword">this</span>);</span><br><span class="line">                               <span class="keyword">if</span> (AbstractConnPool.<span class="keyword">this</span>.validateAfterInactivity &lt;= <span class="number">0</span> || leasedEntry.getUpdated() + (<span class="keyword">long</span>)AbstractConnPool.<span class="keyword">this</span>.validateAfterInactivity &gt; System.currentTimeMillis() || AbstractConnPool.<span class="keyword">this</span>.validate(leasedEntry)) &#123;</span><br><span class="line">                                   <span class="keyword">this</span>.entryRef.set(leasedEntry);</span><br><span class="line">                                   <span class="keyword">this</span>.done.set(<span class="keyword">true</span>);</span><br><span class="line">                                   AbstractConnPool.<span class="keyword">this</span>.onLease(leasedEntry);</span><br><span class="line">                                   <span class="keyword">if</span> (callback != <span class="keyword">null</span>) &#123;</span><br><span class="line">                                       callback.completed(leasedEntry);</span><br><span class="line">                                   &#125;</span><br><span class="line"></span><br><span class="line">                                   PoolEntry var10000 = leasedEntry;</span><br><span class="line">                                   <span class="keyword">return</span> var10000;</span><br><span class="line">                               &#125;</span><br><span class="line"></span><br><span class="line">                               leasedEntry.close();</span><br><span class="line">                               AbstractConnPool.<span class="keyword">this</span>.release(leasedEntry, <span class="keyword">false</span>);</span><br><span class="line">                           &#125;</span><br><span class="line">                       &#125; <span class="keyword">catch</span> (IOException var8) &#123;</span><br><span class="line">                           <span class="keyword">this</span>.done.set(<span class="keyword">true</span>);</span><br><span class="line">                           <span class="keyword">if</span> (callback != <span class="keyword">null</span>) &#123;</span><br><span class="line">                               callback.failed(var8);</span><br><span class="line">                           &#125;</span><br><span class="line"></span><br><span class="line">                           <span class="keyword">throw</span> <span class="keyword">new</span> ExecutionException(var8);</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>   寻找空闲连接的流程大致如下：</p>
+<ul>
+<li>通过routeToPool找到对应route的连接池；</li>
+<li>遍历连接池RouteSpecificPool中的available列表，查询到空闲连接，将该连接entry放入连接池的leased列表中，并返回；</li>
+<li>将返回的future存入pending列表中</li>
+</ul>
+<h3 id="release-connection"><a href="#release-connection" class="headerlink" title="release connection"></a>release connection</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">release</span><span class="params">(E entry, <span class="keyword">boolean</span> reusable)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>.lock.lock();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           <span class="keyword">if</span> (<span class="keyword">this</span>.leased.remove(entry)) &#123;</span><br><span class="line">               RouteSpecificPool&lt;T, C, E&gt; pool = <span class="keyword">this</span>.getPool(entry.getRoute());</span><br><span class="line">               pool.free(entry, reusable);</span><br><span class="line">               <span class="keyword">if</span> (reusable &amp;&amp; !<span class="keyword">this</span>.isShutDown) &#123;</span><br><span class="line">                   <span class="keyword">this</span>.available.addFirst(entry);</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   entry.close();</span><br><span class="line">               &#125;</span><br><span class="line"></span><br><span class="line">               <span class="keyword">this</span>.onRelease(entry);</span><br><span class="line">               Future&lt;E&gt; future = pool.nextPending();</span><br><span class="line">               <span class="keyword">if</span> (future != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   <span class="keyword">this</span>.pending.remove(future);</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   future = (Future)<span class="keyword">this</span>.pending.poll();</span><br><span class="line">               &#125;</span><br><span class="line"></span><br><span class="line">               <span class="keyword">if</span> (future != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   <span class="keyword">this</span>.condition.signalAll();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">           <span class="keyword">this</span>.lock.unlock();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>   和lease连接原理类似，将连接从leased列表中移除并存入available列表，再移除pending列表中的future.</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/06/19/grpc2/" data-toggle="tooltip" data-placement="top"
+                           title="grpc实践(二) — 消息字段不能为空处理">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#默认的RestTemplate配置"><span class="toc-text">默认的RestTemplate配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置RestTemplate线程池、超时时间"><span class="toc-text">配置RestTemplate线程池、超时时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HttpComponentsClientHttpRequestFactory实现原理"><span class="toc-text">HttpComponentsClientHttpRequestFactory实现原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#lease-connection"><span class="toc-text">lease connection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#release-connection"><span class="toc-text">release connection</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#Spring"
+                           title="Spring">Spring</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2018
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/img/brinjaul.png">
+</body>
+
+</html>

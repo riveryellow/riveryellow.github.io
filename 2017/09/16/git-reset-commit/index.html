@@ -179,7 +179,7 @@
 <li><p>查找想要回退到的版本号：</p>
 <ul>
 <li>在IDEA中可以：”Version Control -&gt; Log -&gt; 右键提交记录 -&gt;  Copy Revision Number”获取到</li>
-<li>命令行通过命令：<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> git log</div><div class="line">commit 0edf1b84e1aa60b0571704fcd0e136504878b2ff</div><div class="line">Author: yellow_river &lt;river_yellow@163.com&gt;</div><div class="line">Date:   Thu Sep 21 11:13:01 2017 +0800</div><div class="line">   modified configuration</div><div class="line"></div><div class="line">commit 2baa4aa01a0741a9b0cfe08626d8174ce01978c8</div><div class="line">Author: huanghe_MAC &lt;river_yellow@163.com&gt;</div><div class="line">Date:   Wed Sep 20 22:15:58 2017 +0800</div><div class="line">   new configurations</div><div class="line"></div><div class="line">commit fb21cc83168e11428fb3e502c4b4a8fab8af0ac1</div><div class="line">Author: yellow_river &lt;river_yellow@163.com&gt;</div><div class="line">Date:   Wed Sep 20 17:38:16 2017 +0800</div><div class="line">   new page</div></pre></td></tr></table></figure>
+<li>命令行通过命令：<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> git log</span><br><span class="line">commit 0edf1b84e1aa60b0571704fcd0e136504878b2ff</span><br><span class="line">Author: yellow_river &lt;river_yellow@163.com&gt;</span><br><span class="line">Date:   Thu Sep 21 11:13:01 2017 +0800</span><br><span class="line">   modified configuration</span><br><span class="line"></span><br><span class="line">commit 2baa4aa01a0741a9b0cfe08626d8174ce01978c8</span><br><span class="line">Author: huanghe_MAC &lt;river_yellow@163.com&gt;</span><br><span class="line">Date:   Wed Sep 20 22:15:58 2017 +0800</span><br><span class="line">   new configurations</span><br><span class="line"></span><br><span class="line">commit fb21cc83168e11428fb3e502c4b4a8fab8af0ac1</span><br><span class="line">Author: yellow_river &lt;river_yellow@163.com&gt;</span><br><span class="line">Date:   Wed Sep 20 17:38:16 2017 +0800</span><br><span class="line">   new page</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>commit后的就是版本号。</p>
@@ -187,9 +187,9 @@
 </ol>
 <ol>
 <li><p>撤销分为两种，一种是将代码撤销至与撤销版本完全一致的代码：</p>
- <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> git reset --hard commit_id</div></pre></td></tr></table></figure>
+ <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> git reset --hard commit_id</span><br></pre></td></tr></table></figure>
 <p> 另一种是保留已提交代码：</p>
- <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">$</span> git reset commit_id</div></pre></td></tr></table></figure></li>
+ <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> git reset commit_id</span><br></pre></td></tr></table></figure></li>
 </ol>
 
                 <hr>
