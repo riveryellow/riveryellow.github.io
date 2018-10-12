@@ -2,7 +2,7 @@
 title: HBase filter查询数据的正确姿势
 cdn: header-off
 date: 2018-9-12 16:00:16
-header-img: "/img/hbase"
+header-img: "/img/hbase.jpg"
 tags:
     - HBase
 ---
