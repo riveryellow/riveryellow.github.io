@@ -253,3 +253,4 @@ public abstract class PurgeAccessLogHolder {
 
 }
 ```
+如上，[spring-boot-starter-purge-accesslog](https://github.com/marcosbarbero/spring-boot-starter-purge-accesslog)的做法就是通过配置文件生成一个定时任务，定时清理服务器本地的日志文件，so easy ╮(￣⊿￣")╭
