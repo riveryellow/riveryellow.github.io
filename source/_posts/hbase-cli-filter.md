@@ -5,6 +5,7 @@ date: 2018-9-12 16:00:16
 header-img: "/img/hbase.jpg"
 tags:
     - HBase
+    - Hadoop
 ---
 > 由于HBase是一个菲关系型数据库，所以在查询数据时不能像MySQL那样以列值作为条件来查询。但是虽然不推荐使用使用列值来匹配查询结果，HBase还是提供了SingleColumnValueFilter来支持根据列值查询的操作。
 
