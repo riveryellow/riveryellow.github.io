@@ -80,8 +80,9 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 	- releaseConnection$releaseConnection(boolean)
 
    连接池的核心应该是HttpClientConnectionManager中的属性cPool的父类AbstractConnPool：
-``` java
-	@Contract(
+   
+```java
+@Contract(
     threading = ThreadingBehavior.SAFE_CONDITIONAL
 )
 public abstract class AbstractConnPool<T, C, E extends PoolEntry<T, C>> implements ConnPool<T, E>, ConnPoolControl<T> {
@@ -103,6 +104,7 @@ public abstract class AbstractConnPool<T, C, E extends PoolEntry<T, C>> implemen
 }
 ``` 
    其中，routeToPool是各个路由对应的连接池，一个路由可以存在DefaultMaxPerRoute个连接，所有路由的连接总数不得超过MaxTotal，routeToPool的构成如下：
+   
 ```java
 abstract class RouteSpecificPool<T, C, E extends PoolEntry<T, C>> {
     private final T route;
