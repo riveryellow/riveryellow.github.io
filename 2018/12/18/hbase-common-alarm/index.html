@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        HBase集群常用告警脚本｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2018/12/18/hbase-common-alarm/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/img/post-mongoose.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/img/monitoring.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/img/monitoring.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>HBase集群常用告警脚本</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2018-12-18
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#HBase"
+                           title="HBase">HBase</a>
+                        
+                        <a class="tag" href="/tags/#Hadoop"
+                           title="Hadoop">Hadoop</a>
+                        
+                        <a class="tag" href="/tags/#Python"
+                           title="Python">Python</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            HBase集群常用告警脚本
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="进程监控"><a href="#进程监控" class="headerlink" title="进程监控"></a>进程监控</h2><p>进程监控是最直接能够发现系统是否正常运行的方式。集群中，由于分工的不同，每台机器上运行的进程不同，分别监控各个必须的进程，在发现挂了之后立即执行命令重启，避免系统服务down机后不可用。</p>
+<h3 id="服务进程"><a href="#服务进程" class="headerlink" title="服务进程"></a>服务进程</h3><p>HBase集群中的其中一个节点，同时运行着Master服务和Region服务：<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[yellowriver@localhost:~]$ sudo jps</span><br><span class="line">6840 HMaster</span><br><span class="line">30317 HRegionServer</span><br></pre></td></tr></table></figure></p>
+<h3 id="Python脚本"><a href="#Python脚本" class="headerlink" title="Python脚本"></a>Python脚本</h3><p>hbase-monitor.py<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">HBase Monitor</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys, os, commands, json, requests, time</span><br><span class="line"></span><br><span class="line">RESTART_LOG = <span class="string">'/data/logs/hbase/restart.log'</span></span><br><span class="line"></span><br><span class="line">HBASE_HOME = <span class="string">'/opt/local/hbase-2.0.1'</span></span><br><span class="line"></span><br><span class="line">HADOOP_HOME = <span class="string">'/opt/local/hadoop-2.7.6'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">alarm</span><span class="params">(content)</span>:</span></span><br><span class="line">    <span class="comment">## alarm</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">logger</span><span class="params">(message)</span>:</span></span><br><span class="line">    output = open(RESTART_LOG, <span class="string">'a+'</span>)</span><br><span class="line"></span><br><span class="line">    output.write(message + <span class="string">'\n'</span>)</span><br><span class="line">    </span><br><span class="line">    output.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    status, hostname = commands.getstatusoutput(<span class="string">'hostname'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="string">'HRegionServer'</span> == sys.argv[<span class="number">1</span>]:</span><br><span class="line">        status, region_status = commands.getstatusoutput(<span class="string">'/usr/bin/jps | grep -i "HRegionServer"| wc -l'</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> cmp(region_status, <span class="string">"0"</span>) == <span class="number">0</span>:</span><br><span class="line">            content = <span class="string">'%s %s[%s] is down, try to restart...'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], hostname)</span><br><span class="line">            </span><br><span class="line">            os.system(<span class="string">"su cluster -c '%s/bin/hbase-daemon.sh start regionserver'"</span> % HBASE_HOME)</span><br><span class="line">            </span><br><span class="line">            alarm(content)</span><br><span class="line">            </span><br><span class="line">            logger(content)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            logger(<span class="string">'%s %s is running: %s'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], region_status))</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">elif</span> <span class="string">'HMaster'</span> == sys.argv[<span class="number">1</span>]:</span><br><span class="line">        status, master_status = commands.getstatusoutput(<span class="string">'/usr/bin/jps | grep -i "HMaster"| wc -l'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> cmp(master_status, <span class="string">"0"</span>) == <span class="number">0</span>:</span><br><span class="line">            content = <span class="string">'%s %s[%s] is down, try to restart...'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], hostname)</span><br><span class="line">            </span><br><span class="line">            os.system(<span class="string">"su cluster -c '%s/bin/hbase-daemon.sh start master'"</span> % HBASE_HOME)</span><br><span class="line">            </span><br><span class="line">            alarm(content)</span><br><span class="line">            </span><br><span class="line">            logger(content)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            logger(<span class="string">'%s %s is running: %s'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], master_status))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">elif</span> <span class="string">'JournalNode'</span> == sys.argv[<span class="number">1</span>]:</span><br><span class="line">        status, master_status = commands.getstatusoutput(<span class="string">'/usr/bin/jps | grep -i "JournalNode"| wc -l'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> cmp(master_status, <span class="string">"0"</span>) == <span class="number">0</span>:</span><br><span class="line">            content = <span class="string">'%s %s[%s] is down, try to restart...'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], hostname)</span><br><span class="line">            </span><br><span class="line">            os.system(<span class="string">"su cluster -c '%s/sbin/hadoop-daemon.sh start journalnode'"</span> % HADOOP_HOME)</span><br><span class="line">            </span><br><span class="line">            alarm(content)</span><br><span class="line">            </span><br><span class="line">            logger(content)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            logger(<span class="string">'%s %s is running: %s'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], master_status))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">elif</span> <span class="string">'DataNode'</span> == sys.argv[<span class="number">1</span>]:</span><br><span class="line"></span><br><span class="line">        status, master_status = commands.getstatusoutput(<span class="string">'/usr/bin/jps | grep -i "DataNode"| wc -l'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> cmp(master_status, <span class="string">"0"</span>) == <span class="number">0</span>:</span><br><span class="line">            content = <span class="string">'%s %s[%s] is down, try to restart...'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], hostname)</span><br><span class="line">            </span><br><span class="line">            os.system(<span class="string">"su cluster -c '%s/sbin/hadoop-daemon.sh start datanode'"</span> % HADOOP_HOME)</span><br><span class="line">            </span><br><span class="line">            alarm(content)</span><br><span class="line">            </span><br><span class="line">            logger(content)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            logger(<span class="string">'%s %s is running: %s'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], master_status))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">elif</span> <span class="string">'NameNode'</span> == sys.argv[<span class="number">1</span>]:</span><br><span class="line"></span><br><span class="line">        status, master_status = commands.getstatusoutput(<span class="string">'/usr/bin/jps | grep -i "NameNode"| wc -l'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> cmp(master_status, <span class="string">"0"</span>) == <span class="number">0</span>:</span><br><span class="line">            print(sys.argv[<span class="number">1</span>])</span><br><span class="line">            content = <span class="string">'%s %s[%s] is down, try to restart...'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], hostname)</span><br><span class="line">            </span><br><span class="line">            print(content)</span><br><span class="line"></span><br><span class="line">            os.system(<span class="string">"su cluster -c '%s/sbin/hadoop-daemon.sh start namenode'"</span> % HADOOP_HOME)</span><br><span class="line">            </span><br><span class="line">            alarm(content)</span><br><span class="line">            </span><br><span class="line">            logger(content)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            logger(<span class="string">'%s %s is running: %s'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], master_status))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">elif</span> <span class="string">'DFSZKFailoverController'</span> == sys.argv[<span class="number">1</span>]:</span><br><span class="line"></span><br><span class="line">        status, master_status = commands.getstatusoutput(<span class="string">'/usr/bin/jps | grep -i "DFSZKFailoverController"| wc -l'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> cmp(master_status, <span class="string">"0"</span>) == <span class="number">0</span>:</span><br><span class="line">            content = <span class="string">'%s %s[%s] is down, try to restart...'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], hostname)</span><br><span class="line">            </span><br><span class="line">            os.system(<span class="string">"su cluster -c '%s/sbin/hadoop-daemon.sh start zkfc'"</span> % HADOOP_HOME)</span><br><span class="line">            </span><br><span class="line">            alarm(content)</span><br><span class="line">            </span><br><span class="line">            logger(content)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            logger(<span class="string">'%s %s is running: %s'</span> % (time.asctime(time.localtime(time.time())), sys.argv[<span class="number">1</span>], master_status))</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(<span class="string">'No process:%s'</span> % sys.argv[<span class="number">1</span>])</span><br></pre></td></tr></table></figure></p>
+<h2 id="hdfs坏块监控"><a href="#hdfs坏块监控" class="headerlink" title="hdfs坏块监控"></a>hdfs坏块监控</h2><p>Hadoop提供fsck工具来检查HDFS中文件的健康状况。该工具会在查找那些在所有datanode中均缺失的块以及过少或过多副本的块。<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[yellowriver@localhost:hadoop-2.7.6]$ sudo -u cluster  bin/hdfs -h    </span><br><span class="line">Usage: hdfs [--config confdir] [--loglevel loglevel] COMMAND</span><br><span class="line">       where COMMAND is one of:</span><br><span class="line">  dfs                  run a filesystem command on the file systems supported in Hadoop.</span><br><span class="line">  classpath            prints the classpath</span><br><span class="line">  namenode -format     format the DFS filesystem</span><br><span class="line">  secondarynamenode    run the DFS secondary namenode</span><br><span class="line">  namenode             run the DFS namenode</span><br><span class="line">  journalnode          run the DFS journalnode</span><br><span class="line">  zkfc                 run the ZK Failover Controller daemon</span><br><span class="line">  datanode             run a DFS datanode</span><br><span class="line">  dfsadmin             run a DFS admin client</span><br><span class="line">  haadmin              run a DFS HA admin client</span><br><span class="line">  fsck                 run a DFS filesystem checking utility</span><br><span class="line">  balancer             run a cluster balancing utility</span><br><span class="line">  jmxget               get JMX exported values from NameNode or DataNode.</span><br><span class="line">  mover                run a utility to move block replicas across</span><br><span class="line">                       storage types</span><br><span class="line">  oiv                  apply the offline fsimage viewer to an fsimage</span><br><span class="line">  oiv_legacy           apply the offline fsimage viewer to an legacy fsimage</span><br><span class="line">  oev                  apply the offline edits viewer to an edits file</span><br><span class="line">  fetchdt              fetch a delegation token from the NameNode</span><br><span class="line">  getconf              get config values from configuration</span><br><span class="line">  groups               get the groups which users belong to</span><br><span class="line">  snapshotDiff         diff two snapshots of a directory or diff the</span><br><span class="line">                       current directory contents with a snapshot</span><br><span class="line">  lsSnapshottableDir   list all snapshottable dirs owned by the current user</span><br><span class="line">                                                Use -help to see options</span><br><span class="line">  portmap              run a portmap service</span><br><span class="line">  nfs3                 run an NFS version 3 gateway</span><br><span class="line">  cacheadmin           configure the HDFS cache</span><br><span class="line">  crypto               configure HDFS encryption zones</span><br><span class="line">  storagepolicies      list/get/set block storage policies</span><br><span class="line">  version              print the version</span><br><span class="line"></span><br><span class="line">Most commands print help when invoked w/o parameters.</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[yellowriver@localhost:hadoop-2.7.6]$ sudo bin/hdfs fsck /</span><br><span class="line">Connecting to namenode via http://localhost:50070/fsck?ugi=cluster&amp;path=%2F</span><br><span class="line">FSCK started by cluster (auth:SIMPLE) from /127.0.0.1 for path / at Wed Dec 19 12:02:32 CST 2018</span><br><span class="line">....................................................................................................</span><br><span class="line">....................................................................................................</span><br><span class="line">....................................................................................................</span><br><span class="line">.................................................................................Status: HEALTHY</span><br><span class="line"> Total size:    44626523629 B</span><br><span class="line"> Total dirs:    273</span><br><span class="line"> Total files:   381</span><br><span class="line"> Total symlinks:                0 (Files currently being written: 5)</span><br><span class="line"> Total blocks (validated):      652 (avg. block size 68445588 B) (Total open file blocks (not validated): 4)</span><br><span class="line"> Minimally replicated blocks:   652 (100.0 %)</span><br><span class="line"> Over-replicated blocks:        0 (0.0 %)</span><br><span class="line"> Under-replicated blocks:       0 (0.0 %)</span><br><span class="line"> Mis-replicated blocks:         0 (0.0 %)</span><br><span class="line"> Default replication factor:    3</span><br><span class="line"> Average block replication:     3.0</span><br><span class="line"> Corrupt blocks:                0</span><br><span class="line"> Missing replicas:              0 (0.0 %)</span><br><span class="line"> Number of data-nodes:          3</span><br><span class="line"> Number of racks:               1</span><br><span class="line">FSCK ended at Wed Dec 19 12:02:32 CST 2018 in 12 milliseconds</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">The filesystem under path '/' is HEALTHY</span><br></pre></td></tr></table></figure>
+<p>上述命令的响应的点，为每检查一个文件时打下的。</p>
+<h3 id="坏块、丢失块处理办法"><a href="#坏块、丢失块处理办法" class="headerlink" title="坏块、丢失块处理办法"></a>坏块、丢失块处理办法</h3><p>在健康检查中，Corrupt blocks和Missing replicas是最需要考虑的，因为这意味着数据已经丢失了。默认情况下，fsck不会对这类块进行任何操作，但可以手动让fsck执行如下操作：</p>
+<ul>
+<li>移动 使用 -move 选项将受影响的文件移到 HDFS 的 /lost+found 目录。这些受影响的文件会分裂成连续的块链表，可以帮助用户挽回损失。</li>
+<li>删除 使用 -delete 选项删除受影响的文件。（删除之后文件不可恢复）</li>
+</ul>
+<h3 id="Python脚本-1"><a href="#Python脚本-1" class="headerlink" title="Python脚本"></a>Python脚本</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># monitor hdfs corrupt</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os, re, sys, json, requests</span><br><span class="line"></span><br><span class="line">HADOOP_HOME = <span class="string">'/opt/local/hadoop-2.7.6'</span></span><br><span class="line"></span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">alarm</span><span class="params">(content)</span>:</span></span><br><span class="line">    <span class="comment">## alarm</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    corruptlist = []</span><br><span class="line">    cmd = <span class="string">"su cluster -c 'hadoop fsck -list-corruptfileblocks'"</span></span><br><span class="line">    re = os.popen(cmd)</span><br><span class="line">    result = re.readlines()</span><br><span class="line">    print(result)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> result:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"blk_"</span> <span class="keyword">in</span> line <span class="keyword">and</span> <span class="string">".Trash"</span> <span class="keyword">not</span> <span class="keyword">in</span> line:</span><br><span class="line">        <span class="comment">#if "blk_" in line:</span></span><br><span class="line">            corruptlist.append(line)</span><br><span class="line">    <span class="keyword">if</span> len(corruptlist) != <span class="number">0</span>:</span><br><span class="line">        content = <span class="string">'坏块数量 %s，具体信息如下：\n'</span> % str(len(corruptlist))</span><br><span class="line">        id = <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> clist <span class="keyword">in</span> corruptlist:</span><br><span class="line">            <span class="keyword">print</span> <span class="string">"blkid is "</span> + clist.split()[<span class="number">0</span>] + <span class="string">" file is "</span> + clist.split()[<span class="number">1</span>]</span><br><span class="line">            content += <span class="string">"%s. 序号[%s] 块号[%s] 文件信息[%s]. \n"</span> % (id, clist.split()[<span class="number">0</span>], clist.split()[<span class="number">1</span>])</span><br><span class="line">            id = id + <span class="number">1</span></span><br><span class="line">        alarm(content)</span><br></pre></td></tr></table></figure>
+<h2 id="添加系统定时任务"><a href="#添加系统定时任务" class="headerlink" title="添加系统定时任务"></a>添加系统定时任务</h2><p>在 /etc/cron.d 下创建定时任务：<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span> 每秒执行一次</span><br><span class="line">*/1 * * * * root /usr/bin/python2 /data/script/hbase-monitor.py HMaster</span><br></pre></td></tr></table></figure></p>
+<h2 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h2><p>若/usr/bin下没有响应的命令，如Python2、jps等，可以通过手动增加软链接的方式把命令加到/usr/bin下，例如：<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[yellowriver@localhost:~]$ /usr/bin/jps</span><br><span class="line">-bash: /usr/bin/jps: No such file or directory</span><br><span class="line">[yellowriver@localhost:~]$ which jps</span><br><span class="line">/opt/local/java/jdk1.8.0_181/bin/jps</span><br><span class="line">[yellowriver@localhost:~]$ sudo ln -s /opt/local/java/jdk1.8.0_181/bin/jps /usr/bin/jps</span><br><span class="line">[yellowriver@localhost:~]$ /usr/bin/jps</span><br><span class="line">2139 Jps</span><br></pre></td></tr></table></figure></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/12/27/es-fuzzy-query/" data-toggle="tooltip" data-placement="top"
+                           title="Elasticsearch 模糊查询(Fuzzy Query) 与编辑距离算法(Edit Distance)">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/12/10/purge-accesslog/" data-toggle="tooltip" data-placement="top"
+                           title="基于Spring Boot的Accesslog存储数量控制源码分析">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#进程监控"><span class="toc-text">进程监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务进程"><span class="toc-text">服务进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python脚本"><span class="toc-text">Python脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hdfs坏块监控"><span class="toc-text">hdfs坏块监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#坏块、丢失块处理办法"><span class="toc-text">坏块、丢失块处理办法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python脚本-1"><span class="toc-text">Python脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加系统定时任务"><span class="toc-text">添加系统定时任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tips"><span class="toc-text">Tips</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#HBase"
+                           title="HBase">HBase</a>
+                        
+                        <a class="tag" href="/tags/#Hadoop"
+                           title="Hadoop">Hadoop</a>
+                        
+                        <a class="tag" href="/tags/#Python"
+                           title="Python">Python</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2019
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/img/brinjaul.png">
+</body>
+
+</html>

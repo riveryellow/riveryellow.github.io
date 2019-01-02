@@ -37,7 +37,7 @@
 <style>
 
     header.intro-header {
-        background-image: url('/img/index-bg2.jpg')
+        background-image: url('/img/post-mongoose.jpg')
     }
 </style>
 <!-- hack iOS CSS :active style -->
@@ -272,6 +272,54 @@
 
 
 <div class="post-preview  "
+     style="background-image: url('/img/resttemplate.jpg')">
+    <a href="/2018/08/23/resttemplate-timeout/">
+        <h2 class="post-title">
+            RestTemplate连接池、超时时间配置
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-23
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                   RestTemplate是Spring Framework提供的比HttpClient更优雅的进行HTTP交互的模板类。Java Doc如是说：
+
+Spring’s central class for synchronous client-side HTTP access. It simp..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/grpc.png')">
+    <a href="/2018/06/19/grpc2/">
+        <h2 class="post-title">
+            grpc实践(二) — 消息字段不能为空处理
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-06-19
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                问题背景现象   在使用gRPC做远程接口调用时，从本地的实体通过BeanUtils.copyProperties()对即将传给客户端的由proto3生成的对象进行拷贝时会出现如下报错：org.springframework.beans.FatalBeanException: Could not..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
      style="background-image: url('/img/grpc.png')">
     <a href="/2018/06/12/grpc1/">
         <h2 class="post-title">
@@ -332,32 +380,6 @@ Simple service definition 简单的服务定义..
         <div class="post-content-preview">
             <p>
                 2017.9.4 hexo正确使用方式通过hexo发布blog至github时，发布了整个文件脚手架到github上，导致访问404(npm install hexo-deployer-git --save)，每次删除原来脚手架重新拉取时都要安装发布插件若默认发布分支上有非web结构的目录结构，..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('/img/opensource.jpg')">
-    <a href="/2017/12/30/choose-open-source-license/">
-        <h2 class="post-title">
-            Paul Bagwell教你选择开源许可证
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-12-30
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。即使在最流行的六种——GPL、BSD、MIT、Mozilla、Apache和LGPL之中做选择，也很复杂。乌克兰程序员Paul Bagwell用一张图分析了如何在上述六种许可证中进行选择：
-参考：
-
-如何选择开源许可证？ - 阮一峰的..
             </p>
         </div>
     </a>
@@ -445,30 +467,6 @@ ifr..
 
 
 
-<div class="post-preview  "
-     style="background-image: url('/img/spring.png')">
-    <a href="/2017/10/16/spring-cli-install/">
-        <h2 class="post-title">
-            Spring Boot CLI安装
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-10-16
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                
-The Spring Boot CLI is a command line tool that can be used if you want to quickly prototype with Spring. It allows you to run Groovy scripts, whic..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
 
 <!-- 翻页 pager -->
 
@@ -532,7 +530,7 @@ The Spring Boot CLI is a command line tool that can be used if you want to quick
                     
                     
                     <a href="/tags/#Java" title="Java"
-                       rel="12">Java</a>
+                       rel="13">Java</a>
                     
                     
                     
@@ -557,7 +555,7 @@ The Spring Boot CLI is a command line tool that can be used if you want to quick
                     
                     
                     <a href="/tags/#Elasticsearch" title="Elasticsearch"
-                       rel="2">Elasticsearch</a>
+                       rel="3">Elasticsearch</a>
                     
                     
                     
@@ -577,17 +575,22 @@ The Spring Boot CLI is a command line tool that can be used if you want to quick
                     
                     
                     <a href="/tags/#HBase" title="HBase"
-                       rel="1">HBase</a>
+                       rel="2">HBase</a>
+                    
+                    
+                    
+                    <a href="/tags/#Hadoop" title="Hadoop"
+                       rel="2">Hadoop</a>
+                    
+                    
+                    
+                    <a href="/tags/#Python" title="Python"
+                       rel="1">Python</a>
                     
                     
                     
                     <a href="/tags/#rpc" title="rpc"
                        rel="2">rpc</a>
-                    
-                    
-                    
-                    <a href="/tags/#JVM" title="JVM"
-                       rel="3">JVM</a>
                     
                     
                     
@@ -601,23 +604,18 @@ The Spring Boot CLI is a command line tool that can be used if you want to quick
                     
                     
                     
-                    <a href="/tags/#Python" title="Python"
-                       rel="1">Python</a>
+                    <a href="/tags/#JVM" title="JVM"
+                       rel="3">JVM</a>
                     
                     
                     
-                    <a href="/tags/#Linux" title="Linux"
-                       rel="1">Linux</a>
+                    <a href="/tags/#Spring" title="Spring"
+                       rel="8">Spring</a>
                     
                     
                     
                     <a href="/tags/#mysql" title="mysql"
                        rel="1">mysql</a>
-                    
-                    
-                    
-                    <a href="/tags/#Spring" title="Spring"
-                       rel="6">Spring</a>
                     
                     
                     
@@ -657,7 +655,7 @@ The Spring Boot CLI is a command line tool that can be used if you want to quick
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; 茄子的猫砂盆 2018
+                    Copyright &copy; 茄子的猫砂盆 2019
                     <br>
                     <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
                     <br>

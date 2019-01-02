@@ -37,7 +37,7 @@
 <style>
 
     header.intro-header {
-        background-image: url('/img/index-bg2.jpg')
+        background-image: url('/img/post-mongoose.jpg')
     }
 </style>
 <!-- hack iOS CSS :active style -->
@@ -272,6 +272,125 @@
 
 
 <div class="post-preview  "
+     style="background-image: url('/img/es.png')">
+    <a href="/2018/12/27/es-fuzzy-query/">
+        <h2 class="post-title">
+            Elasticsearch 模糊查询(Fuzzy Query) 与编辑距离算法(Edit Distance)
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-12-27
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                § Fuzzy Matching  在ES的Match Query中，有一个fuzziness字段可以对搜索关键词进行模糊匹配。fuzziness的值可以指定为固定的数值如(0, 1, 2)或是数值区间如0…2, 3…5, &gt;5等，数值的含义原文为：
+
+When querying text..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/monitoring.jpg')">
+    <a href="/2018/12/18/hbase-common-alarm/">
+        <h2 class="post-title">
+            HBase集群常用告警脚本
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-12-18
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                进程监控进程监控是最直接能够发现系统是否正常运行的方式。集群中，由于分工的不同，每台机器上运行的进程不同，分别监控各个必须的进程，在发现挂了之后立即执行命令重启，避免系统服务down机后不可用。
+服务进程HBase集群中的其中一个节点，同时运行着Master服务和Region服务：[yellow..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/springboot.jpg')">
+    <a href="/2018/12/10/purge-accesslog/">
+        <h2 class="post-title">
+            基于Spring Boot的Accesslog存储数量控制源码分析
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-12-10
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                在项目中，所有的access log都通过logstash导入到ES中进行存储分析，因此不希望在应用服务器中存储大量的access log占用存储空间。在Spring Boot的默认配置中并没有可以直接对日志数量进行配置的参数，于是在Github上找到一个开源的spring-boot-start..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/springboot.jpg')">
+    <a href="/2018/10/26/spring-session/">
+        <h2 class="post-title">
+            Spring Session 1.3.1配置
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-10-26
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                Maven依赖&lt;dependency&gt;    &lt;groupId&gt;org.springframework.session&lt;/groupId&gt;    &lt;artifactId&gt;spring-session-data-redis&lt;/artifactI..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
+     style="background-image: url('/img/es.png')">
+    <a href="/2018/10/16/es-sort-script/">
+        <h2 class="post-title">
+            Elasticsearch Java API自定义排序
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-10-16
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                场景查询ES中时，在数据量大、数据时效性强的情况下，要查询到针对性强的少量数据，往往过滤条件会有很多，这个时候我们通常希望通过自己提供的关键字列表和条件对数据进行过滤。
+在音乐项目的新闻模块中，新闻的下发要求为：三天内发布的新闻，按照国家条件过滤后下发排序为：榜单歌手热度 &gt; 新闻发布时间..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
      style="background-image: url('/img/sentinl.jpg')">
     <a href="/2018/10/12/sentinl-monitor1/">
         <h2 class="post-title">
@@ -285,32 +404,6 @@
             <p>
                 
 SENTINL extends Kibi and Kibana with Alerting and Reporting functionality to monitor, notify and report on data series changes using standard queri..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('/img/monitoring.jpg')">
-    <a href="/2018/10/11/progress-monitor/">
-        <h2 class="post-title">
-            服务器进程监控
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-10-11
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                
-As we all know，诸如HBase、Hadoop、Zookeeper之类的通过启动Java进程来启动功能的服务，在做监控的时候只需要对进程进行是否存在的定时监控即可。下面将以python脚本监控HBase进程为例，展示如何在Linux中监控进程。
-
-服务进程HBase集群中的其中一个..
             </p>
         </div>
     </a>
@@ -363,103 +456,6 @@ JavaTable table = connection.ge..
 Spring Framework提供了基于Redis的缓存功能，方便被动的写缓存、读缓存、删除缓存。下面记录一下Spring缓存的配置及使用。
 
 缓存配置为了更定制化地使用Spring缓存，我们将通过创建一个RedisCacheManager的@Bean对Spring缓存进行配置。// Spr..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('/img/Elasticsearch-Logo-Color-H.png')">
-    <a href="/2018/09/01/es1-script-sort/">
-        <h2 class="post-title">
-            Elasticsearch Java API自定义排序
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-09-01
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                场景   在音乐项目的新闻模块中，新闻的下发要求为：三天内发布的新闻，按照国家条件过滤后下发排序为：榜单歌手热度 &gt; 新闻发布时间；
-实现
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('/img/java8.jpg')">
-    <a href="/2018/08/25/java8-1/">
-        <h2 class="post-title">
-            java8-1
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-25
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                Stream API可以避免使用synchronized编写代码，造成不必要的错误，并且降低在多核CPU上的执行成本。
-java.util.stream包中，花哨的迭代器
-向方法传递代码接口中的默认方法
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('/img/resttemplate.jpg')">
-    <a href="/2018/08/23/resttemplate-timeout/">
-        <h2 class="post-title">
-            RestTemplate连接池、超时时间配置
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-23
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                   RestTemplate是Spring Framework提供的比HttpClient更优雅的进行HTTP交互的模板类。Java Doc如是说：
-
-Spring’s central class for synchronous client-side HTTP access. It simp..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview  "
-     style="background-image: url('/img/grpc.png')">
-    <a href="/2018/06/19/grpc2/">
-        <h2 class="post-title">
-            grpc实践(二) — 消息字段不能为空处理
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-06-19
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                问题背景现象   在使用gRPC做远程接口调用时，从本地的实体通过BeanUtils.copyProperties()对即将传给客户端的由proto3生成的对象进行拷贝时会出现如下报错：org.springframework.beans.FatalBeanException: Could not..
             </p>
         </div>
     </a>
@@ -529,7 +525,7 @@ Spring’s central class for synchronous client-side HTTP access. It simp..
                     
                     
                     <a href="/tags/#Java" title="Java"
-                       rel="12">Java</a>
+                       rel="13">Java</a>
                     
                     
                     
@@ -554,7 +550,7 @@ Spring’s central class for synchronous client-side HTTP access. It simp..
                     
                     
                     <a href="/tags/#Elasticsearch" title="Elasticsearch"
-                       rel="2">Elasticsearch</a>
+                       rel="3">Elasticsearch</a>
                     
                     
                     
@@ -574,17 +570,22 @@ Spring’s central class for synchronous client-side HTTP access. It simp..
                     
                     
                     <a href="/tags/#HBase" title="HBase"
-                       rel="1">HBase</a>
+                       rel="2">HBase</a>
+                    
+                    
+                    
+                    <a href="/tags/#Hadoop" title="Hadoop"
+                       rel="2">Hadoop</a>
+                    
+                    
+                    
+                    <a href="/tags/#Python" title="Python"
+                       rel="1">Python</a>
                     
                     
                     
                     <a href="/tags/#rpc" title="rpc"
                        rel="2">rpc</a>
-                    
-                    
-                    
-                    <a href="/tags/#JVM" title="JVM"
-                       rel="3">JVM</a>
                     
                     
                     
@@ -598,23 +599,18 @@ Spring’s central class for synchronous client-side HTTP access. It simp..
                     
                     
                     
-                    <a href="/tags/#Python" title="Python"
-                       rel="1">Python</a>
+                    <a href="/tags/#JVM" title="JVM"
+                       rel="3">JVM</a>
                     
                     
                     
-                    <a href="/tags/#Linux" title="Linux"
-                       rel="1">Linux</a>
+                    <a href="/tags/#Spring" title="Spring"
+                       rel="8">Spring</a>
                     
                     
                     
                     <a href="/tags/#mysql" title="mysql"
                        rel="1">mysql</a>
-                    
-                    
-                    
-                    <a href="/tags/#Spring" title="Spring"
-                       rel="6">Spring</a>
                     
                     
                     
@@ -654,7 +650,7 @@ Spring’s central class for synchronous client-side HTTP access. It simp..
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; 茄子的猫砂盆 2018
+                    Copyright &copy; 茄子的猫砂盆 2019
                     <br>
                     <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
                     <br>
