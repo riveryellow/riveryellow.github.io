@@ -7,13 +7,13 @@ tags:
     - Elasticsearch
 ---
 
-## § Fuzzy Matching
+## Fuzzy Matching
   在ES的[Match Query](https://www.elastic.co/guide/en/elasticsearch/reference/6.5/query-dsl-match-query.html)中，有一个[fuzziness](https://www.elastic.co/guide/en/elasticsearch/reference/6.5/common-options.html#fuzziness)字段可以对搜索关键词进行模糊匹配。fuzziness的值可以指定为固定的数值如(0, 1, 2)或是数值区间如0...2, 3...5, >5等，数值的含义原文为：
   > When querying text or keyword fields, fuzziness is interpreted as a Levenshtein Edit Distance — the number of one character changes that need to be made to one string to make it the same as another string.
   
   大致意思是，搜索关键词可根据指定数值的编辑距离（Levenshtein Edit Distance）进行变换进行关键词的模糊查询，每一次距离的变换可以理解为字符串中一个字符的一次插入、删除或替换操作。
 
-### § Java
+### Java
 ``` java
 private Page<Artist> searchArtist0(String word, Pageable pageable) {
         if (StringUtils.isBlank(word)) {
@@ -53,7 +53,7 @@ private Page<Artist> searchArtist0(String word, Pageable pageable) {
     }
 ```
 
-### § ES JSON
+### ES JSON
 ``` json
 GET /data_artist_v2/music_data/_search
 {
@@ -90,11 +90,11 @@ GET /data_artist_v2/music_data/_search
 }
 ```
 
-## § Levenshtein Edit Distance
-### § Definition
+## Levenshtein Edit Distance
+### Definition
 > the Levenshtein distance is a string metric for measuring the difference between two sequences. Informally, the Levenshtein distance between two words is the minimum number of single-character edits (insertions, deletions or substitutions) required to change one word into the other. 
 
-### § 计算法则
+### 计算法则
 以下是字符串a、b之间相互转换所需要的最小编辑距离的计算公式：
 ![Levenshtein Distance Fomula](/img/levenshtein-formula.png "Levenshtein Distance Fomula") 
 
@@ -144,7 +144,7 @@ You have the following 3 operations permitted on a word:
 
 #### § Solution
 ``` java
-public static int minDistance(String word1, String word2) {
+    public static int minDistance(String word1, String word2) {
         if(word1.equals("") && word2.equals("")) {
             return 0;
         } else if(word1.equals("") || word2.equals("")) {
