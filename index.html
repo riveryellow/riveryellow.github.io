@@ -272,6 +272,29 @@
 
 
 <div class="post-preview  "
+     style="background-image: url('/img/issue.jpeg')">
+    <a href="/2019/04/03/read-time-out-caused-by-mq/">
+        <h2 class="post-title">
+            记一次因为消息队列爆满导致的 "SocketTimeoutException: Read timed out"
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-04-03
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                问题背景说起来都是一把辛酸泪。深夜被老大一个电话call起来，说客户端调的一个接口百分之百报500错误。服务器上清一色的超时报错：2019-04-02 23:47:55.342 [http-nio-8088-exec-74] ERROR c.g.s.c.ExceptionTranslatorAu..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
      style="background-image: url('/img/es.png')">
     <a href="/2018/12/27/es-fuzzy-query/">
         <h2 class="post-title">
@@ -283,9 +306,9 @@
         
         <div class="post-content-preview">
             <p>
-                § Fuzzy Matching  在ES的Match Query中，有一个fuzziness字段可以对搜索关键词进行模糊匹配。fuzziness的值可以指定为固定的数值如(0, 1, 2)或是数值区间如0…2, 3…5, &gt;5等，数值的含义原文为：
+                Fuzzy Matching  在ES的Match Query中，有一个fuzziness字段可以对搜索关键词进行模糊匹配。fuzziness的值可以指定为固定的数值如(0, 1, 2)或是数值区间如0…2, 3…5, &gt;5等，数值的含义原文为：
 
-When querying text..
+When querying text o..
             </p>
         </div>
     </a>
@@ -440,32 +463,6 @@ JavaTable table = connection.ge..
 
 
 
-<div class="post-preview  "
-     style="background-image: url('/img/springboot.jpg')">
-    <a href="/2018/09/11/spring-cache/">
-        <h2 class="post-title">
-            Spring Framework缓存基于Redis的使用（@CachePut, @Cacheable, @CacheEvict）
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-09-11
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                
-Spring Framework提供了基于Redis的缓存功能，方便被动的写缓存、读缓存、删除缓存。下面记录一下Spring缓存的配置及使用。
-
-缓存配置为了更定制化地使用Spring缓存，我们将通过创建一个RedisCacheManager的@Bean对Spring缓存进行配置。// Spr..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
 
 <!-- 翻页 pager -->
 
@@ -525,7 +522,7 @@ Spring Framework提供了基于Redis的缓存功能，方便被动的写缓存�
                     
                     
                     <a href="/tags/#Java" title="Java"
-                       rel="13">Java</a>
+                       rel="14">Java</a>
                     
                     
                     
@@ -549,11 +546,6 @@ Spring Framework提供了基于Redis的缓存功能，方便被动的写缓存�
                     
                     
                     
-                    <a href="/tags/#Elasticsearch" title="Elasticsearch"
-                       rel="3">Elasticsearch</a>
-                    
-                    
-                    
                     <a href="/tags/#deeplink" title="deeplink"
                        rel="1">deeplink</a>
                     
@@ -564,8 +556,18 @@ Spring Framework提供了基于Redis的缓存功能，方便被动的写缓存�
                     
                     
                     
+                    <a href="/tags/#Elasticsearch" title="Elasticsearch"
+                       rel="3">Elasticsearch</a>
+                    
+                    
+                    
                     <a href="/tags/#git" title="git"
                        rel="2">git</a>
+                    
+                    
+                    
+                    <a href="/tags/#rpc" title="rpc"
+                       rel="2">rpc</a>
                     
                     
                     
@@ -584,11 +586,6 @@ Spring Framework提供了基于Redis的缓存功能，方便被动的写缓存�
                     
                     
                     
-                    <a href="/tags/#rpc" title="rpc"
-                       rel="2">rpc</a>
-                    
-                    
-                    
                     <a href="/tags/#jdk" title="jdk"
                        rel="1">jdk</a>
                     
@@ -604,13 +601,18 @@ Spring Framework提供了基于Redis的缓存功能，方便被动的写缓存�
                     
                     
                     
+                    <a href="/tags/#mysql" title="mysql"
+                       rel="1">mysql</a>
+                    
+                    
+                    
                     <a href="/tags/#Spring" title="Spring"
                        rel="8">Spring</a>
                     
                     
                     
-                    <a href="/tags/#mysql" title="mysql"
-                       rel="1">mysql</a>
+                    <a href="/tags/#MQ" title="MQ"
+                       rel="1">MQ</a>
                     
                     
                     

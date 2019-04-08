@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        记一次因为消息队列爆满导致的 &#34;SocketTimeoutException: Read timed out&#34;｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2019/04/03/read-time-out-caused-by-mq/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/img/post-mongoose.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/img/issue.jpeg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/img/issue.jpeg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>记一次因为消息队列爆满导致的 &#34;SocketTimeoutException: Read timed out&#34;</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2019-04-03
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#MQ"
+                           title="MQ">MQ</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            记一次因为消息队列爆满导致的 "SocketTimeoutException: Read timed out"
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>说起来都是一把辛酸泪。深夜被老大一个电话call起来，说客户端调的一个接口百分之百报500错误。服务器上清一色的超时报错：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">2019-04-02 23:47:55.342 [http-nio-8088-exec-74] ERROR c.g.s.c.ExceptionTranslatorAutoConfiguration - Unexpected exception occurs while visiting the URI /api/v1/comments</span><br><span class="line">        at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:674)</span><br><span class="line">        at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:621)</span><br><span class="line">        at org.springframework.web.client.RestTemplate.postForObject(RestTemplate.java:388)</span><br><span class="line">        at com.gomo.music.service.comment.CommentService.createTextComment(CommentService.java:322)</span><br><span class="line">        at com.gomo.music.service.comment.CommentService$$FastClassBySpringCGLIB$$45f5fdde.invoke(&lt;generated&gt;)</span><br><span class="line">        at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:204)</span><br><span class="line">        at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:669)</span><br><span class="line">        at com.gomo.music.service.comment.CommentService$$EnhancerBySpringCGLIB$$493dae5b.createTextComment(&lt;generated&gt;)</span><br><span class="line">        at com.gomo.music.web.external.comment.CommentController.handleCreate(CommentController.java:354)</span><br><span class="line">        at com.gomo.music.web.external.comment.CommentController.create(CommentController.java:185)</span><br><span class="line">        at com.gomo.music.web.external.comment.CommentController$$FastClassBySpringCGLIB$$4d4e3183.invoke(&lt;generated&gt;)</span><br><span class="line">        at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:204)</span><br><span class="line">        at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:738)</span><br><span class="line">        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:157)</span><br><span class="line">        at com.ryantenney.metrics.spring.TimedMethodInterceptor.invoke(TimedMethodInterceptor.java:48)</span><br><span class="line">        at com.ryantenney.metrics.spring.TimedMethodInterceptor.invoke(TimedMethodInterceptor.java:34)</span><br><span class="line">        at com.ryantenney.metrics.spring.AbstractMetricMethodInterceptor.invoke(AbstractMetricMethodInterceptor.java:59)</span><br><span class="line">        at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179)</span><br><span class="line">        at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:673)</span><br><span class="line">        at com.gomo.music.web.external.comment.CommentController$$EnhancerBySpringCGLIB$$1e7fe0af.create(&lt;generated&gt;)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">        at java.lang.reflect.Method.invoke(Method.java:498)</span><br><span class="line">        at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)</span><br><span class="line">        at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:133)</span><br><span class="line">        at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:97)</span><br><span class="line">        at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:827)</span><br><span class="line">        at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:738)</span><br><span class="line">        at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:85)</span><br><span class="line">        at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:967)</span><br><span class="line">        at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:901)</span><br><span class="line">        at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:970)</span><br><span class="line">        at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:872)</span><br><span class="line">        ... 65 common frames omitted</span><br><span class="line">Caused by: java.net.SocketTimeoutException: Read timed out</span><br><span class="line">        at java.net.SocketInputStream.socketRead0(Native Method)</span><br><span class="line">        at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)</span><br><span class="line">        at java.net.SocketInputStream.read(SocketInputStream.java:171)</span><br><span class="line">        at java.net.SocketInputStream.read(SocketInputStream.java:141)</span><br><span class="line">        at org.apache.http.impl.io.SessionInputBufferImpl.streamRead(SessionInputBufferImpl.java:137)</span><br><span class="line">        at org.apache.http.impl.io.SessionInputBufferImpl.fillBuffer(SessionInputBufferImpl.java:153)</span><br><span class="line">        at org.apache.http.impl.io.SessionInputBufferImpl.readLine(SessionInputBufferImpl.java:282)</span><br><span class="line">        at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:138)</span><br><span class="line">        at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:56)</span><br><span class="line">        at org.apache.http.impl.io.AbstractMessageParser.parse(AbstractMessageParser.java:259)</span><br><span class="line">        at org.apache.http.impl.DefaultBHttpClientConnection.receiveResponseHeader(DefaultBHttpClientConnection.java:163)</span><br><span class="line">        at org.apache.http.impl.conn.CPoolProxy.receiveResponseHeader(CPoolProxy.java:165)</span><br><span class="line">        at org.apache.http.protocol.HttpRequestExecutor.doReceiveResponse(HttpRequestExecutor.java:273)</span><br><span class="line">        at org.apache.http.protocol.HttpRequestExecutor.execute(HttpRequestExecutor.java:125)</span><br><span class="line">        at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:272)</span><br><span class="line">        at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:185)</span><br><span class="line">        at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89)</span><br><span class="line">        at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:111)</span><br><span class="line">        at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)</span><br><span class="line">        at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)</span><br><span class="line">        at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:56)</span><br><span class="line">        at org.springframework.http.client.HttpComponentsClientHttpRequest.executeInternal(HttpComponentsClientHttpRequest.java:89)</span><br><span class="line">        at org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48)</span><br><span class="line">        at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:53)</span><br><span class="line">        at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:660)</span><br><span class="line">        ... 99 common frames omitted</span><br></pre></td></tr></table></figure></p>
+<p>报错接口逻辑时序如下：<br><img src="./img/create_comment_sequence.png" alt=""></p>
+<p>由于在目标服务器上的accessLog中没看到有请求记录，按照常规问题处理思路，做了一套常规暂时解决问题的操作（并没有什么用）：</p>
+<ol>
+<li>将 HttpComponentsClientHttpRequestFactory 的 readTimeout、connetTimeout、requestTimeout配置全都放大10倍 —— 于事无补</li>
+<li><p>后来怀疑了一下是不是nginx转发的问题，ping拿ip，nslookup ip 看机房，发现没什么问题：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">[#</span>:~]$ nslookup xxx.xxx.xxx.net.cn 10.10.33.11</span><br><span class="line">Server:    10.10.33.11</span><br><span class="line">Address:  10.10.33.11#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">Name:  xxx.xxx.xxx.net.cn</span><br><span class="line">Address: 10.10.33.221</span><br><span class="line">Name:  xxx.xxx.xxx.net.cn</span><br><span class="line">Address: 10.10.33.222</span><br><span class="line">Name:  xxx.xxx.xxx.net.cn</span><br><span class="line">Address: 10.10.33.223</span><br><span class="line"></span><br><span class="line"><span class="meta">[#</span>:~]$ nslookup xxx.xxx.xxx.net.cn 10.10.33.12</span><br><span class="line">Server:    10.10.33.12</span><br><span class="line">Address:  10.10.33.12#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">Name:  xxx.xxx.xxx.net.cn</span><br><span class="line">Address: 10.10.33.223</span><br><span class="line">Name:  xxx.xxx.xxx.net.cn</span><br><span class="line">Address: 10.10.33.222</span><br><span class="line">Name:  xxx.xxx.xxx.net.cn</span><br><span class="line">Address: 10.10.33.221</span><br><span class="line"></span><br><span class="line"><span class="meta">[#</span>:~]$ curl xxx.xxx.xxx.net.cn</span><br><span class="line">&#123;"app":&#123;"name":"comment-api","version":"1.0.0.RELEASE","description":"Parent pom providing dependency and plugin management for applications built with Maven","encoding":"UTF-8","java":&#123;"source":"1.8.0_162","target":"1.8.0_162"&#125;&#125;,"git":&#123;"build":&#123;"host":"PCSJ000110","version":"1.0.0.RELEASE","time":1537254950000,"user":&#123;"name":"huanghe","email":"huanghe@gomo.com"&#125;&#125;,"branch":"master","commit":&#123;"message":&#123;"short":"ååredisè¿æè¯è®ºæ°æ®","full":"ååredisè¿æè¯è®ºæ°æ®\n\nChange-Id: I7b0c58c564f6d4c95740013e7d717a006f71ca59"&#125;,"id":"76af5ad2dab60d04f5fbb5ac7943f0e02b52d583","id.describe-short":"76af5ad-dirty","id.abbrev":"76af5ad","id.describe":"76af5ad-dirty","time":1537168335000,"user":&#123;"email":"huanghe@gomo.com","name":"huanghe"&#125;&#125;,"closest":&#123;"tag":&#123;"name":"","commit":&#123;"count":""&#125;&#125;&#125;,"dirty":"true","remote":&#123;"origin":&#123;"url":"ssh://huanghe@gerrit.3g.net.cn:29418/comment-api"&#125;&#125;,"tags":""&#125;&#125;</span><br><span class="line"><span class="meta">[#</span>:~]$ cat /etc/resolv.conf </span><br><span class="line">options rotate</span><br><span class="line">options timeout:2</span><br><span class="line">nameserver 10.10.33.11</span><br><span class="line">nameserver 10.10.33.12</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最后不得已，本地debug了一下，发现请求进到目标服务里之后，进入rabbitTemplate.covertAndSend()之后就再也没出来…</p>
+</li>
+</ol>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><h3 id="RabbitMQ连接失败"><a href="#RabbitMQ连接失败" class="headerlink" title="RabbitMQ连接失败"></a>RabbitMQ连接失败</h3><p><img src="img/rabbit-nodes-red-disk-space.png" alt=""><br>基本可以定位为RabbitMQ出问题了。在RabbitMQ的Dashboard中，可以看到用到的mq节点的disk space都已经飘红，只剩下一百多M。在磁盘空间不足的节点上，有两个队列积了两千多万条消息待消费。每个队列中的Consumers都是”… no consumers …”。到消息淤积队列的消费者模块服务器上检查，看到成片的相似错误日志：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    07:01:32.693 [AMQP Connection 10.10.33.167:5672] ERROR c.r.c.impl.ForgivingExceptionHandler - An unexpected connection driver error occured</span><br><span class="line">java.net.SocketException: Connection timed out (Read failed)</span><br><span class="line">        at java.net.SocketInputStream.socketRead0(Native Method)</span><br><span class="line">        at java.net.SocketInputStream.read(SocketInputStream.java:141)</span><br><span class="line">        at java.io.BufferedInputStream.fill(BufferedInputStream.java:246)</span><br><span class="line">        at java.io.BufferedInputStream.read(BufferedInputStream.java:265)</span><br><span class="line">        at java.io.DataInputStream.readUnsignedByte(DataInputStream.java:288)</span><br><span class="line">        at com.rabbitmq.client.impl.Frame.readFrom(Frame.java:91)</span><br><span class="line">        at com.rabbitmq.client.impl.SocketFrameHandler.readFrame(SocketFrameHandler.java:164)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQConnection$MainLoop.run(AMQConnection.java:571)</span><br><span class="line">        at java.lang.Thread.run(Thread.java:748)</span><br><span class="line">07:01:32.702 [AMQP Connection 10.10.33.167:5672] ERROR o.s.a.r.c.CachingConnectionFactory - Channel shutdown: connection error</span><br><span class="line">07:01:32.702 [AMQP Connection 10.10.33.167:5672] ERROR o.s.a.r.c.CachingConnectionFactory - Channel shutdown: connection error</span><br><span class="line">07:01:32.703 [AMQP Connection 10.10.33.167:5672] ERROR o.s.a.r.c.CachingConnectionFactory - Channel shutdown: connection error</span><br><span class="line">07:01:32.705 [AMQP Connection 10.10.33.167:5672] ERROR o.s.a.r.c.CachingConnectionFactory - Channel shutdown: connection error</span><br><span class="line">07:01:32.705 [AMQP Connection 10.10.33.167:5672] ERROR o.s.a.r.c.CachingConnectionFactory - Channel shutdown: connection error</span><br><span class="line">07:02:23.796 [SimpleAsyncTaskExecutor-2] ERROR o.s.a.r.l.SimpleMessageListenerContainer - Failed to check/redeclare auto-delete queue(s).</span><br><span class="line">org.springframework.amqp.AmqpIOException: java.io.IOException</span><br><span class="line">        at org.springframework.amqp.rabbit.support.RabbitExceptionTranslator.convertRabbitAccessException(RabbitExceptionTranslator.java:71)</span><br><span class="line">        at org.springframework.amqp.rabbit.connection.RabbitAccessor.convertRabbitAccessException(RabbitAccessor.java:113)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitTemplate.doExecute(RabbitTemplate.java:1467)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitTemplate.execute(RabbitTemplate.java:1417)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitTemplate.execute(RabbitTemplate.java:1393)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitAdmin.initialize(RabbitAdmin.java:504)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitAdmin$11.onCreate(RabbitAdmin.java:419)</span><br><span class="line">        at org.springframework.amqp.rabbit.connection.CompositeConnectionListener.onCreate(CompositeConnectionListener.java:33)</span><br><span class="line">        at org.springframework.amqp.rabbit.connection.CachingConnectionFactory.createConnection(CachingConnectionFactory.java:579)</span><br><span class="line">        at org.springframework.amqp.rabbit.connection.CachingConnectionFactory.createBareChannel(CachingConnectionFactory.java:526)</span><br><span class="line">        at org.springframework.amqp.rabbit.connection.CachingConnectionFactory.getCachedChannelProxy(CachingConnectionFactory.java:500)</span><br><span class="line">        at org.springframework.amqp.rabbit.connection.CachingConnectionFactory.getChannel(CachingConnectionFactory.java:482)</span><br><span class="line">        at org.springframework.amqp.rabbit.connection.CachingConnectionFactory.access$1400(CachingConnectionFactory.java:97)</span><br><span class="line">        at org.springframework.amqp.rabbit.connection.CachingConnectionFactory$ChannelCachingConnectionProxy.createChannel(CachingConnectionFactory.java:1159)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitTemplate.doExecute(RabbitTemplate.java:1441)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitTemplate.execute(RabbitTemplate.java:1417)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitTemplate.execute(RabbitTemplate.java:1393)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitAdmin.getQueueProperties(RabbitAdmin.java:336)</span><br><span class="line">        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.redeclareElementsIfNecessary(SimpleMessageListenerContainer.java:1209)</span><br><span class="line">        at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1470)</span><br><span class="line">        at java.lang.Thread.run(Thread.java:748)</span><br><span class="line">Caused by: java.io.IOException: null</span><br><span class="line">        at com.rabbitmq.client.impl.AMQChannel.wrap(AMQChannel.java:105)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQChannel.wrap(AMQChannel.java:101)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQChannel.exnWrappingRpc(AMQChannel.java:123)</span><br><span class="line">        at com.rabbitmq.client.impl.ChannelN.queueDeclare(ChannelN.java:948)</span><br><span class="line">        at com.rabbitmq.client.impl.ChannelN.queueDeclare(ChannelN.java:50)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">        at java.lang.reflect.Method.invoke(Method.java:498)</span><br><span class="line">        at org.springframework.amqp.rabbit.connection.CachingConnectionFactory$CachedChannelInvocationHandler.invoke(CachingConnectionFactory.java:980)</span><br><span class="line">        at com.sun.proxy.$Proxy210.queueDeclare(Unknown Source)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitAdmin.declareQueues(RabbitAdmin.java:579)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitAdmin.access$200(RabbitAdmin.java:66)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitAdmin$12.doInRabbit(RabbitAdmin.java:508)</span><br><span class="line">        at org.springframework.amqp.rabbit.core.RabbitTemplate.doExecute(RabbitTemplate.java:1461)</span><br><span class="line">        ... 18 common frames omitted</span><br><span class="line">Caused by: com.rabbitmq.client.ShutdownSignalException: channel error; protocol method: #method&lt;channel.close&gt;(reply-code=404, reply-text=NOT_FOUND - home node &apos;rabbit@psoccomtrmq01.la.gomo.com&apos; of durable queue &apos;comment_result_send_queue_1061&apos; in vhost &apos;/dev&apos; is down or inaccessible, class-id=50, method-id=10)</span><br><span class="line">        at com.rabbitmq.utility.ValueOrException.getValue(ValueOrException.java:66)</span><br><span class="line">        at com.rabbitmq.utility.BlockingValueOrException.uninterruptibleGetValue(BlockingValueOrException.java:32)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQChannel$BlockingRpcContinuation.getReply(AMQChannel.java:366)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQChannel.privateRpc(AMQChannel.java:229)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQChannel.exnWrappingRpc(AMQChannel.java:117)</span><br><span class="line">        ... 30 common frames omitted</span><br><span class="line">Caused by: com.rabbitmq.client.ShutdownSignalException: channel error; protocol method: #method&lt;channel.close&gt;(reply-code=404, reply-text=NOT_FOUND - home node &apos;rabbit@psoccomtrmq01.la.gomo.com&apos; of durable queue &apos;comment_result_send_queue_1061&apos; in vhost &apos;/dev&apos; is down or inaccessible, class-id=50, method-id=10)</span><br><span class="line">        at com.rabbitmq.client.impl.ChannelN.asyncShutdown(ChannelN.java:505)</span><br><span class="line">        at com.rabbitmq.client.impl.ChannelN.processAsync(ChannelN.java:336)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQChannel.handleCompleteInboundCommand(AMQChannel.java:143)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQChannel.handleFrame(AMQChannel.java:90)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQConnection.readFrame(AMQConnection.java:634)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQConnection.access$300(AMQConnection.java:47)</span><br><span class="line">        at com.rabbitmq.client.impl.AMQConnection$MainLoop.run(AMQConnection.java:572)</span><br><span class="line">        ... 1 common frames omitted</span><br></pre></td></tr></table></figure></p>
+<p>看起来消费者找不到集群中的MQ节点，而尝试连接节点出现not found的情况将会导致连接关闭。</p>
+<p>根据RabbitMQ官方文档<a href="http://example.com/" target="_blank" rel="noopener">Consumers — RabbitMQ</a>，</p>
+<blockquote>
+<p>An attempt to consume from a non-existent queue will result in a channel-level exception with the code of 404 Not Found and render the channel it was attempted on to be closed.<br><strong>Connection Failures</strong><br>In the event of a connection failure, the client will need to establish a new connection to the broker. Any channels opened on the previous connection will have been automatically closed and these will need re-opening too.</p>
+</blockquote>
+<h3 id="RabbitMQ节点连接失败原因"><a href="#RabbitMQ节点连接失败原因" class="headerlink" title="RabbitMQ节点连接失败原因"></a>RabbitMQ节点连接失败原因</h3><p>可是为什么会无法连接到节点呢？<br>根据RabbitMQ 官方指南<a href="https://www.rabbitmq.com/reliability.html" target="_blank" rel="noopener">Reliability Guide — RabbitMQ</a><br><strong>What Can Fail?</strong></p>
+<blockquote>
+<p>Network problems are probably the most common class of failure. Not only can networks fail, firewalls can interrupt idle connections, and network failures are not always detected immediately.</p>
+</blockquote>
+<h3 id="为什么没有自动恢复连接（Automatic-Connection-Recovery）"><a href="#为什么没有自动恢复连接（Automatic-Connection-Recovery）" class="headerlink" title="为什么没有自动恢复连接（Automatic Connection Recovery）"></a>为什么没有自动恢复连接（Automatic Connection Recovery）</h3><p>由于项目使用了Spring Boot，因此使用了默认的RabbitMQ客户端配置RabbitAutoConfiguration。该配置中，连接工厂(ConnectionFactory)的初始化使用了如下构造方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConditionalOnMissingBean</span>(ConnectionFactory.class)</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">RabbitConnectionFactoryCreator</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Bean</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> CachingConnectionFactory <span class="title">rabbitConnectionFactory</span><span class="params">(RabbitProperties config)</span> </span>&#123;</span><br><span class="line">                <span class="comment">// RabbitConnectionFactoryBean的空构造方法中，this.connectionFactory.setAutomaticRecoveryEnabled(false);</span></span><br><span class="line">                RabbitConnectionFactoryBean factory = <span class="keyword">new</span> RabbitConnectionFactoryBean();</span><br><span class="line">                <span class="comment">// ...</span></span><br><span class="line">                CachingConnectionFactory connectionFactory = <span class="keyword">new</span> CachingConnectionFactory(factory.getObject());</span><br><span class="line">                <span class="comment">// ...                                       </span></span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line">可以看到，Spring Boot的默认RabbitMQ连接配置中，禁用了自动恢复连接。</span><br></pre></td></tr></table></figure>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>自定义ConnectionFactory的bean，factory.setAutomaticRecoveryEnabled(true);</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/12/27/es-fuzzy-query/" data-toggle="tooltip" data-placement="top"
+                           title="Elasticsearch 模糊查询(Fuzzy Query) 与编辑距离算法(Edit Distance)">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题背景"><span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原因"><span class="toc-text">原因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitMQ连接失败"><span class="toc-text">RabbitMQ连接失败</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitMQ节点连接失败原因"><span class="toc-text">RabbitMQ节点连接失败原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么没有自动恢复连接（Automatic-Connection-Recovery）"><span class="toc-text">为什么没有自动恢复连接（Automatic Connection Recovery）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-text">解决方案</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#MQ"
+                           title="MQ">MQ</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2019
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/img/brinjaul.png">
+</body>
+
+</html>
