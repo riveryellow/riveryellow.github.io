@@ -175,7 +175,7 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
-                <h2 id="Fuzzy-Matching"><a href="#Fuzzy-Matching" class="headerlink" title="Fuzzy Matching"></a>Fuzzy Matching</h2><p>  在ES的<a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.5/query-dsl-match-query.html" target="_blank" rel="noopener">Match Query</a>中，有一个<a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.5/common-options.html#fuzziness" target="_blank" rel="noopener">fuzziness</a>字段可以对搜索关键词进行模糊匹配。fuzziness的值可以指定为固定的数值如(0, 1, 2)或是数值区间如0…2, 3…5, &gt;5等，数值的含义原文为：</p>
+                <h2 id="Fuzzy-Matching"><a href="#Fuzzy-Matching" class="headerlink" title="Fuzzy Matching"></a>Fuzzy Matching</h2><p>  在ES的<a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.5/query-dsl-match-query.html" target="_blank" rel="external">Match Query</a>中，有一个<a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.5/common-options.html#fuzziness" target="_blank" rel="external">fuzziness</a>字段可以对搜索关键词进行模糊匹配。fuzziness的值可以指定为固定的数值如(0, 1, 2)或是数值区间如0…2, 3…5, &gt;5等，数值的含义原文为：</p>
 <blockquote>
 <p>When querying text or keyword fields, fuzziness is interpreted as a Levenshtein Edit Distance — the number of one character changes that need to be made to one string to make it the same as another string.</p>
 </blockquote>
@@ -186,7 +186,7 @@
 <p>the Levenshtein distance is a string metric for measuring the difference between two sequences. Informally, the Levenshtein distance between two words is the minimum number of single-character edits (insertions, deletions or substitutions) required to change one word into the other. </p>
 </blockquote>
 <h3 id="计算法则"><a href="#计算法则" class="headerlink" title="计算法则"></a>计算法则</h3><p>以下是字符串a、b之间相互转换所需要的最小编辑距离的计算公式：<br><img src="/img/levenshtein-formula.png" alt="Levenshtein Distance Fomula" title="Levenshtein Distance Fomula"> </p>
-<p>根据维基百科里的<a href="https://en.wikipedia.org/wiki/Levenshtein_distance" target="_blank" rel="noopener">Levenshtein distance</a>公式，可以用一个二维数组标识string a到string b的最小编辑距离，例如：</p>
+<p>根据维基百科里的<a href="https://en.wikipedia.org/wiki/Levenshtein_distance" target="_blank" rel="external">Levenshtein distance</a>公式，可以用一个二维数组标识string a到string b的最小编辑距离，例如：</p>
 <table>
 <thead>
 <tr>
@@ -284,7 +284,7 @@
 </tbody>
 </table>
 <p>所以<strong>kitten</strong>到<strong>sitting</strong>的最小编辑距离为3。</p>
-<h3 id="§-LeetCode-72-Edit-Distance"><a href="#§-LeetCode-72-Edit-Distance" class="headerlink" title="§ LeetCode - 72. Edit Distance"></a>§ LeetCode - 72. Edit Distance</h3><p>LeetCode中有有一道运用Levenshtein Distance来解的题，<a href="https://leetcode.com/problems/edit-distance/" target="_blank" rel="noopener">72. Edit Distance</a></p>
+<h3 id="§-LeetCode-72-Edit-Distance"><a href="#§-LeetCode-72-Edit-Distance" class="headerlink" title="§ LeetCode - 72. Edit Distance"></a>§ LeetCode - 72. Edit Distance</h3><p>LeetCode中有有一道运用Levenshtein Distance来解的题，<a href="https://leetcode.com/problems/edit-distance/" target="_blank" rel="external">72. Edit Distance</a></p>
 <h4 id="§-Detail"><a href="#§-Detail" class="headerlink" title="§ Detail"></a>§ Detail</h4><p>Given two words word1 and word2, find the minimum number of operations required to convert word1 to word2.<br>You have the following 3 operations permitted on a word:</p>
 <ol>
 <li>Insert a character</li>
@@ -308,8 +308,8 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2019/04/03/read-time-out-caused-by-mq/" data-toggle="tooltip" data-placement="top"
-                           title="记一次因为消息队列爆满导致的 "SocketTimeoutException: Read timed out"">&larr; Previous Post</a>
+                        <a href="/2019/01/09/redis-frames/" data-toggle="tooltip" data-placement="top"
+                           title="Redis架构分析">&larr; Previous Post</a>
                     </li>
                     
                     

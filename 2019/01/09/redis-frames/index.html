@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Redis架构分析｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2019/01/09/redis-frames/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/img/post-mongoose.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/img/redis-banner.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/img/redis-banner.jpg');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Redis架构分析</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2019-01-09
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Redis架构分析
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="普通主从模式"><a href="#普通主从模式" class="headerlink" title="普通主从模式"></a>普通主从模式</h2><p><img src="./img/redis-master-slaves.png" alt=""><br>Redis 的复制（replication）功能允许用户根据一个 Redis 服务器来创建任意多个该服务器的复制品，其中被复制的服务器为主服务器（master），而通过复制创建出来的服务器备份则为从服务器（slave）。 只要主从服务器之间的网络连接正常，主从服务器两者会具有相同的数据，主服务器就会一直将发生在自己身上的数据更新同步给从服务器，从而一直保证主从服务器的数据相同。<br><img src="./img/redis-master-slaves-sequence.png" alt=""></p>
+<p><strong>优点</strong><br>能较好地避免单点故障问题，以及提出了读写分离，降低了master节点的读压力。</p>
+<p><strong>缺点</strong></p>
+<ol>
+<li>没有降低master节点的写压力；</li>
+<li>没有实现高可用，当主节点挂了没办法快速选举出新的主节点；</li>
+<li>每个节点都存储全量数据，浪费资源。</li>
+</ol>
+<h2 id="哨兵-Sentinel-模式"><a href="#哨兵-Sentinel-模式" class="headerlink" title="哨兵(Sentinel)模式"></a>哨兵(Sentinel)模式</h2><p>Redis-Sentinel是Redis官方推荐的高可用性(HA)解决方案。实际上这意味着你可以使用Sentinel模式创建一个可以不用人为干预而应对各种故障的Redis分布式系统。</p>
+<p>Redis提供的sentinel（哨兵）机制，通过sentinel模式启动redis后，自动监控master/slave的运行状态，基本原理是：<strong>心跳机制+投票裁决</strong></p>
+<ul>
+<li><strong>监控（Monitoring）</strong>：Sentinel 会不断地检查你的主服务器和从服务器是否运作正常。</li>
+<li><strong>提醒（Notification）</strong>：当被监控的某个 Redis 服务器出现问题时， Sentinel 可以通过 API 向管理员或者其他应用程序发送通知。</li>
+<li><strong>自动故障迁移（Automatic failover）</strong>：当一个主服务器不能正常工作时， Sentinel 会开始一次自动故障迁移操作， 它会将失效主服务器的其中一个从服务器升级为新的主服务器， 并让失效主服务器的其他从服务器改为复制新的主服务器； 当客户端试图连接失效的主服务器时， 集群也会向客户端返回新主服务器的地址， 使得集群可以使用新主服务器代替失效服务器。<br><strong>故障转移过程</strong><br><img src="./img/sentinel1.png" alt=""> <img src="./img/sentinel2.png" alt=""><br><img src="./img/sentinel3.png" alt=""></li>
+</ul>
+<p><strong>优点</strong></p>
+<ol>
+<li>保证分布式系统的高可用</li>
+<li>实时监控各个节点的健康状态</li>
+<li>自动故障迁移</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>没有解决master的写压力</li>
+<li>切换主节点的过程中可能会有写数据的丢失</li>
+</ol>
+<h2 id="Twemproxy"><a href="#Twemproxy" class="headerlink" title="Twemproxy"></a>Twemproxy</h2><p><img src="./img/twemproxy.png" alt=""><br>Twemproxy 是 Twitter 开源的一个 redis 和 memcached 单线程、快速、轻量级代理服务。结构上相当于在客户端与哨兵模式之间增加了一层代理。<br>Twemproxy使用一致性hash支持多个Redis实例之间的自动分片，如果节点不可用，则将节点实例从系统中摘除。</p>
+<p><strong>优点</strong></p>
+<ol>
+<li>分片（sharding）逻辑对开发透明，读写方式和单个redis一致；</li>
+<li>可以作为cache和storage的proxy（by auto-eject）。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>架构复杂，层次多。包括lvs、twemproxy、redis、sentinel和其控制层程序，管理成本和硬件成本很高；</li>
+<li>twemproxy单节点吞吐量相比单个redis要低很多，虽然都是单进程工作模式。简单请求（请求长度&lt;100字节），单个twemproxy节点能够达到6w的qps。 当请求长度较大时，twemproxy跑到2w的qps，进程cpu就达到了80%+。 因而对于大流量系统，需要部署几十个twemproxy节点做负载均衡。 百万级qps需要使用200+ twemproxy节点，数量接近redis数量；</li>
+<li>Redis层扩容能力差，需预分配足够的redis存储节点，水平扩展需要重启。</li>
+</ol>
+<h2 id="Redis-Cluster集群高可用架构"><a href="#Redis-Cluster集群高可用架构" class="headerlink" title="Redis-Cluster集群高可用架构"></a>Redis-Cluster集群高可用架构</h2><p><img src="./img/redis-cluster.jpg" alt=""><br>Redis Cluster不使用一致性Hash，而是使用不同形式的分片——哈希槽（Hash Slot），每个键会分布在哈希槽中。<br>Redis Cluster架构中，被设计成共有16384(2^14)个hash slot。每个master分得一部分slot，其算法为：hash_slot = crc16(key) mod 16384 ，这就找到对应slot。采用hash slot的算法，实际上是解决了Redis-Cluster架构下多个master节点的数据分布问题。群集至少需要3主3从，且每个实例使用不同的配置文件。</p>
+<p><strong>note</strong><br>Redis Cluster主从架构的从节点默认不支持读写，官方不建议在此模式下进行读写分离。Redis Cluster的核心的理念主要是用slave做高可用，每个master挂一两个slave用作数据的热备，当master故障时的作为主备切换，实现高可用的。</p>
+<p><strong>优点</strong></p>
+<ol>
+<li>无中心架构；</li>
+<li>数据按照哈希槽（hash slot）存储分布在多个redis实例上；</li>
+<li>增加slave做standby数据副本，用于failover，使集群快速恢复；</li>
+<li>实现故障auto failover，节点之间通过gossip协议交换状态信息，投票机制完成slave到master角色的提升。</li>
+<li>亦可manual failover，为升级和迁移提供可操作方案。</li>
+<li>降低硬件成本和运维成本，提高系统的扩展性和可用性。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>节点会因为某些原因发生阻塞(如慢查询、阻塞式命令等导致阻塞时间大于clutser-node-timeout），被判断下线。这种failover是没有必要，sentinel也存在这种切换场景;</li>
+<li>主节点failover后，主从之间容易出现数据丢失，无法保证强一致性。</li>
+</ol>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/04/03/read-time-out-caused-by-mq/" data-toggle="tooltip" data-placement="top"
+                           title="记一次因为消息队列爆满导致的 "SocketTimeoutException: Read timed out"">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/12/27/es-fuzzy-query/" data-toggle="tooltip" data-placement="top"
+                           title="Elasticsearch 模糊查询(Fuzzy Query) 与编辑距离算法(Edit Distance)">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#普通主从模式"><span class="toc-text">普通主从模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#哨兵-Sentinel-模式"><span class="toc-text">哨兵(Sentinel)模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Twemproxy"><span class="toc-text">Twemproxy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-Cluster集群高可用架构"><span class="toc-text">Redis-Cluster集群高可用架构</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2019
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/img/brinjaul.png">
+</body>
+
+</html>

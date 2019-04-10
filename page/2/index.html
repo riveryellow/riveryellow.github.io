@@ -272,6 +272,32 @@
 
 
 <div class="post-preview  "
+     style="background-image: url('/img/hbase.jpg')">
+    <a href="/2018/09/12/hbase-cli-filter/">
+        <h2 class="post-title">
+            HBase filter查询数据的正确姿势
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-09-12
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                
+由于HBase是一个菲关系型数据库，所以在查询数据时不能像MySQL那样以列值作为条件来查询。但是虽然不推荐使用使用列值来匹配查询结果，HBase还是提供了SingleColumnValueFilter来支持根据列值查询的操作。
+
+JavaTable table = connection.ge..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview  "
      style="background-image: url('/img/springboot.jpg')">
     <a href="/2018/09/11/spring-cache/">
         <h2 class="post-title">
@@ -417,47 +443,35 @@ Simple service definition 简单的服务定义..
 
 
 <div class="post-preview  "
-     style="background-image: url('/img/mysql.jpg')">
-    <a href="/2017/12/18/mysql-init/">
+     style="background-image: url('/img/issue.jpeg')">
+    <a href="/2018/04/09/preview-preparation/">
         <h2 class="post-title">
-            mysql-5.7安装及初始化（Windows）
+            PREVIEW PREPARATION
         </h2>
         <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-12-18
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2018-04-09
         </p>
         
         <div class="post-content-preview">
             <p>
-                由于mysql5.5与nodejs之间的兼容性问题，于是将win本上的mysql-5.5揪出来升级，这一折腾就是一下午。虽然不知道mysql-x.x.x会是什么样子，还会不会用同样安（ma）全（fan）的套路，还是做一下这一下午的踩坑记录吧。
-下载、解压、环境变量
-照例地，下载依然选择DOWNL..
-            </p>
-        </div>
-    </a>
+                Redishttps://www.cnblogs.com/jasontec/p/9699242.html
 
-</div>
-
-<hr>
+Redis各种架构模式的特点
 
 
+单机
+主从
+哨兵
+集群(proxy)
+redis-cluster HA
 
-<div class="post-preview  "
-     style="background-image: url('/img/spring.png')">
-    <a href="/2017/11/09/spring-bean-conf/">
-        <h2 class="post-title">
-            Spring bean的装配方案
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2017-11-09
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                
-Spring容器负责创建应用程序中的bean并通过DI来协调这些对象之间的关系。 但是， 作为开发人员，需要告诉Spring要创建哪些bean并且如何将其装配在一起。 当描述bean如何进行装配时， Spring具有非常大的灵活性， 它提供了三种主要的装配机制：
 
-在XML中进行显示配置
-在J..
+一致性哈希算法，哈希槽
+
+Redis分布式锁的实现
+
+
+如果在setnx之后执..
             </p>
         </div>
     </a>
