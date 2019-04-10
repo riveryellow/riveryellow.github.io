@@ -36,11 +36,44 @@ Redis提供的sentinel（哨兵）机制，通过sentinel模式启动redis后，
 1. 没有解决master的写压力
 2. 切换主节点的过程中可能会有写数据的丢失
 
+## Twemproxy
+![](./img/twemproxy.png)
+Twemproxy 是 Twitter 开源的一个 redis 和 memcached 单线程、快速、轻量级代理服务。结构上相当于在客户端与哨兵模式之间增加了一层代理。
+Twemproxy使用一致性hash支持多个Redis实例之间的自动分片，如果节点不可用，则将节点实例从系统中摘除。
+**优点**
+1. 分片（sharding）逻辑对开发透明，读写方式和单个redis一致；
+2. 可以作为cache和storage的proxy（by auto-eject）。
+
+**缺点**
+1. 架构复杂，层次多。包括lvs、twemproxy、redis、sentinel和其控制层程序，管理成本和硬件成本很高；
+2. twemproxy单节点吞吐量相比单个redis要低很多，虽然都是单进程工作模式。简单请求（请求长度<100字节），单个twemproxy节点能够达到6w的qps。 当请求长度较大时，twemproxy跑到2w的qps，进程cpu就达到了80%+。 因而对于大流量系统，需要部署几十个twemproxy节点做负载均衡。 百万级qps需要使用200+ twemproxy节点，数量接近redis数量；
+3. Redis层扩容能力差，需预分配足够的redis存储节点，水平扩展需要重启。
+
+
 ## Redis-Cluster集群高可用架构
 ![](./img/redis-cluster.jpg)
-Redis-Cluster架构中，被设计成共有16384(2^14)个hash slot。每个master分得一部分slot，其算法为：hash_slot = crc16(key) mod 16384 ，这就找到对应slot。采用hash slot的算法，实际上是解决了Redis-Cluster架构下多个master节点的数据分布问题。群集至少需要3主3从，且每个实例使用不同的配置文件。
+Redis Cluster不使用一致性Hash，而是使用不同形式的分片——哈希槽（Hash Slot），每个键会分布在哈希槽中。
+Redis Cluster架构中，被设计成共有16384(2^14)个hash slot。每个master分得一部分slot，其算法为：hash_slot = crc16(key) mod 16384 ，这就找到对应slot。采用hash slot的算法，实际上是解决了Redis-Cluster架构下多个master节点的数据分布问题。群集至少需要3主3从，且每个实例使用不同的配置文件。
 
 **note**
-Redis-Cluster主从架构的从节点默认不支持读写，官方不建议在此模式下进行读写分离。Redis Cluster的核心的理念主要是用slave做高可用，每个master挂一两个slave用作数据的热备，当master故障时的作为主备切换，实现高可用的。
+Redis Cluster主从架构的从节点默认不支持读写，官方不建议在此模式下进行读写分离。Redis Cluster的核心的理念主要是用slave做高可用，每个master挂一两个slave用作数据的热备，当master故障时的作为主备切换，实现高可用的。
+
+**优点**
+1. 无中心架构；
+
+2. 数据按照哈希槽（hash slot）存储分布在多个redis实例上；
+
+3. 增加slave做standby数据副本，用于failover，使集群快速恢复；
+
+4. 实现故障auto failover，节点之间通过gossip协议交换状态信息，投票机制完成slave到master角色的提升。
+
+5. 亦可manual failover，为升级和迁移提供可操作方案。
+
+6. 降低硬件成本和运维成本，提高系统的扩展性和可用性。
+
+**缺点**
+1. 节点会因为某些原因发生阻塞(如慢查询、阻塞式命令等导致阻塞时间大于clutser-node-timeout），被判断下线。这种failover是没有必要，sentinel也存在这种切换场景。
+
+
 
 
