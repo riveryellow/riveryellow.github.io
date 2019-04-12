@@ -10,8 +10,10 @@ tags:
 ![](./img/redis-master-slaves.png)
 Redis 的复制（replication）功能允许用户根据一个 Redis 服务器来创建任意多个该服务器的复制品，其中被复制的服务器为主服务器（master），而通过复制创建出来的服务器备份则为从服务器（slave）。 只要主从服务器之间的网络连接正常，主从服务器两者会具有相同的数据，主服务器就会一直将发生在自己身上的数据更新同步给从服务器，从而一直保证主从服务器的数据相同。
 ![](./img/redis-master-slaves-sequence.png)
+
 **优点**
 能较好地避免单点故障问题，以及提出了读写分离，降低了master节点的读压力。
+
 **缺点**
 1. 没有降低master节点的写压力；
 2. 没有实现高可用，当主节点挂了没办法快速选举出新的主节点；
@@ -33,6 +35,7 @@ Redis提供的sentinel（哨兵）机制，通过sentinel模式启动redis后，
 1. 保证分布式系统的高可用
 2. 实时监控各个节点的健康状态
 3. 自动故障迁移
+
 **缺点**
 1. 没有解决master的写压力
 2. 切换主节点的过程中可能会有写数据的丢失
@@ -41,6 +44,7 @@ Redis提供的sentinel（哨兵）机制，通过sentinel模式启动redis后，
 ![](./img/twemproxy.png)
 Twemproxy 是 Twitter 开源的一个 redis 和 memcached 单线程、快速、轻量级代理服务。结构上相当于在客户端与哨兵模式之间增加了一层代理。
 Twemproxy使用一致性hash支持多个Redis实例之间的自动分片，如果节点不可用，则将节点实例从系统中摘除。
+
 **优点**
 1. 分片（sharding）逻辑对开发透明，读写方式和单个redis一致；
 2. 可以作为cache和storage的proxy（by auto-eject）。
@@ -61,15 +65,10 @@ Redis Cluster主从架构的从节点默认不支持读写，官方不建议在�
 
 **优点**
 1. 无中心架构；
-
 2. 数据按照哈希槽（hash slot）存储分布在多个redis实例上；
-
 3. 增加slave做standby数据副本，用于failover，使集群快速恢复；
-
 4. 实现故障auto failover，节点之间通过gossip协议交换状态信息，投票机制完成slave到master角色的提升。
-
 5. 亦可manual failover，为升级和迁移提供可操作方案。
-
 6. 降低硬件成本和运维成本，提高系统的扩展性和可用性。
 
 **缺点**
