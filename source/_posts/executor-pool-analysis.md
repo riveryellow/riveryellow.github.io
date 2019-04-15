@@ -1,11 +1,80 @@
 ---
 title: Java线程池分析
 cdn: header-off
-date: 2018-06-11 16:10:20
+date: 2018-07-12 16:10:20
 header-img: "/img/java-banner.png"
 tags:
     - Java
+    - 多线程
 ---
+
+## ThreadPoolExecutor私有变量解释
+``` java
+    private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
+    private static final int COUNT_BITS = Integer.SIZE - 3;
+    private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
+
+    // runState is stored in the high-order bits
+    private static final int RUNNING    = -1 << COUNT_BITS;
+    private static final int SHUTDOWN   =  0 << COUNT_BITS;
+    private static final int STOP       =  1 << COUNT_BITS;
+    private static final int TIDYING    =  2 << COUNT_BITS;
+    private static final int TERMINATED =  3 << COUNT_BITS;
+
+    // Packing and unpacking ctl
+    private static int runStateOf(int c)     { return c & ~CAPACITY; }
+    private static int workerCountOf(int c)  { return c & CAPACITY; }
+    private static int ctlOf(int rs, int wc) { return rs | wc; }
+```
+
+### ctl
+对于ctl的解释，源码注释是这么说的：
+``` java
+/**
+  * The main pool control state, ctl, is an atomic integer packing
+  * two conceptual fields
+  *   workerCount, indicating the effective number of threads
+  *   runState,    indicating whether running, shutting down etc
+  */
+```
+**ctl**是线程池的主要控制状态，包含了对工作线程数(workerCount)和线程池运行(runState)状态两个字段的控制。
+
+### workerCount
+``` java
+/**
+  * The workerCount is the number of workers that have been
+  * permitted to start and not permitted to stop.  The value may be
+  * transiently different from the actual number of live threads,
+  * for example when a ThreadFactory fails to create a thread when
+  * asked, and when exiting threads are still performing
+  * bookkeeping before terminating. The user-visible pool size is
+  * reported as the current size of the workers set.
+  */
+```
+**workerCount**是被允许开始并且不被允许停止的工作线程数。workerCount有时会与实际的存活线程数存在瞬间的偏差。例如：当向线程池请求创建新的线程时，正在退出的线程在终止之前还在进行退出操作，此时看到的线程数为workerCount，而过一会workerCount会减去刚才正在退出的线程数量。
+
+### runState
+``` java
+/**
+  * The runState provides the main lifecycle control, taking on values:
+  *
+  *   RUNNING:  Accept new tasks and process queued tasks
+  *   SHUTDOWN: Don't accept new tasks, but process queued tasks
+  *   STOP:     Don't accept new tasks, don't process queued tasks,
+  *             and interrupt in-progress tasks
+  *   TIDYING:  All tasks have terminated, workerCount is zero,
+  *             the thread transitioning to state TIDYING
+  *             will run the terminated() hook method
+  *   TERMINATED: terminated() has completed
+  */
+```
+**runState**的四种状态
++ RUNNING：运行状态，接受新的任务和处理队列中的任务
++ SHUTDOWN：关闭状态，不接受新的任务，但是处理队列中的任务
++ STOP：停止状态，不接受新的任务，不处理队列中大任务，终端正在执行的任务
++ TIDYING：清理状态，所有任务都已经终止，workerCount为0，状态转变为TIDYING，线程池将执行termiated()钩子方法
++ TERMINATED：终止状态，terminated()方法执行完毕
+
 
 ## 线程池创建参数
 
@@ -62,3 +131,158 @@ NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 丢弃队列里最近的一个任务，并执行当前任务。
 
 ## 线程池工作流
+![](./img/threadpool-execute-flow.png)
+
+ThreadPoolExecutor#execute()
+``` java
+/**
+     * Executes the given task sometime in the future.  The task
+     * may execute in a new thread or in an existing pooled thread.
+     *
+     * If the task cannot be submitted for execution, either because this
+     * executor has been shutdown or because its capacity has been reached,
+     * the task is handled by the current {@code RejectedExecutionHandler}.
+     *
+     * @param command the task to execute
+     * @throws RejectedExecutionException at discretion of
+     *         {@code RejectedExecutionHandler}, if the task
+     *         cannot be accepted for execution
+     * @throws NullPointerException if {@code command} is null
+     */
+    public void execute(Runnable command) {
+        if (command == null)
+            throw new NullPointerException();
+        /*
+         * Proceed in 3 steps:
+         *
+         * 1. If fewer than corePoolSize threads are running, try to
+         * start a new thread with the given command as its first
+         * task.  The call to addWorker atomically checks runState and
+         * workerCount, and so prevents false alarms that would add
+         * threads when it shouldn't, by returning false.
+         *
+         * 2. If a task can be successfully queued, then we still need
+         * to double-check whether we should have added a thread
+         * (because existing ones died since last checking) or that
+         * the pool shut down since entry into this method. So we
+         * recheck state and if necessary roll back the enqueuing if
+         * stopped, or start a new thread if there are none.
+         *
+         * 3. If we cannot queue task, then we try to add a new
+         * thread.  If it fails, we know we are shut down or saturated
+         * and so reject the task.
+         */
+        int c = ctl.get();
+        if (workerCountOf(c) < corePoolSize) {
+            if (addWorker(command, true))
+                return;
+            c = ctl.get();
+        }
+        if (isRunning(c) && workQueue.offer(command)) {
+            int recheck = ctl.get();
+            if (! isRunning(recheck) && remove(command))
+                reject(command);
+            else if (workerCountOf(recheck) == 0)
+                addWorker(null, false);
+        }
+        else if (!addWorker(command, false))
+            reject(command);
+    }
+```
+
+ThreadPoolExecutor#addWorker()
+``` java
+/**
+     * Checks if a new worker can be added with respect to current
+     * pool state and the given bound (either core or maximum). If so,
+     * the worker count is adjusted accordingly, and, if possible, a
+     * new worker is created and started, running firstTask as its
+     * first task. This method returns false if the pool is stopped or
+     * eligible to shut down. It also returns false if the thread
+     * factory fails to create a thread when asked.  If the thread
+     * creation fails, either due to the thread factory returning
+     * null, or due to an exception (typically OutOfMemoryError in
+     * Thread.start()), we roll back cleanly.
+     *
+     * @param firstTask the task the new thread should run first (or
+     * null if none). Workers are created with an initial first task
+     * (in method execute()) to bypass queuing when there are fewer
+     * than corePoolSize threads (in which case we always start one),
+     * or when the queue is full (in which case we must bypass queue).
+     * Initially idle threads are usually created via
+     * prestartCoreThread or to replace other dying workers.
+     *
+     * @param core if true use corePoolSize as bound, else
+     * maximumPoolSize. (A boolean indicator is used here rather than a
+     * value to ensure reads of fresh values after checking other pool
+     * state).
+     * @return true if successful
+     */
+    private boolean addWorker(Runnable firstTask, boolean core) {
+        retry:
+        for (;;) {
+            int c = ctl.get();
+            int rs = runStateOf(c);
+
+            // Check if queue empty only if necessary.
+            if (rs >= SHUTDOWN &&
+                ! (rs == SHUTDOWN &&
+                   firstTask == null &&
+                   ! workQueue.isEmpty()))
+                return false;
+
+            for (;;) {
+                int wc = workerCountOf(c);
+                if (wc >= CAPACITY ||
+                    wc >= (core ? corePoolSize : maximumPoolSize))
+                    return false;
+                if (compareAndIncrementWorkerCount(c))
+                    break retry;
+                c = ctl.get();  // Re-read ctl
+                if (runStateOf(c) != rs)
+                    continue retry;
+                // else CAS failed due to workerCount change; retry inner loop
+            }
+        }
+
+        boolean workerStarted = false;
+        boolean workerAdded = false;
+        Worker w = null;
+        try {
+            w = new Worker(firstTask);
+            final Thread t = w.thread;
+            if (t != null) {
+                final ReentrantLock mainLock = this.mainLock;
+                mainLock.lock();
+                try {
+                    // Recheck while holding lock.
+                    // Back out on ThreadFactory failure or if
+                    // shut down before lock acquired.
+                    int rs = runStateOf(ctl.get());
+
+                    if (rs < SHUTDOWN ||
+                        (rs == SHUTDOWN && firstTask == null)) {
+                        if (t.isAlive()) // precheck that t is startable
+                            throw new IllegalThreadStateException();
+                        workers.add(w);
+                        int s = workers.size();
+                        if (s > largestPoolSize)
+                            largestPoolSize = s;
+                        workerAdded = true;
+                    }
+                } finally {
+                    mainLock.unlock();
+                }
+                if (workerAdded) {
+                    t.start();
+                    workerStarted = true;
+                }
+            }
+        } finally {
+            if (! workerStarted)
+                addWorkerFailed(w);
+        }
+        return workerStarted;
+    }
+```
+
