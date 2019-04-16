@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="alternate" type="application/atom+xml" title="茄子的猫砂盆" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Java线程池分析｜yellowriver&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/2018/07/12/executor-pool-analysis/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/img/post-mongoose.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    茄子的猫砂盆
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="/img/java-banner.png">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('/img/java-banner.png');
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Java线程池分析</h1>
+                    
+                    <span class="meta">
+                         作者 yellow river
+                        <span>
+                          日期 2018-07-12
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#多线程"
+                           title="多线程">多线程</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Java线程池分析
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="ThreadPoolExecutor私有变量解释"><a href="#ThreadPoolExecutor私有变量解释" class="headerlink" title="ThreadPoolExecutor私有变量解释"></a>ThreadPoolExecutor私有变量解释</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger ctl = <span class="keyword">new</span> AtomicInteger(ctlOf(RUNNING, <span class="number">0</span>));</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> COUNT_BITS = Integer.SIZE - <span class="number">3</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CAPACITY   = (<span class="number">1</span> &lt;&lt; COUNT_BITS) - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// runState is stored in the high-order bits</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RUNNING    = -<span class="number">1</span> &lt;&lt; COUNT_BITS;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SHUTDOWN   =  <span class="number">0</span> &lt;&lt; COUNT_BITS;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STOP       =  <span class="number">1</span> &lt;&lt; COUNT_BITS;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TIDYING    =  <span class="number">2</span> &lt;&lt; COUNT_BITS;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TERMINATED =  <span class="number">3</span> &lt;&lt; COUNT_BITS;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Packing and unpacking ctl</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">runStateOf</span><span class="params">(<span class="keyword">int</span> c)</span>     </span>&#123; <span class="keyword">return</span> c &amp; ~CAPACITY; &#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">workerCountOf</span><span class="params">(<span class="keyword">int</span> c)</span>  </span>&#123; <span class="keyword">return</span> c &amp; CAPACITY; &#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">ctlOf</span><span class="params">(<span class="keyword">int</span> rs, <span class="keyword">int</span> wc)</span> </span>&#123; <span class="keyword">return</span> rs | wc; &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="ctl"><a href="#ctl" class="headerlink" title="ctl"></a>ctl</h3><p>对于ctl的解释，源码注释是这么说的：<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * The main pool control state, ctl, is an atomic integer packing</span></span><br><span class="line"><span class="comment">  * two conceptual fields</span></span><br><span class="line"><span class="comment">  *   workerCount, indicating the effective number of threads</span></span><br><span class="line"><span class="comment">  *   runState,    indicating whether running, shutting down etc</span></span><br><span class="line"><span class="comment">  */</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>ctl</strong>是线程池的主要控制状态，包含了对工作线程数(workerCount)和线程池运行(runState)状态两个字段的控制。</p>
+<h3 id="workerCount"><a href="#workerCount" class="headerlink" title="workerCount"></a>workerCount</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * The workerCount is the number of workers that have been</span></span><br><span class="line"><span class="comment">  * permitted to start and not permitted to stop.  The value may be</span></span><br><span class="line"><span class="comment">  * transiently different from the actual number of live threads,</span></span><br><span class="line"><span class="comment">  * for example when a ThreadFactory fails to create a thread when</span></span><br><span class="line"><span class="comment">  * asked, and when exiting threads are still performing</span></span><br><span class="line"><span class="comment">  * bookkeeping before terminating. The user-visible pool size is</span></span><br><span class="line"><span class="comment">  * reported as the current size of the workers set.</span></span><br><span class="line"><span class="comment">  */</span></span><br></pre></td></tr></table></figure>
+<p><strong>workerCount</strong>是被允许开始并且不被允许停止的工作线程数。workerCount有时会与实际的存活线程数存在瞬间的偏差。例如：当向线程池请求创建新的线程时，正在退出的线程在终止之前还在进行退出操作，此时看到的线程数为workerCount，而过一会workerCount会减去刚才正在退出的线程数量。</p>
+<h3 id="runState"><a href="#runState" class="headerlink" title="runState"></a>runState</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * The runState provides the main lifecycle control, taking on values:</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  *   RUNNING:  Accept new tasks and process queued tasks</span></span><br><span class="line"><span class="comment">  *   SHUTDOWN: Don't accept new tasks, but process queued tasks</span></span><br><span class="line"><span class="comment">  *   STOP:     Don't accept new tasks, don't process queued tasks,</span></span><br><span class="line"><span class="comment">  *             and interrupt in-progress tasks</span></span><br><span class="line"><span class="comment">  *   TIDYING:  All tasks have terminated, workerCount is zero,</span></span><br><span class="line"><span class="comment">  *             the thread transitioning to state TIDYING</span></span><br><span class="line"><span class="comment">  *             will run the terminated() hook method</span></span><br><span class="line"><span class="comment">  *   TERMINATED: terminated() has completed</span></span><br><span class="line"><span class="comment">  */</span></span><br></pre></td></tr></table></figure>
+<p><strong>runState</strong>的四种状态</p>
+<ul>
+<li>RUNNING：运行状态，接受新的任务和处理队列中的任务</li>
+<li>SHUTDOWN：关闭状态，不接受新的任务，但是处理队列中的任务</li>
+<li>STOP：停止状态，不接受新的任务，不处理队列中大任务，终端正在执行的任务</li>
+<li>TIDYING：清理状态，所有任务都已经终止，workerCount为0，状态转变为TIDYING，线程池将执行termiated()钩子方法</li>
+<li>TERMINATED：终止状态，terminated()方法执行完毕</li>
+</ul>
+<h2 id="线程池创建参数"><a href="#线程池创建参数" class="headerlink" title="线程池创建参数"></a>线程池创建参数</h2><h3 id="int-corePoolSize-——-线程池的基本线程数"><a href="#int-corePoolSize-——-线程池的基本线程数" class="headerlink" title="int corePoolSize —— 线程池的基本线程数"></a>int corePoolSize —— 线程池的基本线程数</h3><blockquote>
+<p>Core pool size is the minimum number of workers to keep alive (and not allow to time out etc) unless allowCoreThreadTimeOut is set, in which case the minimum is zero.</p>
+</blockquote>
+<p>当提交一个任务到线程池时，线程池会创建一个线程来执行任务，即使其他空闲的基本线程能够执行新任务也会创建线程，等到需要执行的任务数大于线程池基本大小时就不再创建。如果调用了线程池的 prestartAllCoreThreads() 方法，线程池会提前创建并启动所有基本线程。</p>
+<h3 id="int-maximumPoolSize-——-线程池最大线程数"><a href="#int-maximumPoolSize-——-线程池最大线程数" class="headerlink" title="int maximumPoolSize —— 线程池最大线程数"></a>int maximumPoolSize —— 线程池最大线程数</h3><blockquote>
+<p>Maximum pool size. Note that the actual maximum is internally bounded by CAPACITY.</p>
+</blockquote>
+<p>线程池允许创建的最大线程数。如果队列满了，并且已创建的线程数小于最大线程数，则线程池会再创建新的线程执行任务。值得注意的是如果使用了无界的任务队列这个参数就没什么效果。</p>
+<h3 id="long-keepAliveTime-——-闲置线程活动时间"><a href="#long-keepAliveTime-——-闲置线程活动时间" class="headerlink" title="long keepAliveTime —— 闲置线程活动时间"></a>long keepAliveTime —— 闲置线程活动时间</h3><blockquote>
+<p>Timeout in nanoseconds for idle threads waiting for work. Threads use this timeout when there are more than corePoolSize present or if allowCoreThreadTimeOut. Otherwise they wait forever for new work.</p>
+</blockquote>
+<p>线程池的工作线程空闲后保持存活的时间。如果任务很多，并且每个任务执行的时间比较短，可以调大这个参数，提高线程的利用率。</p>
+<h3 id="TimeUnit-unit-——-闲置线程活动时间单位"><a href="#TimeUnit-unit-——-闲置线程活动时间单位" class="headerlink" title="TimeUnit unit —— 闲置线程活动时间单位"></a>TimeUnit unit —— 闲置线程活动时间单位</h3><p>NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS</p>
+<h3 id="BlockingQueue-workQueue-——-任务队列"><a href="#BlockingQueue-workQueue-——-任务队列" class="headerlink" title="BlockingQueue workQueue —— 任务队列"></a>BlockingQueue<runnable> workQueue —— 任务队列</runnable></h3><blockquote>
+<p>The queue used for holding tasks and handing off to worker threads.  We do not require that workQueue.poll() returning null necessarily means that workQueue.isEmpty(), so rely solely on isEmpty to see if the queue is empty (which we must do for example when deciding whether to transition from SHUTDOWN to TIDYING).  This accommodates special-purpose queues such as DelayQueues for which poll() is allowed to return null even if it may later return non-null when delays expire.</p>
+</blockquote>
+<p>用于保存等待执行的任务的阻塞队列，例如：</p>
+<ul>
+<li>ArrayBlockingQueue —— 一个基于数组结构的有界阻塞队列，此队列按 FIFO（先进先出）原则对元素进行排序。</li>
+<li>LinkedBlockingDeque —— 一个基于链表结构的阻塞队列，此队列按 FIFO （先进先出） 排序元素，吞吐量通常要高于 ArrayBlockingQueue。静态工厂方法 Executors.newFixedThreadPool() 使用了这个队列。</li>
+<li>SynchronousQueue —— 一个不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于 LinkedBlockingQueue，静态工厂方法 Executors.newCachedThreadPool() 使用了这个队列。</li>
+</ul>
+<h3 id="ThreadFactory-threadFactory"><a href="#ThreadFactory-threadFactory" class="headerlink" title="ThreadFactory threadFactory"></a>ThreadFactory threadFactory</h3><blockquote>
+<p>Factory for new threads. All threads are created using this factory (via method addWorker).  All callers must be prepared for addWorker to fail, which may reflect a system or user’s policy limiting the number of threads.  Even though it is not treated as an error, failure to create threads may result in new tasks being rejected or existing ones remaining stuck in the queue.</p>
+<p>We go further and preserve pool invariants even in the face of errors such as OutOfMemoryError, that might be thrown while trying to create the need to allocate a native stack in Thread.start, and users will want to perform clean pool shutdown to clean up.  There will likely be enough memory available for the cleanup code to complete without encountering yet another OutOfMemoryError.</p>
+</blockquote>
+<h3 id="RejectedExecutionHandler-handler-——-饱和策略"><a href="#RejectedExecutionHandler-handler-——-饱和策略" class="headerlink" title="RejectedExecutionHandler handler —— 饱和策略"></a>RejectedExecutionHandler handler —— 饱和策略</h3><blockquote>
+<p>Handler called when saturated or shutdown in execute.</p>
+</blockquote>
+<p>当队列和线程池都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是 AbortPolicy，表示无法处理新任务时抛出异常。以下是JDK1.8提供的四种策略：</p>
+<ul>
+<li><p>AbortPolicy</p>
+<blockquote>
+<p>A handler for rejected tasks that throws a RejectedExecutionException.<br>直接抛出异常</p>
+</blockquote>
+</li>
+<li><p>CallerRunsPolicy</p>
+<blockquote>
+<p>A handler for rejected tasks that runs the rejected task directly in the calling thread of the execute method, unless the executor has been shut down, in which case the task is discarded.<br>只用调用者所在线程来运行任务。</p>
+</blockquote>
+</li>
+<li><p>DiscardPolicy</p>
+<blockquote>
+<p>A handler for rejected tasks that silently discards the rejected task.<br>不处理，丢弃掉。</p>
+</blockquote>
+</li>
+<li><p>DiscardOldestPolicy</p>
+<blockquote>
+<p>A handler for rejected tasks that discards the oldest unhandled request and then retries execute, unless the executor is shut down, in which case the task is discarded.<br>丢弃队列里最近的一个任务，并执行当前任务。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="线程池工作流"><a href="#线程池工作流" class="headerlink" title="线程池工作流"></a>线程池工作流</h2><h3 id="线程执行过程"><a href="#线程执行过程" class="headerlink" title="线程执行过程"></a>线程执行过程</h3><p><img src="./img/execute-flow.png" alt=""></p>
+<p>ThreadPoolExecutor#execute()<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Executes the given task sometime in the future.  The task</span></span><br><span class="line"><span class="comment">     * may execute in a new thread or in an existing pooled thread.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * If the task cannot be submitted for execution, either because this</span></span><br><span class="line"><span class="comment">     * executor has been shutdown or because its capacity has been reached,</span></span><br><span class="line"><span class="comment">     * the task is handled by the current &#123;<span class="doctag">@code</span> RejectedExecutionHandler&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> command the task to execute</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> RejectedExecutionException at discretion of</span></span><br><span class="line"><span class="comment">     *         &#123;<span class="doctag">@code</span> RejectedExecutionHandler&#125;, if the task</span></span><br><span class="line"><span class="comment">     *         cannot be accepted for execution</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> NullPointerException if &#123;<span class="doctag">@code</span> command&#125; is null</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (command == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Proceed in 3 steps:</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * 1. If fewer than corePoolSize threads are running, try to</span></span><br><span class="line"><span class="comment">         * start a new thread with the given command as its first</span></span><br><span class="line"><span class="comment">         * task.  The call to addWorker atomically checks runState and</span></span><br><span class="line"><span class="comment">         * workerCount, and so prevents false alarms that would add</span></span><br><span class="line"><span class="comment">         * threads when it shouldn't, by returning false.</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * 2. If a task can be successfully queued, then we still need</span></span><br><span class="line"><span class="comment">         * to double-check whether we should have added a thread</span></span><br><span class="line"><span class="comment">         * (because existing ones died since last checking) or that</span></span><br><span class="line"><span class="comment">         * the pool shut down since entry into this method. So we</span></span><br><span class="line"><span class="comment">         * recheck state and if necessary roll back the enqueuing if</span></span><br><span class="line"><span class="comment">         * stopped, or start a new thread if there are none.</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * 3. If we cannot queue task, then we try to add a new</span></span><br><span class="line"><span class="comment">         * thread.  If it fails, we know we are shut down or saturated</span></span><br><span class="line"><span class="comment">         * and so reject the task.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">int</span> c = ctl.get();</span><br><span class="line">        <span class="keyword">if</span> (workerCountOf(c) &lt; corePoolSize) &#123;</span><br><span class="line">            <span class="keyword">if</span> (addWorker(command, <span class="keyword">true</span>))</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            c = ctl.get();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (isRunning(c) &amp;&amp; workQueue.offer(command)) &#123;</span><br><span class="line">            <span class="keyword">int</span> recheck = ctl.get();</span><br><span class="line">            <span class="keyword">if</span> (! isRunning(recheck) &amp;&amp; remove(command))</span><br><span class="line">                reject(command);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (workerCountOf(recheck) == <span class="number">0</span>)</span><br><span class="line">                addWorker(<span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (!addWorker(command, <span class="keyword">false</span>))</span><br><span class="line">            reject(command);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>ThreadPoolExecutor#addWorker()<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Checks if a new worker can be added with respect to current</span></span><br><span class="line"><span class="comment">     * pool state and the given bound (either core or maximum). If so,</span></span><br><span class="line"><span class="comment">     * the worker count is adjusted accordingly, and, if possible, a</span></span><br><span class="line"><span class="comment">     * new worker is created and started, running firstTask as its</span></span><br><span class="line"><span class="comment">     * first task. This method returns false if the pool is stopped or</span></span><br><span class="line"><span class="comment">     * eligible to shut down. It also returns false if the thread</span></span><br><span class="line"><span class="comment">     * factory fails to create a thread when asked.  If the thread</span></span><br><span class="line"><span class="comment">     * creation fails, either due to the thread factory returning</span></span><br><span class="line"><span class="comment">     * null, or due to an exception (typically OutOfMemoryError in</span></span><br><span class="line"><span class="comment">     * Thread.start()), we roll back cleanly.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> firstTask the task the new thread should run first (or</span></span><br><span class="line"><span class="comment">     * null if none). Workers are created with an initial first task</span></span><br><span class="line"><span class="comment">     * (in method execute()) to bypass queuing when there are fewer</span></span><br><span class="line"><span class="comment">     * than corePoolSize threads (in which case we always start one),</span></span><br><span class="line"><span class="comment">     * or when the queue is full (in which case we must bypass queue).</span></span><br><span class="line"><span class="comment">     * Initially idle threads are usually created via</span></span><br><span class="line"><span class="comment">     * prestartCoreThread or to replace other dying workers.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> core if true use corePoolSize as bound, else</span></span><br><span class="line"><span class="comment">     * maximumPoolSize. (A boolean indicator is used here rather than a</span></span><br><span class="line"><span class="comment">     * value to ensure reads of fresh values after checking other pool</span></span><br><span class="line"><span class="comment">     * state).</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> true if successful</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">addWorker</span><span class="params">(Runnable firstTask, <span class="keyword">boolean</span> core)</span> </span>&#123;</span><br><span class="line">        retry:</span><br><span class="line">        <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">            <span class="keyword">int</span> c = ctl.get();</span><br><span class="line">            <span class="keyword">int</span> rs = runStateOf(c);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Check if queue empty only if necessary.</span></span><br><span class="line">            <span class="keyword">if</span> (rs &gt;= SHUTDOWN &amp;&amp;</span><br><span class="line">                ! (rs == SHUTDOWN &amp;&amp;</span><br><span class="line">                   firstTask == <span class="keyword">null</span> &amp;&amp;</span><br><span class="line">                   ! workQueue.isEmpty()))</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">                <span class="keyword">int</span> wc = workerCountOf(c);</span><br><span class="line">                <span class="keyword">if</span> (wc &gt;= CAPACITY ||</span><br><span class="line">                    wc &gt;= (core ? corePoolSize : maximumPoolSize))</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">if</span> (compareAndIncrementWorkerCount(c))</span><br><span class="line">                    <span class="keyword">break</span> retry;</span><br><span class="line">                c = ctl.get();  <span class="comment">// Re-read ctl</span></span><br><span class="line">                <span class="keyword">if</span> (runStateOf(c) != rs)</span><br><span class="line">                    <span class="keyword">continue</span> retry;</span><br><span class="line">                <span class="comment">// else CAS failed due to workerCount change; retry inner loop</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> workerStarted = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">boolean</span> workerAdded = <span class="keyword">false</span>;</span><br><span class="line">        Worker w = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            w = <span class="keyword">new</span> Worker(firstTask);</span><br><span class="line">            <span class="keyword">final</span> Thread t = w.thread;</span><br><span class="line">            <span class="keyword">if</span> (t != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">final</span> ReentrantLock mainLock = <span class="keyword">this</span>.mainLock;</span><br><span class="line">                mainLock.lock();</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="comment">// Recheck while holding lock.</span></span><br><span class="line">                    <span class="comment">// Back out on ThreadFactory failure or if</span></span><br><span class="line">                    <span class="comment">// shut down before lock acquired.</span></span><br><span class="line">                    <span class="keyword">int</span> rs = runStateOf(ctl.get());</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (rs &lt; SHUTDOWN ||</span><br><span class="line">                        (rs == SHUTDOWN &amp;&amp; firstTask == <span class="keyword">null</span>)) &#123;</span><br><span class="line">                        <span class="keyword">if</span> (t.isAlive()) <span class="comment">// precheck that t is startable</span></span><br><span class="line">                            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalThreadStateException();</span><br><span class="line">                        workers.add(w);</span><br><span class="line">                        <span class="keyword">int</span> s = workers.size();</span><br><span class="line">                        <span class="keyword">if</span> (s &gt; largestPoolSize)</span><br><span class="line">                            largestPoolSize = s;</span><br><span class="line">                        workerAdded = <span class="keyword">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    mainLock.unlock();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (workerAdded) &#123;</span><br><span class="line">                    t.start();</span><br><span class="line">                    workerStarted = <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (! workerStarted)</span><br><span class="line">                addWorkerFailed(w);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> workerStarted;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="任务执行完毕后"><a href="#任务执行完毕后" class="headerlink" title="任务执行完毕后"></a>任务执行完毕后</h3><p>Worker执行完毕之后，会调用processWorkerExit()对线程池内的线程数进行管理。<br><img src="./img/process-worker-exit.png" alt=""></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Performs cleanup and bookkeeping for a dying worker. Called</span></span><br><span class="line"><span class="comment">     * only from worker threads. Unless completedAbruptly is set,</span></span><br><span class="line"><span class="comment">     * assumes that workerCount has already been adjusted to account</span></span><br><span class="line"><span class="comment">     * for exit.  This method removes thread from worker set, and</span></span><br><span class="line"><span class="comment">     * possibly terminates the pool or replaces the worker if either</span></span><br><span class="line"><span class="comment">     * it exited due to user task exception or if fewer than</span></span><br><span class="line"><span class="comment">     * corePoolSize workers are running or queue is non-empty but</span></span><br><span class="line"><span class="comment">     * there are no workers.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> w the worker</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> completedAbruptly if the worker died due to user exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processWorkerExit</span><span class="params">(Worker w, <span class="keyword">boolean</span> completedAbruptly)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (completedAbruptly) <span class="comment">// If abrupt, then workerCount wasn't adjusted</span></span><br><span class="line">            decrementWorkerCount();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> ReentrantLock mainLock = <span class="keyword">this</span>.mainLock;</span><br><span class="line">        mainLock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            completedTaskCount += w.completedTasks;</span><br><span class="line">            workers.remove(w);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            mainLock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        tryTerminate();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> c = ctl.get();</span><br><span class="line">        <span class="keyword">if</span> (runStateLessThan(c, STOP)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!completedAbruptly) &#123;</span><br><span class="line">                <span class="keyword">int</span> min = allowCoreThreadTimeOut ? <span class="number">0</span> : corePoolSize;</span><br><span class="line">                <span class="keyword">if</span> (min == <span class="number">0</span> &amp;&amp; ! workQueue.isEmpty())</span><br><span class="line">                    min = <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span> (workerCountOf(c) &gt;= min)</span><br><span class="line">                    <span class="keyword">return</span>; <span class="comment">// replacement not needed</span></span><br><span class="line">            &#125;</span><br><span class="line">            addWorker(<span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/08/23/resttemplate-timeout/" data-toggle="tooltip" data-placement="top"
+                           title="RestTemplate连接池、超时时间配置">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/06/19/grpc2/" data-toggle="tooltip" data-placement="top"
+                           title="grpc实践(二) — 消息字段不能为空处理">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ThreadPoolExecutor私有变量解释"><span class="toc-text">ThreadPoolExecutor私有变量解释</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ctl"><span class="toc-text">ctl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#workerCount"><span class="toc-text">workerCount</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#runState"><span class="toc-text">runState</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程池创建参数"><span class="toc-text">线程池创建参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#int-corePoolSize-——-线程池的基本线程数"><span class="toc-text">int corePoolSize —— 线程池的基本线程数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#int-maximumPoolSize-——-线程池最大线程数"><span class="toc-text">int maximumPoolSize —— 线程池最大线程数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#long-keepAliveTime-——-闲置线程活动时间"><span class="toc-text">long keepAliveTime —— 闲置线程活动时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TimeUnit-unit-——-闲置线程活动时间单位"><span class="toc-text">TimeUnit unit —— 闲置线程活动时间单位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BlockingQueue-workQueue-——-任务队列"><span class="toc-text">BlockingQueue workQueue —— 任务队列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ThreadFactory-threadFactory"><span class="toc-text">ThreadFactory threadFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RejectedExecutionHandler-handler-——-饱和策略"><span class="toc-text">RejectedExecutionHandler handler —— 饱和策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程池工作流"><span class="toc-text">线程池工作流</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#线程执行过程"><span class="toc-text">线程执行过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#任务执行完毕后"><span class="toc-text">任务执行完毕后</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Java"
+                           title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#多线程"
+                           title="多线程">多线程</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 茄子的猫砂盆 2019
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/img/brinjaul.png">
+</body>
+
+</html>
