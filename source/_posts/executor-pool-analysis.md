@@ -131,7 +131,9 @@ NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 丢弃队列里最近的一个任务，并执行当前任务。
 
 ## 线程池工作流
-![](./img/threadpool-execute-flow.png)
+### 线程执行过程
+
+![](./img/execute-flow.png)
 
 ThreadPoolExecutor#execute()
 ``` java
@@ -286,3 +288,49 @@ ThreadPoolExecutor#addWorker()
     }
 ```
 
+### 任务执行完毕后
+Worker执行完毕之后，会调用processWorkerExit()对线程池内的线程数进行管理。
+![](./img/process-worker-exit.png)
+
+``` java
+/**
+     * Performs cleanup and bookkeeping for a dying worker. Called
+     * only from worker threads. Unless completedAbruptly is set,
+     * assumes that workerCount has already been adjusted to account
+     * for exit.  This method removes thread from worker set, and
+     * possibly terminates the pool or replaces the worker if either
+     * it exited due to user task exception or if fewer than
+     * corePoolSize workers are running or queue is non-empty but
+     * there are no workers.
+     *
+     * @param w the worker
+     * @param completedAbruptly if the worker died due to user exception
+     */
+    private void processWorkerExit(Worker w, boolean completedAbruptly) {
+        if (completedAbruptly) // If abrupt, then workerCount wasn't adjusted
+            decrementWorkerCount();
+
+        final ReentrantLock mainLock = this.mainLock;
+        mainLock.lock();
+        try {
+            completedTaskCount += w.completedTasks;
+            workers.remove(w);
+        } finally {
+            mainLock.unlock();
+        }
+
+        tryTerminate();
+
+        int c = ctl.get();
+        if (runStateLessThan(c, STOP)) {
+            if (!completedAbruptly) {
+                int min = allowCoreThreadTimeOut ? 0 : corePoolSize;
+                if (min == 0 && ! workQueue.isEmpty())
+                    min = 1;
+                if (workerCountOf(c) >= min)
+                    return; // replacement not needed
+            }
+            addWorker(null, false);
+        }
+    }
+```
